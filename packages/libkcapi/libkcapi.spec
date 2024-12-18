@@ -24,6 +24,7 @@ Summary: Library for kernel crypto API
 License: BSD-3-Clause OR GPL-2.0-only
 URL: https://www.chronox.de/libkcapi/html/index.html
 Source0: https://cdn.amazonlinux.com/al2023/blobstore/0eef74b3b4eb1ec321bab80f867aee89b94dc9fc95571da58ea5bba7a70e6224/libkcapi-1.4.0-105.amzn2023.0.1.src.rpm
+Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 %description
 %{summary}.
@@ -36,7 +37,10 @@ Requires: %{name}
 %{summary}.
 
 %prep
-rpm2cpio %{SOURCE0} | cpio -iu libkcapi-%{version}.tar.xz
+rpmkeys --import %{S:1} --dbpath "${PWD}/rpmdb"
+rpmkeys --checksig %{S:0} --dbpath "${PWD}/rpmdb"
+rm -rf "${PWD}/rpmdb"
+rpm2cpio %{S:0} | cpio -iu libkcapi-%{version}.tar.xz
 tar -xof libkcapi-%{version}.tar.xz; rm libkcapi-%{version}.tar.xz
 %setup -TDn libkcapi-%{version}
 

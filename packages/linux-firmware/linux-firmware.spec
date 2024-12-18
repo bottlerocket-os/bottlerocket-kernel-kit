@@ -24,6 +24,8 @@ License: GPL-1.0-or-later AND GPL-2.0-or-later AND BSD-Source-Code AND LicenseRe
 URL: https://www.kernel.org/
 
 Source0: https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-%{version}.tar.xz
+Source1: https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-%{version}.tar.sign
+Source2: gpgkey-4CDE8575E547BF835FE15807A31B6BD72486CFD6.asc
 
 Patch0001: 0001-linux-firmware-snd-remove-firmware-for-snd-audio-dev.patch
 Patch0002: 0002-linux-firmware-video-Remove-firmware-for-video-broad.patch
@@ -40,6 +42,7 @@ Patch0010: 0010-linux-firmware-amd-ucode-Remove-amd-microcode.patch
 %{summary}.
 
 %prep
+%{gpgverify} --data=<(xzcat %{S:0}) --signature=%{S:1} --keyring=%{S:2}
 %autosetup -n linux-firmware-%{version} -p1
 
 %build

@@ -16,12 +16,15 @@ Release: 1%{?dist}
 Summary: UEFI shim loader
 License: BSD-3-Clause
 URL: https://github.com/rhboot/shim/
-Source0: https://github.com/rhboot/shim/archive/%{shimver}/shim-%{shimver}.tar.bz2
+Source0: https://github.com/rhboot/shim/releases/download/%{shimver}/shim-%{shimver}.tar.bz2
+Source1: https://github.com/rhboot/shim/releases/download/%{shimver}/shim-%{shimver}.tar.bz2.asc
+Source2: gpgkey-8107B101A432AAC9FE8E547CA348D61BC2713E9F.asc
 
 %description
 %{summary}.
 
 %prep
+%{gpgverify} --data=%{S:0} --signature=%{S:1} --keyring=%{S:2}
 %autosetup -n shim-%{shimver} -p1
 
 # Make sure the `.vendor_cert` section is large enough to cover a replacement

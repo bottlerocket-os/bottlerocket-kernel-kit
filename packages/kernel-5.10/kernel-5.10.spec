@@ -8,8 +8,10 @@ License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
 Source0: https://cdn.amazonlinux.com/blobstore/0af5f80d00a3d5a867d4959d74751bc7d24b1bcb0ab8a5de558ae301ae0fa52e/kernel-5.10.228-219.884.amzn2.src.rpm
+Source1: gpgkey-99E617FE5DB527C0D8BD5F8E11CF1F95C87F5B1A.asc
 # Use latest-neuron-srpm-url.sh to get this.
-Source1: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.18.12.0.noarch.rpm
+Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.18.12.0.noarch.rpm
+Source3: gpgkey-00FA2C1079260870A76D2C285749CAD8646D9185.asc
 Source100: config-bottlerocket
 
 # Neuron-related drop-ins.
@@ -102,7 +104,10 @@ Summary: Header files for the Linux kernel for use by glibc
 %{summary}.
 
 %prep
-rpm2cpio %{SOURCE0} | cpio -iu linux-%{version}.tar config-%{_cross_arch} "*.patch"
+rpmkeys --import %{S:1} --dbpath "${PWD}/rpmdb"
+rpmkeys --checksig %{S:0} --dbpath "${PWD}/rpmdb"
+rm -rf "${PWD}/rpmdb"
+rpm2cpio %{S:0} | cpio -iu linux-%{version}.tar config-%{_cross_arch} "*.patch"
 tar -xof linux-%{version}.tar; rm linux-%{version}.tar
 %setup -TDn linux-%{version}
 # Patches from the Source0 SRPM
@@ -129,13 +134,16 @@ scripts/kconfig/merge_config.sh \
 %if "%{_cross_arch}" == "x86_64"
   ../config-microcode \
 %endif
-  %{SOURCE100}
+  %{S:100}
 
 rm -f ../config-* ../*.patch
 
 %if "%{_cross_arch}" == "x86_64"
 cd %{_builddir}
-rpm2cpio %{SOURCE1} | cpio -idmu './usr/src/aws-neuronx-*'
+rpmkeys --import %{S:3} --dbpath "${PWD}/rpmdb"
+rpmkeys --checksig %{S:2} --dbpath "${PWD}/rpmdb"
+rm -rf "${PWD}/rpmdb"
+rpm2cpio %{S:2} | cpio -idmu './usr/src/aws-neuronx-*'
 find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron \;
 rm -r usr
 %endif

@@ -18,3 +18,9 @@
 *.run
 /tests
 Twoliter.override
+packages/*/*.asc
+packages/*/*-asc.txt
+packages/*/*.sig
+packages/*/*-sig.txt
+packages/*/*.sign
+!packages/*/gpgkey-*.asc

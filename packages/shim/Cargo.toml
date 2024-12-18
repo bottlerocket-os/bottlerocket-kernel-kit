@@ -11,3 +11,7 @@ path = "../packages.rs"
 [[package.metadata.build-package.external-files]]
 url = "https://github.com/rhboot/shim/releases/download/15.8/shim-15.8.tar.bz2"
 sha512 = "30b3390ae935121ea6fe728d8f59d37ded7b918ad81bea06e213464298b4bdabbca881b30817965bd397facc596db1ad0b8462a84c87896ce6c1204b19371cd1"
+
+[[package.metadata.build-package.external-files]]
+url = "https://github.com/rhboot/shim/releases/download/15.8/shim-15.8.tar.bz2.asc"
+sha512 = "13479009185b1631874c0be8cd41a50ed80e17f8cf5541290bd2f00110533bdcf2eb57e20eb96e7055556a54121065faae01c9f31218ad55012e9ffc86f57676"

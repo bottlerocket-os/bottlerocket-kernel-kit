@@ -20,7 +20,9 @@ License: LicenseRef-scancode-amd-linux-firmware-export AND LicenseRef-scancode-i
 URL: https://github.com/bottlerocket-os/bottlerocket/tree/develop/packages/microcode
 
 Source0: https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-%{amd_ucode_version}.tar.xz
-Source1: https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/archive/refs/tags/microcode-%{intel_ucode_version}.tar.gz
+Source1: https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-%{amd_ucode_version}.tar.sign
+Source2: gpgkey-4CDE8575E547BF835FE15807A31B6BD72486CFD6.asc
+Source3: https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/archive/refs/tags/microcode-%{intel_ucode_version}.tar.gz
 
 # Lets us install "microcode" to pull in the AMD and Intel updates.
 Requires: %{_cross_os}microcode-amd
@@ -75,9 +77,10 @@ Requires: %{_cross_os}microcode-intel-license
 %{summary}.
 
 %prep
+%{gpgverify} --data=<(xzcat %{S:0}) --signature=%{S:1} --keyring=%{S:2}
 mkdir amd intel
-tar -C amd --strip-components=1 -xof %{SOURCE0}
-tar -C intel --strip-components=1 -xof %{SOURCE1}
+tar -C amd --strip-components=1 -xof %{S:0}
+tar -C intel --strip-components=1 -xof %{S:3}
 # CVE-2023-20569 - "AMD Inception"
 # This is adding new microcode for Zen3/Zen4 AMD cpus. The patch was taken
 # directly from the linux-firmware repository, but has not been part of a

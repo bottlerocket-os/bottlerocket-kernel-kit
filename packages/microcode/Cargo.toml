@@ -15,5 +15,9 @@ url = "https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-20240909.
 sha512 = "d1918364f9925291da722075cf2d038082a6b6b5c6d7e5ab8b0888c5e87563718934f493fe172db21608d6eace92ade5c519b5f50b1fc7f25a328e45be059142"
 
 [[package.metadata.build-package.external-files]]
+url = "https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-20240909.tar.sign"
+sha512 = "89f608c5e2afc645772f4b71289973344ce1d8d2ec5e9dde41ea31dcdada46b7cb875f9e6abaf05670d1428d191e65e96c3ee4bcf0e5bc9efbd4a716cec476cf"
+
+[[package.metadata.build-package.external-files]]
 url = "https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/archive/refs/tags/microcode-20240813.tar.gz"
 sha512 = "ba1fa7d9bed7d90756ea959f5878afca0deacc9b1e932a936a15d74a411b7efb6103a4af75dc3731d9cbb2e464439ce9a7d448f75bc6f38b616907ff6dec6ee3"

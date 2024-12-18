@@ -17,9 +17,10 @@ Summary: Bootloader with support for Linux and more
 License: GPL-3.0-or-later AND Unicode-DFS-2015
 URL: https://www.gnu.org/software/grub/
 Source0: https://cdn.amazonlinux.com/al2023/blobstore/f4fa28cb4e1586d622925449b1e24748c6ab09ccebe0fd8ddfa20cf5e7ce182a/grub2-2.06-61.amzn2023.0.9.src.rpm
-Source1: bios.cfg
-Source2: efi.cfg
-Source3: sbat.csv.in
+Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
+Source2: bios.cfg
+Source3: efi.cfg
+Source4: sbat.csv.in
 Patch0001: 0001-setup-Add-root-device-argument-to-grub-setup.patch
 Patch0002: 0002-gpt-start-new-GPT-module.patch
 Patch0003: 0003-gpt-rename-misnamed-header-location-fields.patch
@@ -97,6 +98,9 @@ Summary: Tools for the bootloader with support for Linux and more
 %{summary}.
 
 %prep
+rpmkeys --import %{S:1} --dbpath "${PWD}/rpmdb"
+rpmkeys --checksig %{S:0} --dbpath "${PWD}/rpmdb"
+rm -rf "${PWD}/rpmdb"
 rpm2cpio %{S:0} | cpio -iu grub-%{version}.tar.xz \
   bootstrap bootstrap.conf \
   gitignore %{gnulib_version}.tar.gz \
@@ -168,7 +172,7 @@ popd
 mkdir efi-build
 pushd efi-build
 
-sed -e "s,__VERSION__,%{version},g" %{S:3} > sbat.csv
+sed -e "s,__VERSION__,%{version},g" %{S:4} > sbat.csv
 
 %cross_configure \
   CFLAGS="" \
@@ -199,7 +203,7 @@ pushd bios-build
 %make_install
 mkdir -p %{buildroot}%{biosdir}
 %{buildroot}%{_cross_bindir}/grub-mkimage \
-  -c %{S:1} \
+  -c %{S:2} \
   -d ./grub-core/ \
   -O "i386-pc" \
   -o "%{buildroot}%{biosdir}/core.img" \
@@ -219,7 +223,7 @@ mkdir -p %{buildroot}%{efidir}
 truncate -s 4096 empty.pubkey
 
 %{buildroot}%{_cross_bindir}/grub-mkimage \
-  -c %{S:2} \
+  -c %{S:3} \
   -d ./grub-core/ \
   -O "%{_cross_grub_efi_format}" \
   -o "%{buildroot}%{efidir}/%{efi_image}" \
