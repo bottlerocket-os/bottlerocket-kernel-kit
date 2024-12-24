@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-8zxvcvs8fwd8"
+title = "kernel CVE-2023-52913"
+cve = "CVE-2023-52913"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: drm/i915: Fix potential context UAFs"
+
+[[advisory.products]]
+package-name = "kernel-5.15"
+patched-version = "5.15.173"
+patched-epoch = "0"
+
+[updateinfo]
+author = "rpkelly"
+issue-date = 2024-12-20T22:00:12Z
+arches = ["x86_64", "aarch64"]
+version = "1.0.2"

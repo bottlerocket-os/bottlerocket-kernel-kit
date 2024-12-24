@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-9cmoeqsnaerg"
+title = "kernel CVE-2024-49996"
+cve = "CVE-2024-49996"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: cifs: Fix buffer overflow when parsing NFS reparse points"
+
+[[advisory.products]]
+package-name = "kernel-5.10"
+patched-version = "5.10.230"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-5.15"
+patched-version = "5.15.173"
+patched-epoch = "0"
+
+[updateinfo]
+author = "rpkelly"
+issue-date = 2024-12-20T22:00:12Z
+arches = ["x86_64", "aarch64"]
+version = "1.0.2"
