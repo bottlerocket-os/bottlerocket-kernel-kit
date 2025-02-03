@@ -31,6 +31,9 @@ Source300: bootconfig-aws.conf
 Source301: bootconfig-vmware.conf
 Source302: bootconfig-metal.conf
 
+# XFS configuration
+Source400: mkfs.xfs.conf
+
 # Help out-of-tree module builds run `make prepare` automatically.
 Patch1001: 1001-Makefile-add-prepare-target-for-external-modules.patch
 # Expose tools/* targets for out-of-tree module builds.
@@ -74,6 +77,9 @@ Requires: (%{name}-modules-neuron if (%{_cross_os}variant-platform(aws) without 
 
 # Pull in FIPS-related files if needed.
 Requires: (%{name}-fips if %{_cross_os}image-feature(fips))
+
+# Pull in XFSprogs default config files
+Provides: %{_cross_os}kernel(mkfs-confs) = %{version}-%{release}
 
 %global _cross_ksrcdir %{_cross_usrsrc}/kernels
 %global _cross_kmoddir %{_cross_libdir}/modules/%{version}
@@ -375,6 +381,9 @@ mkdir -p %{buildroot}%{_cross_unitdir}/modprobe@neuron.service.d
 install -p -m 0644 %{S:221} %{buildroot}%{_cross_unitdir}/modprobe@neuron.service.d/neuron.conf
 %endif
 
+mkdir -p %{buildroot}%{_cross_datadir}/xfs
+install -p -m 0644 %{S:400} %{buildroot}%{_cross_datadir}/xfs/mkfs.xfs.conf
+
 # Install platform-specific bootconfig snippets.
 install -d %{buildroot}%{_cross_bootconfigdir}
 install -p -m 0644 %{S:300} %{buildroot}%{_cross_bootconfigdir}/05-aws.conf
@@ -384,6 +393,7 @@ install -p -m 0644 %{S:302} %{buildroot}%{_cross_bootconfigdir}/05-metal.conf
 %files
 %license COPYING LICENSES/preferred/GPL-2.0 LICENSES/exceptions/Linux-syscall-note
 %{_cross_attribution_file}
+%{_cross_datadir}/xfs/mkfs.xfs.conf
 /boot/vmlinuz
 /boot/config
 

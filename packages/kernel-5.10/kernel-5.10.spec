@@ -16,6 +16,9 @@ Source100: config-bottlerocket
 Source220: neuron-sysinit.target.drop-in.conf
 Source221: modprobe@neuron.service.drop-in.conf
 
+# XFS configuration
+Source300: mkfs.xfs.conf
+
 # Help out-of-tree module builds run `make prepare` automatically.
 Patch1001: 1001-Makefile-add-prepare-target-for-external-modules.patch
 # Enable INITRAMFS_FORCE config option for our use case.
@@ -52,6 +55,9 @@ Requires: %{name}-devel = %{version}-%{release}
 %if "%{_cross_arch}" == "x86_64"
 Requires: (%{name}-modules-neuron if (%{_cross_os}variant-platform(aws) without %{_cross_os}variant-flavor(nvidia)))
 %endif
+
+# Pull in XFSprogs default config files
+Provides: %{_cross_os}kernel(mkfs-confs) = %{version}-%{release}
 
 # The 5.10 kernel is not FIPS certified.
 Conflicts: %{_cross_os}image-feature(fips)
@@ -291,9 +297,13 @@ mkdir -p %{buildroot}%{_cross_unitdir}/modprobe@neuron.service.d
 install -p -m 0644 %{S:221} %{buildroot}%{_cross_unitdir}/modprobe@neuron.service.d/neuron.conf
 %endif
 
+mkdir -p %{buildroot}%{_cross_datadir}/xfs
+install -p -m 0644 %{S:300} %{buildroot}%{_cross_datadir}/xfs/mkfs.xfs.conf
+
 %files
 %license COPYING LICENSES/preferred/GPL-2.0 LICENSES/exceptions/Linux-syscall-note
 %{_cross_attribution_file}
+%{_cross_datadir}/xfs/mkfs.xfs.conf
 /boot/vmlinuz
 /boot/config
 
