@@ -19,7 +19,6 @@ kernel-6_12 = { path = "../../packages/kernel-6.12" }
 kmod-5_15-nvidia = { path = "../../packages/kmod-5.15-nvidia" }
 kmod-6_1-nvidia = { path = "../../packages/kmod-6.1-nvidia" }
 kmod-6_1-nvidia-r570 = { path = "../../packages/kmod-6.1-nvidia-r570" }
-kmod-6_12-nvidia-r570 = { path = "../../packages/kmod-6.12-nvidia-r570" }
 nvidia-migmanager = { path = "../../packages/nvidia-migmanager" }
 linux-firmware = { path = "../../packages/linux-firmware" }
 microcode = { path = "../../packages/microcode" }
