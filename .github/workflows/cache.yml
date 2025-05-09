@@ -58,4 +58,5 @@ jobs:
             build/rpms
             build/state
             target
+            packages/kmod-*-nvidia/COPYING
           key: ${{ env.cache-key }}

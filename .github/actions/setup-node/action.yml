@@ -16,6 +16,7 @@ runs:
           build/rpms
           build/state
           target
+          packages/kmod-*-nvidia/COPYING
         key: build-cache
     - run: cargo install cargo-make
       shell: bash
