@@ -1,3 +1,14 @@
+# v3.1.0 (2025-06-11)
+
+## OS Changes
+ * Add default config files for xfsprogs ([#155])
+
+## Build Changes
+ * Update to SDK 0.62.0 ([#190])
+
+[#155]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/155
+[#190]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/190
+
 # v3.0.2 (2025-06-09)
 
 ## OS Changes
