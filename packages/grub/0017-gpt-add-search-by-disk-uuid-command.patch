@@ -7,6 +7,7 @@ Subject: [PATCH] gpt: add search by disk uuid command
 general search_flags parameter now instead of a no_floppy flag.]
 
 Signed-off-by: Markus Boehme <markubo@amazon.com>
+Signed-off-by: Jingwei Wang <jweiw@amazon.com>
 ---
  Makefile.util.def                     |  1 +
  grub-core/Makefile.core.def           |  5 ++++

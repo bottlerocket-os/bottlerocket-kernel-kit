@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Glenn Washburn <development@efficientek.com>
+Date: Fri, 14 Jul 2023 15:49:17 -0500
+Subject: [PATCH] disk/cryptodisk: Optimize luks_script_get()
+
+Use the return value of grub_snprintf() to move the string pointer forward,
+instead of incrementing the string pointer iteratively until a NULL byte is
+reached. Move the space out of the format string argument, a small
+optimization, but also makes the spacing clearer. Also, use the new
+PRIxGRUB_OFFSET instead of PRIuGRUB_UINT64_T to accurately reflect the
+format string for this type.
+
+Signed-off-by: Glenn Washburn <development@efficientek.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ grub-core/disk/cryptodisk.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/grub-core/disk/cryptodisk.c b/grub-core/disk/cryptodisk.c
+index bbe39a8..751fe9b 100644
+--- a/grub-core/disk/cryptodisk.c
++++ b/grub-core/disk/cryptodisk.c
+@@ -1504,9 +1504,8 @@ luks_script_get (grub_size_t *sz)
+ 	ptr = grub_stpcpy (ptr, "luks_mount ");
+ 	ptr = grub_stpcpy (ptr, i->uuid);
+ 	*ptr++ = ' ';
+-	grub_snprintf (ptr, 21, "%" PRIuGRUB_UINT64_T " ", i->offset_sectors);
+-	while (*ptr)
+-	  ptr++;
++	ptr += grub_snprintf (ptr, 21, "%" PRIxGRUB_OFFSET, i->offset_sectors);
++	*ptr++ = ' ';
+ 	for (iptr = i->cipher->cipher->name; *iptr; iptr++)
+ 	  *ptr++ = grub_tolower (*iptr);
+ 	switch (i->mode)

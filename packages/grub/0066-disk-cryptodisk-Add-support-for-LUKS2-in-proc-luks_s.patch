@@ -1,0 +1,69 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Glenn Washburn <development@efficientek.com>
+Date: Fri, 14 Jul 2023 15:49:18 -0500
+Subject: [PATCH] disk/cryptodisk: Add support for LUKS2 in (proc)/luks_script
+
+The sector size in bytes is added to each line and it is allowed to be
+6 decimal digits long, which covers the most common cases of 512 and 4096
+byte sectors with space for two additional digits as future-proofing. The
+size allocation is updated to reflect this additional field. Also make
+clearer the size allocation calculation.
+
+Signed-off-by: Glenn Washburn <development@efficientek.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ grub-core/disk/cryptodisk.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/grub-core/disk/cryptodisk.c b/grub-core/disk/cryptodisk.c
+index 751fe9b..49af8a9 100644
+--- a/grub-core/disk/cryptodisk.c
++++ b/grub-core/disk/cryptodisk.c
+@@ -1479,12 +1479,22 @@ luks_script_get (grub_size_t *sz)
+   *sz = 0;
+ 
+   for (i = cryptodisk_list; i != NULL; i = i->next)
+-    if (grub_strcmp (i->modname, "luks") == 0)
++    if (grub_strcmp (i->modname, "luks") == 0 ||
++	grub_strcmp (i->modname, "luks2") == 0)
+       {
+-	size += sizeof ("luks_mount ");
++	size += grub_strlen (i->modname);
++	size += sizeof ("_mount");
+ 	size += grub_strlen (i->uuid);
+ 	size += grub_strlen (i->cipher->cipher->name);
+-	size += 54;
++	/*
++	 * Add space in the line for (in order) spaces, cipher mode, cipher IV
++	 * mode, sector offset, sector size and the trailing newline. This is
++	 * an upper bound on the size of this data. There are 15 extra bytes
++	 * in an earlier version of this code that are unaccounted for. It is
++	 * left in the calculations in case it is needed. At worst, its short-
++	 * lived wasted space.
++	 */
++	size += 5 + 5 + 8 + 20 + 6 + 1 + 15;
+ 	if (i->essiv_hash)
+ 	  size += grub_strlen (i->essiv_hash->name);
+ 	size += i->keysize * 2;
+@@ -1497,15 +1507,19 @@ luks_script_get (grub_size_t *sz)
+   ptr = ret;
+ 
+   for (i = cryptodisk_list; i != NULL; i = i->next)
+-    if (grub_strcmp (i->modname, "luks") == 0)
++    if (grub_strcmp (i->modname, "luks") == 0 ||
++	grub_strcmp (i->modname, "luks2") == 0)
+       {
+ 	unsigned j;
+ 	const char *iptr;
+-	ptr = grub_stpcpy (ptr, "luks_mount ");
++	ptr = grub_stpcpy (ptr, i->modname);
++	ptr = grub_stpcpy (ptr, "_mount ");
+ 	ptr = grub_stpcpy (ptr, i->uuid);
+ 	*ptr++ = ' ';
+ 	ptr += grub_snprintf (ptr, 21, "%" PRIxGRUB_OFFSET, i->offset_sectors);
+ 	*ptr++ = ' ';
++	ptr += grub_snprintf (ptr, 7, "%u", 1 << i->log_sector_size);
++	*ptr++ = ' ';
+ 	for (iptr = i->cipher->cipher->name; *iptr; iptr++)
+ 	  *ptr++ = grub_tolower (*iptr);
+ 	switch (i->mode)
