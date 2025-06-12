@@ -16,7 +16,7 @@ Epoch: 1
 Summary: Bootloader with support for Linux and more
 License: GPL-3.0-or-later AND Unicode-DFS-2015
 URL: https://www.gnu.org/software/grub/
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/f4fa28cb4e1586d622925449b1e24748c6ab09ccebe0fd8ddfa20cf5e7ce182a/grub2-2.06-61.amzn2023.0.9.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/e17d7dca3d451a111a1ed9a8b24d6be5c7bb71b2726271508067c8d33d42ab5c/grub2-2.06-61.amzn2023.0.18.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 Source2: bios.cfg
 Source3: efi.cfg
@@ -68,14 +68,6 @@ Patch0044: 0044-efi-return-virtual-size-of-section-found-by-grub_efi.patch
 Patch0045: 0045-mkimage-pgp-move-single-public-key-into-its-own-sect.patch
 Patch0046: 0046-Revert-sb-Add-fallback-to-EFI-LoadImage-if-shim_lock.patch
 Patch0047: 0047-Revert-UBUNTU-Move-verifiers-after-decompressors.patch
-Patch0048: 0048-add-flag-to-only-search-root-dev.patch
-Patch0049: 0049-efi-Add-grub_efi_set_variable_with_attributes.patch
-Patch0050: 0050-include-grub-types.h-Add-GRUB_SSIZE_MAX.patch
-Patch0051: 0051-kern-misc-kern-efi-Extract-UTF-8-to-UTF-16-code.patch
-Patch0052: 0052-efi-Add-grub_efi_set_variable_to_string.patch
-Patch0053: 0053-efi-add-vendor-GUID-for-Boot-Loader-Interface.patch
-Patch0054: 0054-efi-set-LoaderTimeInitUSec-and-LoaderTimeExecUSec.patch
-Patch0055: 0055-tsc-drop-tsc_boot_time-offset.patch
 
 BuildRequires: automake
 BuildRequires: bison
