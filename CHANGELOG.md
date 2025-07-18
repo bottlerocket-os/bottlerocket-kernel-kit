@@ -1,3 +1,9 @@
+# 3.2.1. (2025-07-24)
+
+## OS Changes
+ * Update r570 NVIDIA driver to 570.172.08
+ * Update r535 NVIDIA driver to 535.261.03
+
 # v3.2.0 (2025-07-16)
 
 ## Build Changes
