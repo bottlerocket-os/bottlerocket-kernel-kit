@@ -69,9 +69,6 @@ Requires: %{_cross_os}microcode-licenses
 # No bare-metal for this kernel
 Conflicts: %{_cross_os}variant-platform(metal)
 
-# No FIPS submission
-Conflicts: %{_cross_os}image-feature(fips)
-
 # No squashfs support, rely on erofs for compression
 Conflicts: %{_cross_os}image-feature(no-erofs-root-partition)
 
