@@ -1,3 +1,14 @@
+# v4.6.0 (2025-11-12)
+## OS Changes
+* Include EFA from efa-installer in kernel-6.12 ([#313])
+
+## Build Changes
+* Update to Twoliter 0.13.0 ([#315])
+
+[#313]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/313
+[#315]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/315
+
+
 # v4.5.0 (2025-11-10)
 ## OS Changes
 * Update kernel from 6.1.156-177.286 to 6.1.158-178.288([#310])
