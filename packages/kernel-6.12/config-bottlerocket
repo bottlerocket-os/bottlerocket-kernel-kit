@@ -262,3 +262,6 @@ CONFIG_CEPH_FS_SECURITY_LABEL=y
 # Disable ext4/jbd2 debug options for production (reduces latency overhead)
 # CONFIG_EXT4_DEBUG is not set
 # CONFIG_JBD2_DEBUG is not set
+
+# Enable IO Latency cgroup controller
+CONFIG_BLK_CGROUP_IOLATENCY=y
