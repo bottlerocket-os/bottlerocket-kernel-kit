@@ -369,3 +369,6 @@ CONFIG_SCSI_SNIC=m
 
 # Add ib_umad module
 CONFIG_INFINIBAND_USER_MAD=m
+
+# Enable IO Latency cgroup controller
+CONFIG_BLK_CGROUP_IOLATENCY=y
