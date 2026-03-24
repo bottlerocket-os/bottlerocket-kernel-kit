@@ -1,3 +1,10 @@
+# v5.3.0 (2026-03-24)
+
+## OS Changes
+* Add kernel 6.18 ([#381])
+
+[#381]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/381
+
 # v5.2.0 (2026-03-18)
 ## Build Changes
 * Update the Bottlerocket SDK to v0.72.0 ([#391])
