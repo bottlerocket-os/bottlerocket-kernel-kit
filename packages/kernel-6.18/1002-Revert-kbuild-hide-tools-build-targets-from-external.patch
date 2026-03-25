@@ -1,7 +1,7 @@
-From 2c7096f7159205698d574fbf8325020d9db4b567 Mon Sep 17 00:00:00 2001
+From 8a4d78e71f24628b43bc58675e8348eabd8537c3 Mon Sep 17 00:00:00 2001
 From: Arnaldo Garcia Rincon <agarrcia@amazon.com>
-Date: Wed, 22 Jun 2022 19:26:43 +0000
-Subject: [PATCH] Revert "kbuild: hide tools/ build targets from external
+Date: Thu, 26 Mar 2026 18:29:59 +0000
+Subject: [PATCH] Revert "kbuild: hide tools/ build targets from external 
  module builds"
 
 This reverts commit 1bb0b18a06dceee1fdc32161a72e28eab6f011c4 in which
@@ -10,16 +10,18 @@ they are required by the kmod kit since the 'tools/*' binaries are not
 distributed as part of the archive.
 
 Signed-off-by: Arnaldo Garcia Rincon <agarrcia@amazon.com>
+[jepiyush: adjust context for 6.18.15]
+Signed-off-by: Piyush Jena <jepiyush@amazon.com>
 ---
- Makefile | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ Makefile | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index cdf29031f..c1b31f753 100644
+index e4aa2e76ea56..9089203c7e20 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1440,14 +1440,6 @@ ifneq ($(wildcard $(resolve_btfids_O)),)
- 	$(Q)$(MAKE) -sC $(srctree)/tools/bpf/resolve_btfids O=$(resolve_btfids_O) clean
+@@ -1449,13 +1449,6 @@ ifneq ($(wildcard $(objtool_O)),)
+ 	$(Q)$(MAKE) -sC $(abs_srctree)/tools/objtool O=$(objtool_O) srctree=$(abs_srctree) clean
  endif
  
 -tools/: FORCE
@@ -29,11 +31,10 @@ index cdf29031f..c1b31f753 100644
 -tools/%: FORCE
 -	$(Q)mkdir -p $(objtree)/tools
 -	$(Q)$(MAKE) O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
--
+ 
  # ---------------------------------------------------------------------------
  # Kernel selftest
- 
-@@ -2147,6 +2139,14 @@ kernelversion:
+@@ -2144,6 +2137,15 @@ kernelversion:
  image_name:
  	@echo $(KBUILD_IMAGE)
  
@@ -45,9 +46,10 @@ index cdf29031f..c1b31f753 100644
 +	$(Q)mkdir -p $(objtree)/tools
 +	$(Q)$(MAKE) O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
 +
++
  PHONY += run-command
  run-command:
  	$(Q)$(KBUILD_RUN_COMMAND)
 -- 
-2.50.1
+2.52.0
 

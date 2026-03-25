@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm64 6.18.8 Kernel Configuration
+# Linux/arm64 6.18.15 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="aarch64-bottlerocket-linux-gnu-gcc (Buildroot 2025.05.1) 13.4.0"
 CONFIG_CC_IS_GCC=y
@@ -2640,7 +2640,9 @@ CONFIG_IXGBEVF_IPSEC=y
 CONFIG_I40E=m
 # CONFIG_I40E_DCB is not set
 # CONFIG_I40EVF is not set
-# CONFIG_ICE is not set
+CONFIG_ICE=m
+CONFIG_ICE_HWMON=y
+CONFIG_ICE_SWITCHDEV=y
 # CONFIG_FM10K is not set
 CONFIG_IGC=m
 # CONFIG_IDPF is not set
@@ -2811,8 +2813,23 @@ CONFIG_ACPI_MDIO=m
 # CONFIG_PCS_XPCS is not set
 # end of PCS device drivers
 
-# CONFIG_PPP is not set
+CONFIG_PPP=m
+CONFIG_PPP_BSDCOMP=m
+CONFIG_PPP_DEFLATE=m
+CONFIG_PPP_FILTER=y
+CONFIG_PPP_MPPE=m
+CONFIG_PPP_MULTILINK=y
+CONFIG_PPPOE=m
+# CONFIG_PPPOE_HASH_BITS_1 is not set
+# CONFIG_PPPOE_HASH_BITS_2 is not set
+CONFIG_PPPOE_HASH_BITS_4=y
+# CONFIG_PPPOE_HASH_BITS_8 is not set
+CONFIG_PPPOE_HASH_BITS=4
+# CONFIG_PPTP is not set
+CONFIG_PPP_ASYNC=m
+CONFIG_PPP_SYNC_TTY=m
 # CONFIG_SLIP is not set
+CONFIG_SLHC=m
 
 #
 # Host-side USB support is needed for USB Network Adapter support
@@ -3222,6 +3239,7 @@ CONFIG_PTP_1588_CLOCK_VMCLOCK=y
 #
 # DPLL device support
 #
+CONFIG_DPLL=y
 # CONFIG_ZL3073X_I2C is not set
 # CONFIG_ZL3073X_SPI is not set
 # end of DPLL device support
@@ -5894,7 +5912,7 @@ CONFIG_BINARY_PRINTF=y
 #
 CONFIG_RAID6_PQ=m
 CONFIG_RAID6_PQ_BENCHMARK=y
-# CONFIG_PACKING is not set
+CONFIG_PACKING=y
 CONFIG_BITREVERSE=y
 CONFIG_HAVE_ARCH_BITREVERSE=y
 CONFIG_GENERIC_STRNCPY_FROM_USER=y
