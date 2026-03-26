@@ -4,13 +4,13 @@
 %global kmajor 6.12
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.12.73
+Version: 6.12.74
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/668b5471c0600699f7ce4891c9e8f039444b11c7235640e94d7f9f9f07ff2d2d/kernel6.12-6.12.73-95.123.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/d18b7c1fb8fe6018d190824e2aad829f3f4d834048e4fe15e0022808913a4adf/kernel6.12-6.12.74-98.124.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 # Use latest-2.24-neuron-srpm-url.sh to get this.
 Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
@@ -51,8 +51,6 @@ Source224: load-neuron-latest-modules.service
 # Bootconfig snippets to adjust the default kernel command line for the platform.
 Source300: bootconfig-aws.conf
 Source301: bootconfig-vmware.conf
-
-Patch0001: 0001-Revert-wireguard-device-enable-threaded-NAPI.patch
 
 # Help out-of-tree module builds run `make prepare` automatically.
 Patch1001: 1001-Makefile-add-prepare-target-for-external-modules.patch

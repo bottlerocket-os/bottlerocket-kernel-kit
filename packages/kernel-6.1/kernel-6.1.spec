@@ -2,13 +2,13 @@
 %global kmajor 6.1
 
 Name: %{_cross_os}kernel-6.1
-Version: 6.1.163
+Version: 6.1.164
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/5345c8e36a653c0013bb38f8973f652a2d1958438662b44dc22efc0972ab647b/kernel-6.1.163-186.299.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/992929b28c5b3242f0e7c85ee49b7f2b79d77e9b93a590f935ebc4b43b09c0b6/kernel-6.1.164-196.303.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 # Use latest-2.24-neuron-srpm-url.sh to get this.
 Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
@@ -44,8 +44,6 @@ Source224: load-neuron-latest-modules.service
 Source300: bootconfig-aws.conf
 Source301: bootconfig-vmware.conf
 Source302: bootconfig-metal.conf
-
-Patch0001: 0001-Revert-wireguard-device-enable-threaded-NAPI.patch
 
 # Help out-of-tree module builds run `make prepare` automatically.
 Patch1001: 1001-Makefile-add-prepare-target-for-external-modules.patch
@@ -671,6 +669,7 @@ install -p -m 0644 %{S:302} %{buildroot}%{_cross_bootconfigdir}/05-metal.conf
 %{_cross_kmoddir}/kernel/drivers/acpi/ac.ko.*
 %{_cross_kmoddir}/kernel/drivers/acpi/button.ko.*
 %{_cross_kmoddir}/kernel/drivers/acpi/thermal.ko.*
+%{_cross_kmoddir}/kernel/drivers/acpi/acpi_ipmi.ko.gz
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/drivers/acpi/acpi_extlog.ko.*
 %{_cross_kmoddir}/kernel/drivers/acpi/acpi_pad.ko.*
@@ -678,6 +677,7 @@ install -p -m 0644 %{S:302} %{buildroot}%{_cross_bootconfigdir}/05-metal.conf
 %endif
 %{_cross_kmoddir}/kernel/drivers/amazon/media/v4l2-loopback/v4l2loopback.ko.gz
 %{_cross_kmoddir}/kernel/drivers/amazon/net/ena/ena.ko.*
+%{_cross_kmoddir}/kernel/drivers/amazon/net/igb_uio/igb_uio.ko.gz
 %{_cross_kmoddir}/kernel/drivers/amazon/scsi/mpi3mr/mpi3mr.ko.gz
 %if "%{_cross_arch}" == "aarch64"
 %{_cross_kmoddir}/kernel/drivers/ata/ahci_platform.ko.*
@@ -693,6 +693,11 @@ install -p -m 0644 %{S:302} %{buildroot}%{_cross_bootconfigdir}/05-metal.conf
 %{_cross_kmoddir}/kernel/drivers/block/zram/zram.ko.*
 %{_cross_kmoddir}/kernel/drivers/cdrom/cdrom.ko.*
 %{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_msghandler.ko.*
+%{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_devintf.ko.gz
+%{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_poweroff.ko.gz
+%{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_si.ko.gz
+%{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_ssif.ko.gz
+%{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_watchdog.ko.gz
 %{_cross_kmoddir}/kernel/drivers/char/virtio_console.ko.*
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/drivers/char/agp/intel-gtt.ko.*
@@ -768,7 +773,16 @@ install -p -m 0644 %{S:302} %{buildroot}%{_cross_bootconfigdir}/05-metal.conf
 %endif
 %{_cross_kmoddir}/kernel/drivers/hwmon/acpi_power_meter.ko.*
 %{_cross_kmoddir}/kernel/drivers/hwmon/hwmon.ko.*
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/hwmon/coretemp.ko.gz
+%{_cross_kmoddir}/kernel/drivers/hwmon/k10temp.ko.gz
+%endif
 %{_cross_kmoddir}/kernel/drivers/i2c/algos/i2c-algo-bit.ko.*
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-i801.ko.gz
+%{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-piix4.ko.gz
+%{_cross_kmoddir}/kernel/drivers/i2c/i2c-smbus.ko.gz
+%endif
 %{_cross_kmoddir}/kernel/drivers/i2c/i2c-core.ko.*
 %{_cross_kmoddir}/kernel/drivers/infiniband/core/ib_cm.ko.*
 %{_cross_kmoddir}/kernel/drivers/infiniband/core/ib_core.ko.*
