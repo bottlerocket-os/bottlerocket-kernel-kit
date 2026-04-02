@@ -4,13 +4,13 @@
 %global kmajor 6.18
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.18.15
+Version: 6.18.16
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/75c933cc9349e00f27c0147b6829fb72476f69ead98b2eb6fbc9d90edcf59d19/kernel6.18-6.18.15-14.217.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/c1b6325419d54e51eaf473cb56f1f8aee3193e6359e6b4414551aa23ee310a33/kernel6.18-6.18.16-18.222.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 # Use latest-2.24-neuron-srpm-url.sh to get this.
 Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
@@ -677,6 +677,10 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/drivers/hid/uhid.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/hid/usbhid/usbhid.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/hwmon/acpi_power_meter.%{_ko}
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/hwmon/coretemp.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/hwmon/k10temp.%{_ko}
+%endif
 %{_cross_kmoddir}/kernel/drivers/hwmon/hwmon.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/i2c/algos/i2c-algo-bit.%{_ko}
 %if "%{_cross_arch}" == "x86_64"
