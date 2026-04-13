@@ -12,6 +12,8 @@ distributed as part of the archive.
 Signed-off-by: Arnaldo Garcia Rincon <agarrcia@amazon.com>
 [jepiyush: adjust context for 6.12.77]
 Signed-off-by: Piyush Jena <jepiyush@amazon.com>
+[vighmah: adjust context for 6.12.79]
+Signed-off-by: Vighnesh Maheshwari <vighmah@amazon.com>
 ---
  Makefile | 16 +++++++++-------
  1 file changed, 9 insertions(+), 7 deletions(-)
@@ -20,8 +22,8 @@ diff --git a/Makefile b/Makefile
 index e4aa2e76ea56..9089203c7e20 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1449,13 +1449,6 @@ ifneq ($(wildcard $(objtool_O)),)
- 	$(Q)$(MAKE) -sC $(abs_srctree)/tools/objtool O=$(objtool_O) srctree=$(abs_srctree) clean
+@@ -1380,13 +1380,6 @@ ifneq ($(wildcard $(objtool_O)),)
+	$(Q)$(MAKE) -sC $(abs_srctree)/tools/objtool O=$(objtool_O) srctree=$(abs_srctree) $(patsubst objtool_%,%,$@)
  endif
 
 -tools/: FORCE
@@ -34,7 +36,7 @@ index e4aa2e76ea56..9089203c7e20 100644
 
  # ---------------------------------------------------------------------------
  # Kernel selftest
-@@ -2144,6 +2137,15 @@ kernelversion:
+@@ -2077,6 +2070,15 @@ kernelversion:
  image_name:
  	@echo $(KBUILD_IMAGE)
 
