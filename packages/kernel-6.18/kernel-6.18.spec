@@ -56,6 +56,8 @@ Patch1004: 1004-af_unix-increase-default-max_dgram_qlen-to-512.patch
 Patch1005: 1005-drm-simpledrm-Select-prerequisites-for-gpu-drivers.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1006: 1006-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
+# Fix race condition reading zero MAC in IB neighbor resolution.
+Patch1007: 1007-IB-core-Fix-zero-dmac-race-in-neighbor-resolution.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
