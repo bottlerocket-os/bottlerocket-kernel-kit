@@ -7,7 +7,7 @@ MICROCODE_DIR="${KERNEL_KIT_DIR}/packages/microcode"
 
 # Usage information
 usage() {
-    cat << EOF
+    cat <<EOF
 Usage: $0
 
 This script generates and validates full kernel configurations for all available
@@ -39,6 +39,17 @@ bail() {
     exit 1
 }
 
+# Get the config-full filename for a given kernel version and architecture
+get_kernel_config_file_name() {
+    local majorminor="$1"
+    local arch="$2"
+    if [[ "${majorminor}" == "6.18" ]]; then
+        echo "config-full-bottlerocket-${arch}-on-$(uname -m)"
+    else
+        echo "config-full-bottlerocket-${arch}"
+    fi
+}
+
 # Fetch the sources of the configured kernels
 fetch_sources() {
     # Use the tools available in the Bottlerocket SDK (curl, grep , sed) since
@@ -55,6 +66,38 @@ fetch_sources() {
     done
 }
 
+# Generate merged kernel configs for each architecture.
+generate_kernel_configs() {
+    local version="$1"
+    local kernel_path="$2"
+    local microcode_file="$3"
+    local majorminor="$4"
+    for arch in "x86_64" "aarch64"; do
+        br_cfg="${kernel_path}/config-bottlerocket"
+        br_cfg_arch="${kernel_path}/config-bottlerocket-${arch}"
+        microcode_cfg="${MICROCODE_DIR}/${microcode_file}"
+        config_filename=$(get_kernel_config_file_name "${majorminor}" "${arch}")
+
+        pushd "linux-${version}" || bail "Could not move into linux-${version}"
+
+        if [ "${arch}" = "aarch64" ]; then
+            karch="arm64"
+            script_args=("../config-${arch}" "${br_cfg}" "${br_cfg_arch}")
+        elif [ "${arch}" = "x86_64" ]; then
+            karch="x86"
+            script_args=("../config-${arch}" "${microcode_cfg}" "${br_cfg}" "${br_cfg_arch}")
+        fi
+
+        ARCH=${karch} \
+            CROSS_COMPILE=/usr/bin/${arch}-bottlerocket-linux-gnu- \
+            KCONFIG_CONFIG=bottlerocket_${arch}_defconfig \
+            ./scripts/kconfig/merge_config.sh "${script_args[@]}"
+
+        mv -f "bottlerocket_${arch}_defconfig" "${kernel_path}/${config_filename}" || bail "Failed to create ${config_filename}"
+        popd || bail "Could not move around - 'popd' failed in merge_config loop. Lets stop before we break anything further."
+    done
+}
+
 # Function to merge kernel configurations for a specific kernel version
 merge_kernel_configs() {
     local version="$1"
@@ -65,10 +108,10 @@ merge_kernel_configs() {
 
     readarray -t br_patches < <(find "${kernel_package_dir}" -maxdepth 1 -name "*.patch")
 
-    if [ "${majorminor}" == "6.18" ]; then
+    if [[ "${majorminor}" == "6.18" ]]; then
         spec_file="kernel6.18.spec"
         microcode_file="config-microcode-6-18"
-    elif [ "${majorminor}" == "6.12" ]; then
+    elif [[ "${majorminor}" == "6.12" ]]; then
         spec_file="kernel6.12.spec"
         microcode_file="config-microcode-6-12"
     else
@@ -84,9 +127,11 @@ merge_kernel_configs() {
 
     # Upstream source is either xz compressed tarball or plain tarball
     if [ -f "./linux-${version}.tar" ]; then
-        tar -xof linux-"${version}".tar; rm linux-"${version}".tar
+        tar -xof linux-"${version}".tar
+        rm linux-"${version}".tar
     else
-        tar -xof linux-"${version}".tar.xz; rm linux-"${version}".tar.xz
+        tar -xof linux-"${version}".tar.xz
+        rm linux-"${version}".tar.xz
     fi
 
     # Find upstream patch ordering based on the upstream SRPM so we can apply in that order
@@ -108,29 +153,7 @@ merge_kernel_configs() {
 
     popd || bail "Could not move around - 'popd' back to /work failed. Lets stop before we break anything further."
 
-    for arch in "x86_64" "aarch64"; do
-        br_cfg="${kernel_path}/config-bottlerocket"
-        br_cfg_arch="${kernel_path}/config-bottlerocket-${arch}"
-        microcode_cfg="${MICROCODE_DIR}/${microcode_file}"
-
-        pushd "linux-${version}" || bail "Could not move into linux-${version}"
-
-        if [ "${arch}" = "aarch64" ]; then
-            karch="arm64"
-            script_args=("../config-${arch}" "${br_cfg}" "${br_cfg_arch}")
-        elif [ "${arch}" = "x86_64" ]; then
-            karch="x86"
-            script_args=("../config-${arch}" "${microcode_cfg}" "${br_cfg}" "${br_cfg_arch}")
-        fi
-
-        ARCH=${karch} \
-        CROSS_COMPILE=/usr/bin/${arch}-bottlerocket-linux-gnu- \
-        KCONFIG_CONFIG=bottlerocket_${arch}_defconfig \
-        ./scripts/kconfig/merge_config.sh "${script_args[@]}"
-
-        mv -f "bottlerocket_${arch}_defconfig" "${kernel_path}/config-full-bottlerocket-${arch}" || bail "Failed to create config-full-bottlerocket-${arch}"
-        popd || bail "Could not move around - 'popd' failed in merge_config loop. Lets stop before we break anything further."
-    done
+    generate_kernel_configs "${version}" "${kernel_path}" "${microcode_file}" "${majorminor}"
 
     popd || bail "Could not return from temporary directory"
 }
@@ -148,17 +171,19 @@ validate_kernel_configs() {
         # Check if files exist
         if [[ ! -f "${kernel_path}/config-bottlerocket" ]]; then
             echo "❌ Missing config-bottlerocket"
-            (( ++errors ))
+            ((++errors))
             continue
         fi
         if [[ ! -f "${kernel_path}/config-bottlerocket-${arch}" ]]; then
             echo "❌ Missing config-bottlerocket-${arch}"
-            (( ++errors ))
+            ((++errors))
             continue
         fi
-        if [[ ! -f "${kernel_path}/config-full-bottlerocket-${arch}" ]]; then
-            echo "❌ Missing config-full-bottlerocket-${arch}"
-            (( ++errors ))
+        local config_filename
+        config_filename=$(get_kernel_config_file_name "${majorminor}" "${arch}")
+        if [[ ! -f "${kernel_path}/${config_filename}" ]]; then
+            echo "❌ Missing ${config_filename}"
+            ((++errors))
             continue
         fi
 
@@ -168,7 +193,7 @@ validate_kernel_configs() {
         local arch_configs
         arch_configs=$(grep "^CONFIG_" "${kernel_path}/config-bottlerocket-${arch}" | sort)
         local full_configs
-        full_configs=$(grep "^CONFIG_" "${kernel_path}/config-full-bottlerocket-${arch}" | sort)
+        full_configs=$(grep "^CONFIG_" "${kernel_path}/${config_filename}" | sort)
 
         # Check common configs
         local missing_common
@@ -180,13 +205,13 @@ validate_kernel_configs() {
         if [[ -n "$missing_common" ]]; then
             echo "❌ Missing common configs:"
             echo "$missing_common"
-            (( ++errors ))
+            ((++errors))
         fi
 
         if [[ -n "$missing_arch" ]]; then
             echo "❌ Missing arch-specific configs:"
             echo "$missing_arch"
-            (( ++errors ))
+            ((++errors))
         fi
 
         if [[ -z "$missing_common" && -z "$missing_arch" ]]; then
@@ -194,7 +219,7 @@ validate_kernel_configs() {
         fi
     done
 
-    if (( errors == 0 )); then
+    if ((errors == 0)); then
         echo -e "\n🎉 All kernel config validations passed!"
     else
         echo -e "\n💥 Some kernel config validations failed!"
@@ -205,15 +230,15 @@ validate_kernel_configs() {
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        *)
-            echo "Unknown option: $1"
-            usage
-            exit 1
-            ;;
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    *)
+        echo "Unknown option: $1"
+        usage
+        exit 1
+        ;;
     esac
     shift
 done
@@ -256,7 +281,7 @@ for kernel_dir in "${KERNEL_KIT_DIR}/packages"/kernel-*; do
     version="$(rpm --query --nosignature --queryformat '%{VERSION}' kernel-source.rpm)"
     majorminor=${version%.*}
 
-    merge_kernel_configs "${version}" "${majorminor}" "${tmpdir}"
+    merge_kernel_configs "${version}" "${majorminor}" "${tmpdir}" || bail "Failed to merge kernel config for ${kernel_pkg}"
 
     echo "Validating ${kernel_pkg} configurations..."
     validate_kernel_configs "${version}" "${majorminor}" || bail "Validation failed for ${kernel_pkg}"
