@@ -3,6 +3,8 @@
 
 %global kmajor 6.18
 
+%global host_arch %(uname -m)
+
 Name: %{_cross_os}kernel-%{kmajor}
 Version: 6.18.20
 Release: 1%{?dist}
@@ -23,8 +25,10 @@ Source100: config-bottlerocket
 Source101: config-bottlerocket-x86_64
 Source102: config-bottlerocket-aarch64
 # Fully generated kernel configurations used for validation.
-Source110: config-full-bottlerocket-x86_64
-Source111: config-full-bottlerocket-aarch64
+Source110: config-full-bottlerocket-x86_64-on-aarch64
+Source111: config-full-bottlerocket-aarch64-on-aarch64
+Source112: config-full-bottlerocket-x86_64-on-x86_64
+Source113: config-full-bottlerocket-aarch64-on-x86_64
 
 # Adjust kernel-devel mount behavior if not squashfs.
 Source210: var-lib-kernel-devel-lower.mount.drop-in.conf.in
@@ -208,11 +212,23 @@ scripts/kconfig/merge_config.sh \
 %endif
   %{S:100}
 
-%if "%{_cross_arch}" == "x86_64"
-SOURCE_FILE="%{S:110}"
+# Select the full kernel config based on host and target architecture.
+# Kernel 6.18 uses host-arch-specific configs because config generation
+# can produce different results depending on the build host.
+%if "%{host_arch}" == "aarch64"
+  %if "%{_cross_arch}" == "x86_64"
+    SOURCE_FILE="%{S:110}"
+  %else
+    SOURCE_FILE="%{S:111}"
+  %endif
 %else
-SOURCE_FILE="%{S:111}"
+  %if "%{_cross_arch}" == "x86_64"
+    SOURCE_FILE="%{S:112}"
+  %else
+    SOURCE_FILE="%{S:113}"
+  %endif
 %endif
+
 if ! diff "${KCONFIG_CONFIG}" "${SOURCE_FILE}"; then
   echo "error: source and build kernel configurations do not match"
   exit 1
