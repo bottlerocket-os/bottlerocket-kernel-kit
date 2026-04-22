@@ -17,8 +17,10 @@ During the build process, these configurations are merged in the following order
 4. Architecture-specific Bottlerocket config (`config-bottlerocket-<arch>`)
 
 The final merged configurations are written to:
-* [`config-full-bottlerocket-aarch64`](config-full-bottlerocket-aarch64) - Complete ARM64 configuration
-* [`config-full-bottlerocket-x86_64`](config-full-bottlerocket-x86_64) - Complete x86_64 configuration
+* [`config-full-bottlerocket-aarch64-on-aarch64`](config-full-bottlerocket-aarch64-on-aarch64) - Complete ARM64 configuration for an ARM64 host
+* [`config-full-bottlerocket-x86_64-on-aarch64`](config-full-bottlerocket-x86_64-on-aarch64) - Complete x86_64 configuration for an ARM64 host
+* [`config-full-bottlerocket-aarch64-on-x86_64`](config-full-bottlerocket-aarch64-on-x86_64) - Complete ARM64 configuration for an X86_64 host
+* [`config-full-bottlerocket-x86_64-on-x86_64`](config-full-bottlerocket-x86_64-on-x86_64) - Complete x86_64 configuration for an X86_64 host
 
 ## Testing of Configuration Changes
 
@@ -32,8 +34,14 @@ script from the this repository to ensure the configuration for any of the combi
 $ make full-config
 ```
 
-Any resulting diff in a [`config-full-bottlerocket-aarch64`](https://github.com/bottlerocket-os/bottlerocket-kernel-kit/blob/develop/packages/kernel-6.18/config-full-bottlerocket-aarch64)
-or [`config-full-bottlerocket-x86_64`](https://github.com/bottlerocket-os/bottlerocket-kernel-kit/blob/develop/packages/kernel-6.18/config-full-bottlerocket-x86_64) file should be PR'd to this package for review.
+Any resulting diff to the following:
+- [`config-full-bottlerocket-aarch64-on-aarch64`](https://github.com/bottlerocket-os/bottlerocket-kernel-kit/blob/develop/packages/kernel-6.18/config-full-bottlerocket-aarch64-on-aarch64)
+- [`config-full-bottlerocket-x86_64-on-aarch64`](https://github.com/bottlerocket-os/bottlerocket-kernel-kit/blob/develop/packages/kernel-6.18/config-full-bottlerocket-x86_64-on-aarch64)
+- [`config-full-bottlerocket-aarch64-on-x86_64`](https://github.com/bottlerocket-os/bottlerocket-kernel-kit/blob/develop/packages/kernel-6.18/config-full-bottlerocket-aarch64-on-x86_64)
+- [`config-full-bottlerocket-x86_64-on-x86_64`](https://github.com/bottlerocket-os/bottlerocket-kernel-kit/blob/develop/packages/kernel-6.18/config-full-bottlerocket-x86_64-on-x86_64)
+
+should be PR'd to this package for review.
+
 Changes that can have an effect on the resulting kernel configuration include:
 
 * explicit kernel configuration changes in any of the source config files
