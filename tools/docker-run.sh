@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e -o pipefail
 
-TQ_IMAGE=ghcr.io/mdm-code/tq:v2.4.0
+YQ_IMAGE=mikefarah/yq:4.53.2
 
 bail() {
     if [[ $# -gt 0 ]]; then
@@ -15,14 +15,14 @@ find_sdk() {
       -v "$(pwd):/bottlerocket-kernel-kit:ro" \
       --user "$(id -u):$(id -g)" \
       --network none \
-      "${TQ_IMAGE}" \
-      tq -q "[sdk][source]" /bottlerocket-kernel-kit/Twoliter.lock
+      "${YQ_IMAGE}" \
+      -p toml -oy '.sdk.source' /bottlerocket-kernel-kit/Twoliter.lock
 }
 
 SCRIPT_PATH="$1"
 
 if [[ -z "${SDK}" ]]; then
-  echo "Retriving SDK from Twoliter.lock"
+  echo "Retrieving SDK from Twoliter.lock"
   SDK="$(find_sdk)"
 fi
 
