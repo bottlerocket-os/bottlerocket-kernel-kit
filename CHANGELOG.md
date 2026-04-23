@@ -1,3 +1,16 @@
+# v5.4.0 (2026-04-23)
+
+## OS Changes
+* Split kernel-6.18 config-full by target and host architecture ([#411])
+
+## Build Changes
+
+* Add support for `docker-run` on ARM hosts ([#411])
+* Update the Bottlerocket SDK to `v0.73.0` ([#412])
+
+[#411]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/411
+[#412]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/412
+
 # v5.3.3 (2026-04-13)
 ## OS Changes
 * Update kernel from 6.12.77-99.140 to 6.12.79-101.147 ([#404])
