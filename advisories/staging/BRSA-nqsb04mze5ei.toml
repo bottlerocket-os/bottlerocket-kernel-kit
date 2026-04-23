@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-nqsb04mze5ei"
+title = "modules-neuron support ended"
+end-of-life = true
+severity = "low"
+description = "modules-neuron sub-package is no longer included in Bottlerocket. All users must upgrade to a version of the OS that does not include this package."
+
+[[advisory.products]]
+package-name = "kernel-6.12-modules-neuron"
+patched-version = "6.12.77"
+patched-epoch = "1"
+
+[[advisory.products]]
+package-name = "kernel-6.1-modules-neuron"
+patched-version = "6.1.166"
+patched-epoch = "1"
+
+[[advisory.products]]
+package-name = "kernel-6.18-modules-neuron"
+patched-version = "6.18.16"
+patched-epoch = "1"
+
+[updateinfo]
+author = "jepiyush"
+issue-date = 2026-04-23T20:02:44Z
+arches = ["aarch64", "x86_64"]
+version = "staging"
