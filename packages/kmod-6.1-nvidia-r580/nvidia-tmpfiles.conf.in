@@ -7,5 +7,5 @@ d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gr
 C /etc/nvidia/fabricmanager.cfg - - - -
 C /etc/nvidia/fabricmanager.env - - - -
 C /etc/nvidia/gridd.conf - - - -
-d /run/nvidia 0700 root root -
+d /run/nvidia 0755 root root -
 D /var/run/nvidia-persistenced 0755 nvidia nvidia - -
