@@ -56,6 +56,22 @@ Patch1004: 1004-af_unix-increase-default-max_dgram_qlen-to-512.patch
 Patch1005: 1005-drm-simpledrm-Select-prerequisites-for-gpu-drivers.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1006: 1006-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
+# Fix NULL pointer dereference in scatterwalk from SGL chaining.
+Patch1007: 1007-crypto-af-alg-fix-NULL-pointer-dereference-in-scatterwalk.patch
+# Revert algif_aead to out-of-place operation.
+Patch1008: 1008-crypto-algif_aead-Revert-to-operating-out-of-place.patch
+# Snapshot IV for async AEAD requests.
+Patch1009: 1009-crypto-algif_aead-snapshot-IV-for-async-AEAD-requests.patch
+# Fix authencesn out-of-place decryption.
+Patch1010: 1010-crypto-authencesn-Do-not-place-hiseq-at-end-of-dst.patch
+# Limit RX SG extraction by receive buffer budget.
+Patch1011: 1011-crypto-af_alg-limit-RX-SG-extraction-by-receive-buffer-budget.patch
+# Fix page reassignment overflow in af_alg_pull_tsgl.
+Patch1012: 1012-crypto-af_alg-Fix-page-reassignment-overflow-in-af_alg_pull_tsgl.patch
+# Fix minimum RX size check for AEAD decryption.
+Patch1013: 1013-crypto-algif_aead-Fix-minimum-RX-size-check-for-decryption.patch
+# Fix authencesn src offset for in-place decryption.
+Patch1014: 1014-crypto-authencesn-Fix-src-offset-when-decrypting-in-place.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
