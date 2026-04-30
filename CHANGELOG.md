@@ -1,3 +1,10 @@
+# v5.4.1 (2026-04-30)
+
+## OS Changes
+* Backport patches to revert algif_aead to out-of-place operation ([#416])
+
+[#416]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/416
+
 # v5.4.0 (2026-04-23)
 
 ## OS Changes
