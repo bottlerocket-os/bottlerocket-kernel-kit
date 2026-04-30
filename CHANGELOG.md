@@ -1,8 +1,10 @@
 # v5.4.1 (2026-04-30)
 
 ## OS Changes
-* Backport patches to revert algif_aead to out-of-place operation ([#416])
+* Grant users read access to `/run/nvidia` so that non-root users can start MPS daemons ([#415])
+* Backport patches to revert `algif_aead` to out-of-place operation ([#416])
 
+[#415]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/415
 [#416]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/416
 
 # v5.4.0 (2026-04-23)
