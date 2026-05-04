@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e -o pipefail
 
-YQ_IMAGE=mikefarah/yq:4.53.2
-
 bail() {
     if [[ $# -gt 0 ]]; then
         >&2 echo "Error: $*"
@@ -11,12 +9,7 @@ bail() {
 }
 
 find_sdk() {
-  docker run --rm \
-      -v "$(pwd):/bottlerocket-kernel-kit:ro" \
-      --user "$(id -u):$(id -g)" \
-      --network none \
-      "${YQ_IMAGE}" \
-      -p toml -oy '.sdk.source' /bottlerocket-kernel-kit/Twoliter.lock
+  grep -A5 '^\[sdk\]' Twoliter.lock | grep '^source' | cut -d'"' -f2
 }
 
 SCRIPT_PATH="$1"
