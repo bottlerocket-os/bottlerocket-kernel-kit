@@ -1,0 +1,11 @@
+R __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/tesla - - - - -
+d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/tesla 0755 root root - -
+R __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/open-gpu - - - - -
+d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/open-gpu 0755 root root - -
+R __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/grid - - - - -
+d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/grid 0755 root root - -
+C /etc/nvidia/fabricmanager.cfg - - - -
+C /etc/nvidia/fabricmanager.env - - - -
+C /etc/nvidia/gridd.conf - - - -
+d /run/nvidia 0755 root root -
+D /var/run/nvidia-persistenced 0755 nvidia nvidia - -

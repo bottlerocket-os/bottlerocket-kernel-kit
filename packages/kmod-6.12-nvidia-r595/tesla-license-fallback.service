@@ -1,0 +1,14 @@
+[Unit]
+Description=Tesla GRID License Check Fallback
+RefuseManualStart=true
+RefuseManualStop=true
+
+[Service]
+Type=oneshot
+ExecCondition=/usr/bin/ghostdog match-nvidia-driver tesla
+ExecStart=/usr/bin/touch /etc/drivers/.grid-licensed
+ExecStart=/usr/bin/systemctl stop grid-license-check.timer --no-block
+RemainAfterExit=true
+
+[Install]
+WantedBy=nvidia-k8s-device-plugin.service

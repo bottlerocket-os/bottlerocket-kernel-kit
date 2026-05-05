@@ -1,0 +1,21 @@
+[Unit]
+Description=NVIDIA fabric manager service
+Wants=modprobe@ib_umad.service
+After=modprobe@ib_umad.service nvlsm-online.service
+Requires=nvlsm-online.service
+
+[Service]
+EnvironmentFile=/etc/nvidia/fabricmanager.env
+EnvironmentFile=-/etc/nvidia/nvlsm.env
+ExecStart=/usr/bin/nv-fabricmanager -c /etc/nvidia/fabricmanager.cfg $GUID_ARG
+Type=simple
+TimeoutSec=0
+RestartSec=5
+Restart=always
+RemainAfterExit=true
+StandardError=journal+console
+SuccessExitStatus=255
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target

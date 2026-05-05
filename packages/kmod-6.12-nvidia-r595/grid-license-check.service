@@ -1,0 +1,19 @@
+[Unit]
+Description=GRID License Check
+RefuseManualStart=true
+RefuseManualStop=true
+After=nvidia-gridd.service
+Requires=nvidia-gridd.service
+
+[Service]
+Type=oneshot
+ExecCondition=/usr/bin/ghostdog match-nvidia-driver grid
+ExecStart=-/usr/bin/truncate /tmp/.nvidia-gridd-license
+ExecStart=/usr/bin/nvidia-smi -q
+ExecStart=/usr/bin/grep -q "License Status.*: Licensed" /tmp/.nvidia-gridd-license
+ExecStart=/usr/bin/touch /etc/drivers/.grid-licensed
+ExecStart=/usr/bin/systemctl stop grid-license-check.timer --no-block
+StandardOutput=append:/tmp/.nvidia-gridd-license
+
+[Install]
+WantedBy=nvidia-k8s-device-plugin.service
