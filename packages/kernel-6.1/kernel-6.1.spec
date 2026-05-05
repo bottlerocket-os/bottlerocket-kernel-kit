@@ -2,13 +2,13 @@
 %global kmajor 6.1
 
 Name: %{_cross_os}kernel-6.1
-Version: 6.1.166
+Version: 6.1.168
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/9a46bdc59783c89558f2e909f260f57637881f819cd56a6d6cedf55a146d3f06/kernel-6.1.166-197.305.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/35ad091d02de3b2f76b41beb79aaf6048d2240d4f5b26a101017cf89540ae479/kernel-6.1.168-203.330.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 # Use latest-2.24-neuron-srpm-url.sh to get this.
 Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
@@ -60,24 +60,6 @@ Patch1005: 1005-Revert-Revert-drm-fb_helper-improve-CONFIG_FB-depend.patch
 Patch1006: 1006-strscpy-write-destination-buffer-only-once.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1007: 1007-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
-# Backport memcpy_sglist() for use by algif_aead fix.
-Patch1008: 1008-crypto-scatterwalk-Backport-memcpy_sglist.patch
-# Replace null skcipher with memcpy_sglist() in algif_aead.
-Patch1009: 1009-crypto-algif_aead-use-memcpy_sglist-instead-of-null-skcipher.patch
-# Revert algif_aead to out-of-place operation.
-Patch1010: 1010-crypto-algif_aead-Revert-to-operating-out-of-place.patch
-# Snapshot IV for async AEAD requests.
-Patch1011: 1011-crypto-algif_aead-snapshot-IV-for-async-AEAD-requests.patch
-# Replace null skcipher with memcpy_sglist() in authenc.
-Patch1012: 1012-crypto-authenc-use-memcpy_sglist-instead-of-null-skcipher.patch
-# Fix authencesn out-of-place decryption.
-Patch1013: 1013-crypto-authencesn-Do-not-place-hiseq-at-end-of-dst.patch
-# Fix authencesn src offset for in-place decryption.
-Patch1014: 1014-crypto-authencesn-Fix-src-offset-when-decrypting-in-place.patch
-# Fix page reassignment overflow in af_alg_pull_tsgl.
-Patch1015: 1015-crypto-af_alg-Fix-page-reassignment-overflow-in-af_alg_pull_tsgl.patch
-# Fix minimum RX size check for AEAD decryption.
-Patch1016: 1016-crypto-algif_aead-Fix-minimum-RX-size-check-for-decryption.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel

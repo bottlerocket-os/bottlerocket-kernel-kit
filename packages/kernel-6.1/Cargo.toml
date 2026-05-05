@@ -13,8 +13,8 @@ path = "../packages.rs"
 
 [[package.metadata.build-package.external-files]]
 # Use latest-kernel-srpm-url.sh to get this.
-url = "https://cdn.amazonlinux.com/al2023/blobstore/9a46bdc59783c89558f2e909f260f57637881f819cd56a6d6cedf55a146d3f06/kernel-6.1.166-197.305.amzn2023.src.rpm"
-sha512 = "78b129227507d2adeadb8b2f3feb128f24724115f04bc8f8bd46ddd6c93bf250b3b9385ebc01d302cd66c03d2ef9df76f060efee57525daf38aef3e502fefb78"
+url = "https://cdn.amazonlinux.com/al2023/blobstore/35ad091d02de3b2f76b41beb79aaf6048d2240d4f5b26a101017cf89540ae479/kernel-6.1.168-203.330.amzn2023.src.rpm"
+sha512 = "f614647932c59028cdbd0f8fbaedc5b94ebcf34b58646503dfa0d502db65a1059b7e4f9b399757ea220b9c6730c1e9d414847925686d1d045caae43aed57c922"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
