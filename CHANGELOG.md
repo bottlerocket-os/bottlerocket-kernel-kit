@@ -1,3 +1,13 @@
+# v5.5.0 (TBD)
+
+## OS Changes
+* Backport patch to prevent a race in neighbor resolution for RDMA workloads ([#427])
+* Provide inactive nvidia-imex systemd service ([#428])
+* Provide NVIDIA modprobe override to create a default IMEX channel ([#428])
+
+[#427]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/427
+[#428]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/428
+
 # v5.4.2 (2026-05-05)
 
 ## OS Changes
