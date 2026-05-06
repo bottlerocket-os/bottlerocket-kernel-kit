@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-k33iswugohtq"
+title = "kernel CVE-2026-31451"
+cve = "CVE-2026-31451"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: ext4: replace BUG_ON with proper error handling in ext4_read_inline_folio"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.80"
+patched-epoch = "0"
+
+[updateinfo]
+author = "kssessio"
+issue-date = 2026-05-06T00:49:38Z
+arches = ["aarch64", "x86_64"]
+version = "5.4.2"
