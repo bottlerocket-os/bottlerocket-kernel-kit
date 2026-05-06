@@ -61,6 +61,9 @@ Source211: grid-license-check.timer
 Source212: open-gpu-license-fallback.service
 Source213: tesla-license-fallback.service
 Source214: grid-license-file-check.conf
+Source215: nvidia-imex.service
+Source216: nvidia-imex.cfg
+Source217: nvidia-imex-tmpfiles.conf
 
 # NVIDIA tesla conf files from 300 to 399
 Source300: nvidia-tesla-tmpfiles.conf
@@ -503,6 +506,12 @@ install -p -m 0755 usr/bin/nvidia-imex-ctl %{buildroot}%{_cross_bindir}
 
 popd
 
+# NVIDIA IMEX service, config, and tmpfiles
+install -p -m 0644 %{S:215} %{buildroot}%{_cross_unitdir}
+install -d %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/nvidia-imex
+install -p -m 0644 %{S:216} %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/nvidia-imex/config.cfg
+install -p -m 0644 %{S:217} %{buildroot}%{_cross_tmpfilesdir}/nvidia-imex.conf
+
 %files
 %{_cross_attribution_file}
 %dir %{_cross_libexecdir}/nvidia
@@ -786,6 +795,9 @@ popd
 %files imex
 %{_cross_bindir}/nvidia-imex
 %{_cross_bindir}/nvidia-imex-ctl
+%{_cross_unitdir}/nvidia-imex.service
+%{_cross_factorydir}/etc/nvidia-imex/config.cfg
+%{_cross_tmpfilesdir}/nvidia-imex.conf
 
 %files mps
 %{_cross_bindir}/nvidia-cuda-mps-control
