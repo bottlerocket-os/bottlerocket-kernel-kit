@@ -64,6 +64,7 @@ Source214: grid-license-file-check.conf
 Source215: nvidia-imex.service
 Source216: nvidia-imex.cfg
 Source217: nvidia-imex-tmpfiles.conf
+Source218: nvidia-imex-default-channel.conf
 
 # NVIDIA tesla conf files from 300 to 399
 Source300: nvidia-tesla-tmpfiles.conf
@@ -113,6 +114,13 @@ Summary: NVIDIA IMEX config and service files
 Requires: %{name}
 
 %description imex
+%{summary}.
+
+%package imex-config
+Summary: NVIDIA IMEX modprobe configuration
+Requires: %{name}-imex
+
+%description imex-config
 %{summary}.
 
 %package open-gpu
@@ -512,6 +520,10 @@ install -d %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/nvidia-imex
 install -p -m 0644 %{S:216} %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/nvidia-imex/config.cfg
 install -p -m 0644 %{S:217} %{buildroot}%{_cross_tmpfilesdir}/nvidia-imex.conf
 
+# NVIDIA IMEX modprobe config
+install -d %{buildroot}%{_cross_libdir}/modprobe.d
+install -p -m 0644 %{S:218} %{buildroot}%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
+
 %files
 %{_cross_attribution_file}
 %dir %{_cross_libexecdir}/nvidia
@@ -798,6 +810,9 @@ install -p -m 0644 %{S:217} %{buildroot}%{_cross_tmpfilesdir}/nvidia-imex.conf
 %{_cross_unitdir}/nvidia-imex.service
 %{_cross_factorydir}/etc/nvidia-imex/config.cfg
 %{_cross_tmpfilesdir}/nvidia-imex.conf
+
+%files imex-config
+%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
 
 %files mps
 %{_cross_bindir}/nvidia-cuda-mps-control
