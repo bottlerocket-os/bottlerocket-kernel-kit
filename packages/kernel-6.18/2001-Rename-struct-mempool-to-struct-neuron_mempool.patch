@@ -1,0 +1,119 @@
+From 199a6ba1eb72d6a14ad09710e40b933945be4b80 Mon Sep 17 00:00:00 2001
+From: "Patrick J.P. Culp" <jpculp@amazon.com>
+Date: Fri, 8 May 2026 23:21:26 +0000
+Subject: [PATCH] Rename struct mempool to struct neuron_mempool
+
+Avoid conflict with the kernel's struct mempool defined in
+linux/mempool.h, which collides with the neuron driver's own
+struct mempool on kernel 6.18.
+
+Signed-off-by: Patrick J.P. Culp <jpculp@amazon.com>
+---
+ neuron_mempool.c | 14 +++++++-------
+ neuron_mempool.h |  8 ++++----
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/neuron_mempool.c b/neuron_mempool.c
+index 20e4436..b892348 100644
+--- a/neuron_mempool.c
++++ b/neuron_mempool.c
+@@ -133,7 +133,7 @@ static void mc_remove_node(struct rb_root *root, struct mem_chunk *mc)
+  * Return: 0 if pool is created, a negative error code otherwise.
+  */
+ 
+-static int mp_init_device_mem(struct mempool *mp, struct mempool_set *mpset,
++static int mp_init_device_mem(struct neuron_mempool *mp, struct mempool_set *mpset,
+ 			      u64 start_addr, size_t pool_size,	u32 dram_channel, u32 dram_region)
+ {
+ 	int ret;
+@@ -205,7 +205,7 @@ static int mp_init_device_mem(struct mempool *mp, struct mempool_set *mpset,
+  * Frees all backing pages allocated for reserved host_mem pool.
+  * Does opposite work of mp_init_hrm_pool
+  */
+-static void mp_destroy_hrm_pool(struct mempool *mp)
++static void mp_destroy_hrm_pool(struct neuron_mempool *mp)
+ {
+ 	int i = 0;
+ 	if (mp->page_va_array == NULL)
+@@ -238,7 +238,7 @@ static void mp_destroy_hrm_pool(struct mempool *mp)
+  *
+  * Return: 0 if pool is created, a negative error code otherwise.
+  */
+-static int mp_init_hrm_pool(struct mempool *mp, struct mempool_set *mpset,
++static int mp_init_hrm_pool(struct neuron_mempool *mp, struct mempool_set *mpset,
+ 			    u32 page_size, u32 page_count)
+ {
+ 	int ret;
+@@ -299,7 +299,7 @@ fail:
+ /**
+  * Frees all the chunks associated with the mempool and releases the mempool.
+  */
+-static void mp_destroy_gen_pool(struct mempool *mp)
++static void mp_destroy_gen_pool(struct neuron_mempool *mp)
+ {
+ 	BUG_ON(mp == NULL);
+ 	if (!mp->initialized)
+@@ -562,7 +562,7 @@ void mpset_free_expired_mc(struct mempool_set *mpset, enum mc_lifespan lifespan)
+ 	mpset_free_lifespan_list(head, next_head);
+ }
+ 
+-static inline u64 get_offset_for_scratchpad_alloc(const struct mempool *mp, u64 alloc_size)
++static inline u64 get_offset_for_scratchpad_alloc(const struct neuron_mempool *mp, u64 alloc_size)
+ {
+ 	/*
+ 	Contiguous scratchpad grows backwards from the end of the main genpool
+@@ -581,7 +581,7 @@ static int mc_alloc_internal(struct neuron_device *nd, enum mc_lifespan lifespan
+ 	     struct mem_chunk **result)
+ {
+ 	struct mem_chunk *mc;
+-	struct mempool *mp = NULL;
++	struct neuron_mempool *mp = NULL;
+ 	struct mempool_set *mpset = &nd->mpset;
+ 	struct gen_pool *pool = NULL;
+ 	struct gen_pool *alt_pool = NULL;
+@@ -845,7 +845,7 @@ void mc_free(struct mem_chunk **mcp)
+ 		mpset->host_mem_size -= mc->size;
+ 		nsysfsmetric_dec_counter(mpset->nd, NON_NDS_METRIC, NON_NDS_COUNTER_HOST_MEM, mc->nc_id, mc->size, false);
+ 	} else if (mc->mem_location == MEM_LOC_DEVICE) {
+-		struct mempool *mp;
++		struct neuron_mempool *mp;
+ 		mp = &mpset->mp_device[mc->dram_channel][mc->dram_region];
+ 		gen_pool_free(mc->gen_pool, (u64)mc->va, mc->size);
+ 		mp->allocated_size -= mc->size;
+diff --git a/neuron_mempool.h b/neuron_mempool.h
+index 2ad7aa9..23be9da 100644
+--- a/neuron_mempool.h
++++ b/neuron_mempool.h
+@@ -39,7 +39,7 @@ enum mem_location {
+  * Device is memory is split in to chunks and allocated.
+  * Uses genpool allocator in the backend.
+  */
+-struct mempool {
++struct neuron_mempool {
+ 	char name[32]; // friendly name
+ 	bool initialized; // True if initialized.
+ 
+@@ -82,9 +82,9 @@ struct mempool_set {
+ 
+ 	u32 mp_device_num_regions; // number of regions in the device pool
+ 	u32 num_channels; // number of regions in the device pool
+-	struct mempool mp_device[MAX_DRAM_CHANNELS][MAX_DDR_REGIONS]; // device memory pools
++	struct neuron_mempool mp_device[MAX_DRAM_CHANNELS][MAX_DDR_REGIONS]; // device memory pools
+ 
+-	struct mempool mp_hrm[MP_HOST_RESERVE_MEMORY_POOL_COUNT]; // host reserve memory pools
++	struct neuron_mempool mp_hrm[MP_HOST_RESERVE_MEMORY_POOL_COUNT]; // host reserve memory pools
+ 
+ 	// linked list head to store mem_chunk of different lifespan
+ 	struct list_head mc_lifespan_local_head;
+@@ -127,7 +127,7 @@ struct mem_chunk {
+ 
+ 	u64 size; // chunk size
+ 
+-	struct mempool *mp; // backpointer to mp
++	struct neuron_mempool *mp; // backpointer to mp
+ 	struct mempool_set *mpset; // back pointer to mpset
+ 	struct gen_pool *gen_pool; // pointer to genpool
+ 
+-- 
+2.50.1
+
