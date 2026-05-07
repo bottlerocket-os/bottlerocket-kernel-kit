@@ -1,8 +1,8 @@
 %global tesla_major 580
-%global tesla_minor 126
-%global tesla_patch 09
+%global tesla_minor 159
+%global tesla_patch 03
 %global tesla_ver %{tesla_major}.%{tesla_minor}.%{tesla_patch}
-%global grid_ver grid-19.4
+%global grid_ver grid-19.5
 %if "%{?_cross_arch}" == "aarch64"
 %global nvidia_arch sbsa
 %else
@@ -36,8 +36,8 @@ Source4: COPYING
 Source5: NvidiaGridAWSUserLicenseAgreement.DOCX
 
 # fabricmanager for NVSwitch
-Source10: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-fabricmanager-%{tesla_ver}-1.x86_64.rpm
-Source11: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-fabricmanager-%{tesla_ver}-1.aarch64.rpm
+Source10: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.x86_64.rpm
+Source11: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.aarch64.rpm
 
 # Common NVIDIA conf files from 200 to 299
 Source200: nvidia-tmpfiles.conf.in
@@ -159,7 +159,7 @@ popd
 # Extract fabricmanager from the rpm via cpio rather than `%%setup` since the
 # correct source is architecture-dependent.
 mkdir fabricmanager-linux-%{nvidia_arch}-%{tesla_ver}-archive
-rpm2cpio %{_sourcedir}/nvidia-fabricmanager-%{tesla_ver}-1.%{_cross_arch}.rpm | cpio -idmV -D fabricmanager-linux-%{nvidia_arch}-%{tesla_ver}-archive
+rpm2cpio %{_sourcedir}/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.%{_cross_arch}.rpm | cpio -idmV -D fabricmanager-linux-%{nvidia_arch}-%{tesla_ver}-archive
 
 # Add the license.
 install -p -m 0644 %{S:3} %{S:4} %{S:5} .
@@ -706,9 +706,9 @@ popd
 %exclude %{_cross_libdir}/nvidia/tesla/libnvidia-egl-gbm.so.1.1.3
 %exclude %{_cross_libdir}/nvidia/tesla/libnvidia-egl-wayland.so.1.1.20
 %exclude %{_cross_libdir}/nvidia/tesla/libnvidia-egl-xcb.so.1
-%exclude %{_cross_libdir}/nvidia/tesla/libnvidia-egl-xcb.so.1.0.4
+%exclude %{_cross_libdir}/nvidia/tesla/libnvidia-egl-xcb.so.1.0.5
 %exclude %{_cross_libdir}/nvidia/tesla/libnvidia-egl-xlib.so.1
-%exclude %{_cross_libdir}/nvidia/tesla/libnvidia-egl-xlib.so.1.0.4
+%exclude %{_cross_libdir}/nvidia/tesla/libnvidia-egl-xlib.so.1.0.5
 %exclude %{_cross_libdir}/nvidia/tesla/libnvidia-sandboxutils.so.1
 %exclude %{_cross_libdir}/nvidia/tesla/libnvidia-sandboxutils.so.%{tesla_ver}
 %if "%{_cross_arch}" == "x86_64"
