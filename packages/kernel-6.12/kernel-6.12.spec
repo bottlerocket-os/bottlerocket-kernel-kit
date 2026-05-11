@@ -4,13 +4,13 @@
 %global kmajor 6.12
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.12.80
+Version: 6.12.83
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/1e72b072f6dee49adeea116ed9605657d25421dfcb905ae92b93c1affe491468/kernel6.12-6.12.80-106.156.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/2ee4c390ec122cf4eb359262d0e8d4f371f8eeabb67951f52c88c668c9cffc1f/kernel6.12-6.12.83-113.160.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 # Use latest-2.24-neuron-srpm-url.sh to get this.
 Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
