@@ -1,12 +1,20 @@
-# v5.5.0 (TBD)
+# v5.5.0 (2026-05-11)
 
 ## OS Changes
-* Backport patch to prevent a race in neighbor resolution for RDMA workloads ([#427])
 * Provide inactive nvidia-imex systemd service ([#428])
 * Provide NVIDIA modprobe override to create a default IMEX channel ([#428])
+* Update r580 NVIDIA driver to 580.159.03 ([#429])
+* Add Neuron driver 2.x.7372.0, 2.x.7693.0, 2.x.8072.0, and 2.x.8689.0 to kernel-6.18 ([#430])
+* Update kernel from 6.1.168-203.330 to 6.1.170-210.320 ([#432])
+* Update kernel from 6.12.80-106.156 to 6.12.83-113.160 ([#431])
+* Update kernel from 6.18.20-41.237 to 6.18.25-55.108 ([#433])
 
-[#427]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/427
 [#428]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/428
+[#429]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/429
+[#430]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/430
+[#431]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/431
+[#432]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/432
+[#433]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/433
 
 # v5.4.2 (2026-05-05)
 
