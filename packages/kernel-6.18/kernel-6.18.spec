@@ -6,13 +6,13 @@
 %global host_arch %(uname -m)
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.18.20
+Version: 6.18.25
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/f25d60a7c68c07a9cbbc32fb8d6a52c38abc01b31d707e84d8d80664a4a120aa/kernel6.18-6.18.20-41.237.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/4e330748d7ddde678d5cf13b7c32a6b3c744e87564a5257713500cc41e9d7b6c/kernel6.18-6.18.25-55.108.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 # Use latest-2.24-neuron-srpm-url.sh to get this.
 Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
@@ -64,8 +64,6 @@ Patch1004: 1004-af_unix-increase-default-max_dgram_qlen-to-512.patch
 Patch1005: 1005-drm-simpledrm-Select-prerequisites-for-gpu-drivers.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1006: 1006-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
-# Fix race condition reading zero MAC in IB neighbor resolution.
-Patch1007: 1007-IB-core-Fix-zero-dmac-race-in-neighbor-resolution.patch
 
 # Neuron driver patches for kernel 6.18 compatibility.
 Patch2001: 2001-Rename-struct-mempool-to-struct-neuron_mempool.patch
@@ -747,6 +745,9 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %endif
 
 %{_cross_kmoddir}/kernel/drivers/hid/hid-generic.%{_ko}
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/hid/hid-hyperv.%{_ko}
+%endif
 %{_cross_kmoddir}/kernel/drivers/hid/hid-multitouch.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/hid/uhid.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/hid/usbhid/usbhid.%{_ko}
@@ -756,6 +757,10 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/drivers/hwmon/k10temp.%{_ko}
 %endif
 %{_cross_kmoddir}/kernel/drivers/hwmon/hwmon.%{_ko}
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/hv/hv_balloon.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/hv/hv_utils.%{_ko}
+%endif
 %{_cross_kmoddir}/kernel/drivers/i2c/algos/i2c-algo-bit.%{_ko}
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-i801.%{_ko}
@@ -781,6 +786,7 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/drivers/input/misc/uinput.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/input/mousedev.%{_ko}
 %if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/input/serio/hyperv-keyboard.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/input/serio/i8042.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/input/serio/libps2.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/input/serio/serio.%{_ko}
@@ -849,6 +855,9 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/realtek/r8169.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/geneve.%{_ko}
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/net/hyperv/hv_netvsc.%{_ko}
+%endif
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/ixgbe/ixgbe.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libeth/libeth.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libie/libie.%{_ko}
@@ -897,6 +906,9 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %endif
 %{_cross_kmoddir}/kernel/drivers/nvme/host/nvme-fabrics.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/nvme/host/nvme-tcp.%{_ko}
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/pci/controller/pci-hyperv-intf.%{_ko}
+%endif
 %{_cross_kmoddir}/kernel/drivers/pci/hotplug/acpiphp_ibm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/pci/pci-stub.%{_ko}
 %if "%{_cross_arch}" == "x86_64"
@@ -927,6 +939,9 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %endif
 %{_cross_kmoddir}/kernel/drivers/tty/serial/8250/8250_exar.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/uio/uio_dmem_genirq.%{_ko}
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/uio/uio_hv_generic.%{_ko}
+%endif
 %{_cross_kmoddir}/kernel/drivers/uio/uio.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/uio/uio_pci_generic.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/uio/uio_pdrv_genirq.%{_ko}
@@ -989,6 +1004,9 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %endif
 
 %{_cross_kmoddir}/kernel/drivers/scsi/scsi_transport_sas.%{_ko}
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/drivers/scsi/hv_storvsc.%{_ko}
+%endif
 %{_cross_kmoddir}/kernel/drivers/scsi/iscsi_boot_sysfs.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/scsi/iscsi_tcp.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/scsi/libiscsi.%{_ko}
@@ -1148,6 +1166,10 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_snat.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_stp.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_vlan.%{_ko}
+%{_cross_kmoddir}/kernel/net/bridge/netfilter/ebtable_broute.%{_ko}
+%{_cross_kmoddir}/kernel/net/bridge/netfilter/ebtable_filter.%{_ko}
+%{_cross_kmoddir}/kernel/net/bridge/netfilter/ebtable_nat.%{_ko}
+%{_cross_kmoddir}/kernel/net/bridge/netfilter/ebtables.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/nft_reject_bridge.%{_ko}
 %{_cross_kmoddir}/kernel/net/ceph/libceph.%{_ko}
 %{_cross_kmoddir}/kernel/net/core/failover.%{_ko}
@@ -1167,6 +1189,8 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/net/ipv4/ip_vti.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/ipcomp.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/ipip.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv4/netfilter/arp_tables.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv4/netfilter/arptable_filter.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/arpt_mangle.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_ah.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_ECN.%{_ko}
@@ -1184,6 +1208,7 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nft_dup_ipv4.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nft_fib_ipv4.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nft_reject_ipv4.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv4/netfilter/iptable_nat.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/raw_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_bbr.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_bic.%{_ko}
@@ -1233,6 +1258,8 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nft_dup_ipv6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nft_fib_ipv6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nft_reject_ipv6.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6table_nat.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6table_security.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/sit.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/tunnel6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/xfrm6_tunnel.%{_ko}
@@ -1405,6 +1432,7 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/net/netfilter/xt_TCPMSS.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_TCPOPTSTRIP.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_TEE.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_TRACE.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_time.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_TPROXY.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_u32.%{_ko}
@@ -1473,6 +1501,9 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/net/sunrpc/sunrpc.%{_ko}
 %{_cross_kmoddir}/kernel/net/tls/tls.%{_ko}
 %{_cross_kmoddir}/kernel/net/unix/unix_diag.%{_ko}
+%if "%{_cross_arch}" == "x86_64"
+%{_cross_kmoddir}/kernel/net/vmw_vsock/hv_sock.%{_ko}
+%endif
 %{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_virtio_transport_common.%{_ko}
 %{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_virtio_transport.%{_ko}
 %{_cross_kmoddir}/kernel/net/vmw_vsock/vsock_diag.%{_ko}
