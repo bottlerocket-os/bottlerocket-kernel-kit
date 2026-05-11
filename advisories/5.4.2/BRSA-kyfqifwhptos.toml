@@ -1,0 +1,16 @@
+[advisory]
+id = "BRSA-kyfqifwhptos"
+title = "Bottlerocket Kernel 6.1 Updates"
+severity = "high"
+description = "Kernel version 6.1.168 is now available with important fixes. All users must upgrade. Advisory information for kernel is often published after new kernels become available. Bottlerocket recommends that you consume the latest kernel release for your LTS version."
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.168"
+patched-epoch = "0"
+
+[updateinfo]
+author = "kssessio"
+issue-date = 2026-05-06T00:49:38Z
+arches = ["aarch64", "x86_64"]
+version = "5.4.2"

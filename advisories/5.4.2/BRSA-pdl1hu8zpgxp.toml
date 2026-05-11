@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-pdl1hu8zpgxp"
+title = "kernel CVE-2026-23207"
+cve = "CVE-2026-23207"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: spi: tegra210-quad: Protect curr_xfer check in IRQ handler"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.80"
+patched-epoch = "0"
+
+[updateinfo]
+author = "kssessio"
+issue-date = 2026-05-06T00:49:38Z
+arches = ["x86_64", "aarch64"]
+version = "5.4.2"

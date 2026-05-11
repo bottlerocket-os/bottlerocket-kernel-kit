@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-zppq7gahg44y"
+title = "kernel CVE-2026-31492"
+cve = "CVE-2026-31492"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: RDMA/irdma: Initialize free_qp completion before using it"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.80"
+patched-epoch = "0"
+
+[updateinfo]
+author = "kssessio"
+issue-date = 2026-05-06T00:49:38Z
+arches = ["aarch64", "x86_64"]
+version = "5.4.2"

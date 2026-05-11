@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-jncvirdg6oo5"
+title = "kernel CVE-2026-31455"
+cve = "CVE-2026-31455"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: xfs: stop reclaim before pushing AIL during unmount"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.80"
+patched-epoch = "0"
+
+[updateinfo]
+author = "kssessio"
+issue-date = 2026-05-06T00:49:38Z
+arches = ["x86_64", "aarch64"]
+version = "5.4.2"

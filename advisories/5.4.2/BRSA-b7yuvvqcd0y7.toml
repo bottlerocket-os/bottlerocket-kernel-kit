@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-b7yuvvqcd0y7"
+title = "kernel CVE-2026-31426"
+cve = "CVE-2026-31426"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: ACPI: EC: clean up handlers on probe failure in acpi_ec_setup()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.80"
+patched-epoch = "0"
+
+[updateinfo]
+author = "kssessio"
+issue-date = 2026-05-06T00:49:38Z
+arches = ["aarch64", "x86_64"]
+version = "5.4.2"
