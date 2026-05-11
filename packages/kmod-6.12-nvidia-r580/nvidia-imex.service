@@ -1,0 +1,11 @@
+[Unit]
+Description=NVIDIA IMEX service
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/nvidia-imex -c /etc/nvidia-imex/config.cfg
+StandardOutput=journal
+StandardError=journal
+LimitCORE=infinity
