@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-wvbenfkzmsgy"
+title = "kernel CVE-2026-46300"
+cve = "CVE-2026-46300"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: net: skbuff: propagate shared-frag marker through pskb_copy()"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.170"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.83"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.25"
+patched-epoch = "0"
+
+[updateinfo]
+author = "agarrcia"
+issue-date = 2026-05-16T02:32:35Z
+arches = ["x86_64", "aarch64"]
+version = "5.5.1"
