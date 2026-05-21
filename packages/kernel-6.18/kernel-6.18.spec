@@ -1117,6 +1117,7 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/fs/quota/quota_v2.%{_ko}
 %{_cross_kmoddir}/kernel/fs/smb/client/cifs.%{_ko}
 %{_cross_kmoddir}/kernel/fs/smb/common/cifs_md4.%{_ko}
+%{_cross_kmoddir}/kernel/fs/squashfs/squashfs.%{_ko}
 %{_cross_kmoddir}/kernel/fs/udf/udf.%{_ko}
 %{_cross_kmoddir}/kernel/kernel/bpf/preload/bpf_preload.%{_ko}
 %{_cross_kmoddir}/kernel/kernel/kheaders.%{_ko}
