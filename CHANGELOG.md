@@ -1,3 +1,11 @@
+# v5.6.0(2026-05-26)
+
+## Build Changes
+
+* Update the Bottlerocket SDK to `v0.74.0` ([#441])
+
+[#441]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/441
+
 # v5.5.2 (2026-05-26)
 
 ## OS Changes
