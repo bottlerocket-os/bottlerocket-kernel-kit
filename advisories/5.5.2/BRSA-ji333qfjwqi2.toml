@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-ji333qfjwqi2"
+title = "kernel CVE-2026-31449"
+cve = "CVE-2026-31449"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: ext4: validate p_idx bounds in ext4_ext_correct_indexes"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.172"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jweiw"
+issue-date = 2026-05-26T22:59:04Z
+arches = ["aarch64", "x86_64"]
+version = "5.5.2"
