@@ -6,13 +6,13 @@
 %global host_arch %(uname -m)
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.18.25
+Version: 6.18.30
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/272f520461eeb7b66e4240303b425b5d653778f2df6389403f0273ab5e8defc6/kernel6.18-6.18.25-57.109.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/f82452e4fddb3f26f08c0c3c3e731306f5f0baf2001fd7ac78f7b25d9689f528/kernel6.18-6.18.30-61.116.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 # Use latest-2.24-neuron-srpm-url.sh to get this.
 Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
