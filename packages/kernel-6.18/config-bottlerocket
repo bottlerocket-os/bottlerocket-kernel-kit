@@ -142,7 +142,6 @@ CONFIG_ZRAM_DEF_COMP_LZ4=y
 
 # Add virtio drivers for development setups running as guests in qemu
 CONFIG_VIRTIO_CONSOLE=m
-CONFIG_HW_RANDOM_VIRTIO=m
 
 # Add support for IPMI drivers
 CONFIG_IPMI_HANDLER=m
@@ -262,3 +261,18 @@ CONFIG_CEPH_FS_SECURITY_LABEL=y
 # Disable ext4/jbd2 debug options for production (reduces latency overhead)
 # CONFIG_EXT4_DEBUG is not set
 # CONFIG_JBD2_DEBUG is not set
+
+# Nitro Security Module for AWS Nitro Enclaves
+CONFIG_NSM=y
+
+# Firecracker virtio/networking built-in (not modules)
+CONFIG_VIRTIO_MMIO=y
+CONFIG_VIRTIO_NET=y
+CONFIG_VIRTIO_BALLOON=y
+CONFIG_VIRTIO_VSOCKETS=y
+CONFIG_HW_RANDOM_VIRTIO=y
+CONFIG_PTP_1588_CLOCK_KVM=y
+
+# Dependencies for VIRTIO_VSOCKETS and HW_RANDOM_VIRTIO built-in
+CONFIG_VSOCKETS=y
+CONFIG_HW_RANDOM=y

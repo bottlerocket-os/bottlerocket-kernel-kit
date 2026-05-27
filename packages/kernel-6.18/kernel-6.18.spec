@@ -682,8 +682,7 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/drivers/char/hangcheck-timer.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/char/nvram.%{_ko}
 %endif
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/rng-core.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/virtio-rng.%{_ko}
+
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/drivers/char/hw_random/amd-rng.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/char/hw_random/intel-rng.%{_ko}
@@ -840,7 +839,6 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/drivers/misc/vmw_balloon.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/misc/vmw_vmci/vmw_vmci.%{_ko}
 %endif
-%{_cross_kmoddir}/kernel/drivers/misc/nsm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/bonding/bonding.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/dummy.%{_ko}
 
@@ -872,7 +870,6 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/drivers/net/mdio/acpi_mdio.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/mdio/fwnode_mdio.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/netdevsim/netdevsim.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/net_failover.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/nlmon.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/phy/fixed_phy.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/phy/libphy.%{_ko}
@@ -896,7 +893,6 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/drivers/net/team/team_mode_roundrobin.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/tun.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/veth.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/virtio_net.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/vmxnet3/vmxnet3.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/vrf.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/vxlan/vxlan.%{_ko}
@@ -922,7 +918,6 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %endif
 %{_cross_kmoddir}/kernel/drivers/pps/clients/pps-gpio.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/pps/clients/pps-ldisc.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/ptp/ptp_kvm.%{_ko}
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/drivers/ras/amd/atl/amd_atl.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/ras/amd/fmpm.%{_ko}
@@ -984,8 +979,6 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %if "%{_cross_arch}" == "aarch64"
 %{_cross_kmoddir}/kernel/drivers/virt/nitro_enclaves/nitro_enclaves.%{_ko}
 %endif
-%{_cross_kmoddir}/kernel/drivers/virtio/virtio_balloon.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/virtio/virtio_mmio.%{_ko}
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/drivers/virtio/virtio_mem.%{_ko}
 %endif
@@ -1172,7 +1165,6 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebtables.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/nft_reject_bridge.%{_ko}
 %{_cross_kmoddir}/kernel/net/ceph/libceph.%{_ko}
-%{_cross_kmoddir}/kernel/net/core/failover.%{_ko}
 %{_cross_kmoddir}/kernel/net/core/selftests.%{_ko}
 %{_cross_kmoddir}/kernel/net/dns_resolver/dns_resolver.%{_ko}
 %{_cross_kmoddir}/kernel/net/ife/ife.%{_ko}
@@ -1504,10 +1496,7 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/net/vmw_vsock/hv_sock.%{_ko}
 %endif
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_virtio_transport_common.%{_ko}
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_virtio_transport.%{_ko}
 %{_cross_kmoddir}/kernel/net/vmw_vsock/vsock_diag.%{_ko}
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vsock.%{_ko}
 %{_cross_kmoddir}/kernel/net/vmw_vsock/vsock_loopback.%{_ko}
 %if "%{_cross_arch}" == "x86_64"
 %{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_vmci_transport.%{_ko}
