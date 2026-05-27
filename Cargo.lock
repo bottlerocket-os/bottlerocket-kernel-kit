@@ -14,6 +14,7 @@ dependencies = [
  "kmod-6_1-nvidia-r580",
  "kmod-6_12-amdgpu",
  "kmod-6_12-efa",
+ "kmod-6_12-neuron",
  "kmod-6_12-nvidia-r580",
  "kmod-6_18-efa",
  "kmod-6_18-neuron",
@@ -74,6 +75,13 @@ dependencies = [
 
 [[package]]
 name = "kmod-6_12-efa"
+version = "0.1.0"
+dependencies = [
+ "kernel-6_12",
+]
+
+[[package]]
+name = "kmod-6_12-neuron"
 version = "0.1.0"
 dependencies = [
  "kernel-6_12",
