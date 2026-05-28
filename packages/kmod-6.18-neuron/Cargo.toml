@@ -41,5 +41,15 @@ sha512 = "d96bd0fe73482684c97faae6f779bfa8a84e9b9ca09f796031d409322550fb1744a38e
 url = "https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8689.0.noarch.rpm/5d3ce7f81858d5aae62279369bce72e041dd321f71146a4ab8e61f9230f3965323f9c9230547476614f1c334b84c59edbd892524e2a87c35b46960a044502e9f/aws-neuronx-dkms-2.x.8689.0.noarch.rpm"
 sha512 = "5d3ce7f81858d5aae62279369bce72e041dd321f71146a4ab8e61f9230f3965323f9c9230547476614f1c334b84c59edbd892524e2a87c35b46960a044502e9f"
 
+[[package.metadata.build-package.external-files]]
+# Neuron driver 2.x.8586.0
+url = "https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8586.0.noarch.rpm/0c5bf7f6ffd9d1ef3585aad48c8bb9a1f3f242e32af63755c3f914d9d000dc1f999b53ea90718dfbbfb8c3318ac80c0c90fc68a4962ea25ce4948183d62eb732/aws-neuronx-dkms-2.x.8586.0.noarch.rpm"
+sha512 = "0c5bf7f6ffd9d1ef3585aad48c8bb9a1f3f242e32af63755c3f914d9d000dc1f999b53ea90718dfbbfb8c3318ac80c0c90fc68a4962ea25ce4948183d62eb732"
+
+[[package.metadata.build-package.external-files]]
+# Neuron driver 2.x.8732.0
+url = "https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8732.0.noarch.rpm/089caa0289ff37219583a2fcb7f947520da0c130595ff2a5917a04eed3d6272064332deb48a4b401fa0385b5450cc5fc3195991ca59b42a321d5706641f435e5/aws-neuronx-dkms-2.x.8732.0.noarch.rpm"
+sha512 = "089caa0289ff37219583a2fcb7f947520da0c130595ff2a5917a04eed3d6272064332deb48a4b401fa0385b5450cc5fc3195991ca59b42a321d5706641f435e5"
+
 [build-dependencies]
 kernel-6_18 = { path = "../kernel-6.18" }
