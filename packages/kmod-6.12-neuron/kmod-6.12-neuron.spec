@@ -3,17 +3,18 @@
 %global _cross_kmoddir %{_cross_libdir}/modules/%{kmajor}
 %global _ko ko
 %global neuron_ver 2.26.10
+%global neuron_inf1_ver 2.24.13
 
 Name: %{_cross_os}kmod-6.12-neuron
 Version: %{neuron_ver}
 Release: 1%{?dist}
 Epoch: 1
-Summary: Modules for the Linux kernel with Neuron hardware
+Summary: Neuron drivers for the 6.12 kernel
 License: Apache-2.0 OR MIT
 URL: https://aws.amazon.com/ai/machine-learning/neuron/
 
 # Use latest-2.24-neuron-srpm-url.sh to get this.
-Source1: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
+Source1: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-%{neuron_inf1_ver}.0.noarch.rpm
 # Use latest-neuron-srpm-url.sh to get this.
 Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-%{neuron_ver}.0.noarch.rpm
 # Neuron driver 2.x.7372.0
@@ -43,7 +44,7 @@ Conflicts: %{_cross_os}variant-flavor(nvidia-fips)
 %{summary}.
 
 %package latest
-Summary: Modules for the Linux kernel with Neuron hardware
+Summary: Neuron %{version} driver
 License: MIT AND GPL-2.0-only AND (GPL-2.0-only OR BSD-2-Clause) AND (GPL-2.0 OR Linux-OpenIB) AND (((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause))
 Requires: %{name}
 
@@ -51,8 +52,8 @@ Requires: %{name}
 %{summary}.
 
 %package inf1
-Version: 2.24.13
-Summary: Modules for the Linux kernel with Neuron hardware (inf1)
+Version: %{neuron_inf1_ver}
+Summary: Neuron %{neuron_inf1_ver} driver
 License: MIT AND GPL-2.0-only AND (GPL-2.0-only OR BSD-2-Clause) AND (GPL-2.0 OR Linux-OpenIB) AND (((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause))
 Requires: %{name}
 
@@ -60,7 +61,7 @@ Requires: %{name}
 %{summary}.
 
 %package extras
-Summary: Extra Neuron driver modules for the Linux kernel
+Summary: Extra Neuron drivers
 License: MIT AND GPL-2.0-only AND (GPL-2.0-only OR BSD-2-Clause) AND (GPL-2.0 OR Linux-OpenIB) AND (((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause))
 Requires: %{name}
 
