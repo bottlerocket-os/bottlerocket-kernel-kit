@@ -1,3 +1,15 @@
+# v6.0.0 (2026-05-28)
+
+## OS Changes
+
+* Enable CONFIG_SQUASHFS=m for kernel-6.12 and kernel-6.18 ([#442])
+* Add Neuron drivers 2.x.8586.0 and 2.x.8732.0 to kernel-6.18 ([#452])
+* Provide Neuron drivers as distinct kmod packages ([#407])
+
+[#407]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/407
+[#442]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/442
+[#452]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/452
+
 # v5.6.0(2026-05-26)
 
 ## Build Changes
