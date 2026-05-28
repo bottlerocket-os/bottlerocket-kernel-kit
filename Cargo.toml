@@ -12,6 +12,7 @@ members = [
     "packages/kmod-6.12-efa",
     "packages/kmod-6.12-nvidia-r580",
     "packages/kmod-6.18-efa",
+    "packages/kmod-6.18-neuron",
     "packages/kmod-6.18-nvidia-r580",
     "packages/nvidia-migmanager",
     "packages/nvlsm",

@@ -22,6 +22,7 @@ kmod-6_12-amdgpu = { path = "../../packages/kmod-6.12-amdgpu" }
 kmod-6_12-efa = { path = "../../packages/kmod-6.12-efa" }
 kmod-6_12-nvidia-r580 = { path = "../../packages/kmod-6.12-nvidia-r580" }
 kmod-6_18-efa = { path = "../../packages/kmod-6.18-efa" }
+kmod-6_18-neuron = { path = "../../packages/kmod-6.18-neuron" }
 kmod-6_18-nvidia-r580 = { path = "../../packages/kmod-6.18-nvidia-r580" }
 nvidia-migmanager = { path = "../../packages/nvidia-migmanager" }
 nvlsm = { path = "../../packages/nvlsm" }

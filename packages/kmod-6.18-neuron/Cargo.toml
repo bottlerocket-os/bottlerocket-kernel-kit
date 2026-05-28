@@ -1,0 +1,45 @@
+[package]
+name = "kmod-6_18-neuron"
+version = "0.1.0"
+edition = "2021"
+publish = false
+build = "../build.rs"
+
+[package.metadata.build-package]
+package-name = "kmod-6.18-neuron"
+
+[lib]
+path = "../packages.rs"
+
+[[package.metadata.build-package.external-files]]
+# Use latest-2.24-neuron-srpm-url.sh to get this.
+url = "https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm"
+sha512 = "ba2234e3aa8f5fb15a36304d811043abbed27e79bbd34bf2e0789f2f9a72d8f4c25c701be56622fc1cfdb70966d70b6bfa9d5f77127e76eec382fd0c9477f4ed"
+
+[[package.metadata.build-package.external-files]]
+# Use latest-neuron-srpm-url.sh to get this.
+url = "https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.26.10.0.noarch.rpm"
+sha512 = "ee49ab3aa9f4273a91aef305f30ed213c90c46317e72cfe46dd1d0e7088f0758039f998589ffc1080523f0af8f3348f9db4fe763b6fe8a0fd7d3119546cb1936"
+
+[[package.metadata.build-package.external-files]]
+# Neuron driver 2.x.7372.0
+url = "https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.7372.0.noarch.rpm/e82516a77ab54f1c651a1f160e3a67b1cbca8bef391d78a6c683d6fc22442c8ee17df9d3fae1392ca8cffa676bb966b7088c32e634894ba142d83bef58dd2d81/aws-neuronx-dkms-2.x.7372.0.noarch.rpm"
+sha512 = "e82516a77ab54f1c651a1f160e3a67b1cbca8bef391d78a6c683d6fc22442c8ee17df9d3fae1392ca8cffa676bb966b7088c32e634894ba142d83bef58dd2d81"
+
+[[package.metadata.build-package.external-files]]
+# Neuron driver 2.x.7693.0
+url = "https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.7693.0.noarch.rpm/4411e3d28bc307bd096408f72f9c3d9e3edcadcbeab3ca409b0f94041ac1f589120353edfb1e11c45ff5a5421808297a308f18a6ac687459abe8c5e985653d3f/aws-neuronx-dkms-2.x.7693.0.noarch.rpm"
+sha512 = "4411e3d28bc307bd096408f72f9c3d9e3edcadcbeab3ca409b0f94041ac1f589120353edfb1e11c45ff5a5421808297a308f18a6ac687459abe8c5e985653d3f"
+
+[[package.metadata.build-package.external-files]]
+# Neuron driver 2.x.8072.0
+url = "https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8072.0.noarch.rpm/d96bd0fe73482684c97faae6f779bfa8a84e9b9ca09f796031d409322550fb1744a38e6c54f5fcc8c1221f051cf04f518694876ea825722f5ed7895c2e8bb22a/aws-neuronx-dkms-2.x.8072.0.noarch.rpm"
+sha512 = "d96bd0fe73482684c97faae6f779bfa8a84e9b9ca09f796031d409322550fb1744a38e6c54f5fcc8c1221f051cf04f518694876ea825722f5ed7895c2e8bb22a"
+
+[[package.metadata.build-package.external-files]]
+# Neuron driver 2.x.8689.0
+url = "https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8689.0.noarch.rpm/5d3ce7f81858d5aae62279369bce72e041dd321f71146a4ab8e61f9230f3965323f9c9230547476614f1c334b84c59edbd892524e2a87c35b46960a044502e9f/aws-neuronx-dkms-2.x.8689.0.noarch.rpm"
+sha512 = "5d3ce7f81858d5aae62279369bce72e041dd321f71146a4ab8e61f9230f3965323f9c9230547476614f1c334b84c59edbd892524e2a87c35b46960a044502e9f"
+
+[build-dependencies]
+kernel-6_18 = { path = "../kernel-6.18" }
