@@ -57,8 +57,8 @@ Requires: %{name}
 tar -xf %{_cross_datadir}/bottlerocket/kernel-devel.tar.xz
 
 rpmkeys --import %{S:3} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:1} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:2} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:1} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:2} --dbpath "${PWD}/rpmdb"
 rm -rf "${PWD}/rpmdb"
 
 rpm2cpio %{S:1} | cpio -idmu './usr/src/aws-neuronx-*'
