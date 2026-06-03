@@ -1,0 +1,12 @@
+[Unit]
+Description=GRID License Check Timer
+RefuseManualStart=true
+
+[Timer]
+Unit=grid-license-check.service
+OnBootSec=5s
+OnUnitActiveSec=2s
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
