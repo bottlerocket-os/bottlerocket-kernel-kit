@@ -1,0 +1,13 @@
+[Unit]
+Description=NVIDIA Grid Daemon
+Wants=systemd-resolved.service network-online.target nvidia-persistenced.service
+After=systemd-resolved.service network-online.target nvidia-persistenced.service
+
+[Service]
+Type=forking
+ExecCondition=/usr/bin/ghostdog match-nvidia-driver grid
+ExecStart=/usr/bin/nvidia-gridd
+ExecStopPost=/bin/rm -rf /var/run/nvidia-gridd
+
+[Install]
+WantedBy=preconfigured.target

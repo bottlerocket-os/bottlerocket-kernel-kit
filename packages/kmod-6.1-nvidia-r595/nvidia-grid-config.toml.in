@@ -1,0 +1,11 @@
+[nvidia-grid]
+lib-modules-path = "kernel/drivers/extra/video/nvidia/grid"
+
+[nvidia-grid.kernel-modules."nvidia.ko"]
+copy-source = "__NVIDIA_MODULES__"
+
+[nvidia-grid.kernel-modules."nvidia-modeset.ko"]
+copy-source = "__NVIDIA_MODULES__"
+
+[nvidia-grid.kernel-modules."nvidia-uvm.ko"]
+copy-source = "__NVIDIA_MODULES__"
