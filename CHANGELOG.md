@@ -1,3 +1,18 @@
+# v6.1.0 (2026-06-04)
+
+## OS Changes
+
+* Add kmod packages for NVIDIA r595 driver (version 595.71.05) for kernel-6.12 and kernel-6.18 ([#424])
+* Add kmod package for NVIDIA r595 driver (version 595.71.05) for kernel-6.1 ([#456])
+
+## Build Changes
+
+* Update Twoliter to `0.20.0` ([#450])
+
+[#424]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/424
+[#450]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/450
+[#456]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/456
+
 # v6.0.0 (2026-05-28)
 
 ## OS Changes
