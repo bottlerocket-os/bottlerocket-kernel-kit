@@ -6,13 +6,13 @@
 %global host_arch %(uname -m)
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.18.30
+Version: 6.18.33
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/f82452e4fddb3f26f08c0c3c3e731306f5f0baf2001fd7ac78f7b25d9689f528/kernel6.18-6.18.30-61.116.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/1a6ce3e0de662102df4139a8a3f620fb7c55e828df64b18be7e2b71a308cdd1b/kernel6.18-6.18.33-63.124.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
