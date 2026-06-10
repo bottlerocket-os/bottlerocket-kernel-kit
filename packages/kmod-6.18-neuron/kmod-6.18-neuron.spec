@@ -79,14 +79,14 @@ Requires: %{name}
 
 %prep
 rpmkeys --import %{S:9} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:1} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:2} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:3} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:4} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:5} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:6} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:7} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:8} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:1} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:2} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:3} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:4} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:5} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:6} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:7} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:8} --dbpath "${PWD}/rpmdb"
 rm -rf "${PWD}/rpmdb"
 
 rpm2cpio %{S:1} | cpio -idmu './usr/src/aws-neuronx-*'
