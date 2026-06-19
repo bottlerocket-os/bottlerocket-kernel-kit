@@ -1,3 +1,18 @@
+# v6.2.0 (2026-06-19)
+
+## OS Changes
+
+* Normalize NVIDIA r580 library paths to `/usr/lib/` ([#425])
+* Default to RPM v4 package-verification for Neuron kmods ([#455])
+
+## Build Changes
+
+* Update the Bottlerocket SDK to `v0.76.0` ([#455], [#463])
+
+[#425]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/425
+[#455]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/455
+[#463]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/463
+
 # v6.1.1 (2026-06-08)
 
 ## OS Changes
