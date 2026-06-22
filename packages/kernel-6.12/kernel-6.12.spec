@@ -4,13 +4,13 @@
 %global kmajor 6.12
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.12.90
+Version: 6.12.92
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/80c5e4072633ede1db2cae84d790fcfd4951ffbe5576af05259257272aabfdd2/kernel6.12-6.12.90-120.164.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/61532583ce601e02a69b106e4a7dc7e477432b81428efa635a306bc00ef15980/kernel6.12-6.12.92-122.166.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
