@@ -2,13 +2,13 @@
 %global kmajor 6.1
 
 Name: %{_cross_os}kernel-6.1
-Version: 6.1.174
+Version: 6.1.175
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/11d1def15c2e72b0b20502857bc961d9bcbdd4d1f78d057a8f29e58349ff180f/kernel-6.1.174-217.345.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/960d7cfb400a16eb905f743c1a85d2cd1d2057ee68b9f1c48f83c12233d672fd/kernel-6.1.175-219.357.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
