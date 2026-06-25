@@ -1,3 +1,10 @@
+# v6.2.2 (2026-06-25)
+
+## OS Changes
+* Normalize NVIDIA r595 library paths to `/usr/lib/` ([#473])
+
+[#473]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/473
+
 # v6.2.1 (2026-06-22)
 
 ## OS Changes
