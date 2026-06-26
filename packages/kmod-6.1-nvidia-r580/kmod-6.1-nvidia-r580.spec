@@ -188,6 +188,8 @@ tar -xf %{_cross_datadir}/bottlerocket/kernel-devel.tar.xz
 # This recipe was based in the NVIDIA yum/dnf specs:
 # https://github.com/NVIDIA/yum-packaging-precompiled-kmod
 
+%build
+
 # Begin open driver build
 pushd NVIDIA-Linux-%{_cross_arch}-%{tesla_ver}/kernel-open
 
