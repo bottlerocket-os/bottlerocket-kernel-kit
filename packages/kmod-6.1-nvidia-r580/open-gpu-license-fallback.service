@@ -11,4 +11,4 @@ ExecStart=/usr/bin/systemctl stop grid-license-check.timer --no-block
 RemainAfterExit=true
 
 [Install]
-WantedBy=nvidia-k8s-device-plugin.service
+WantedBy=nvidia-gridd.service
