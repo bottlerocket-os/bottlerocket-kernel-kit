@@ -50,5 +50,9 @@ url = "https://raw.githubusercontent.com/NVIDIA/open-gpu-kernel-modules/580.159.
 sha512 = "f9cee68cbb12095af4b4e92d01c210461789ef41c70b64efefd6719d0b88468b7a67a3629c432d4d9304c730b5d1a942228a5bcc74a03ab1c411c77c758cd938"
 force-upstream = true
 
+[[package.metadata.build-package.external-files]]
+url = "https://github.com/NVIDIA/gdrcopy/archive/v2.6/gdrcopy-2.6.tar.gz"
+sha512 = "3653881de4380ecf85d26a93d9e4ce66679001c9901189707fb13cb98f2ff841eb6d67b63784d1e048db7f7c1975052f22fea0f7813233d96fded2bd39031342"
+
 [build-dependencies]
 kernel-6_1 = { path = "../kernel-6.1" }
