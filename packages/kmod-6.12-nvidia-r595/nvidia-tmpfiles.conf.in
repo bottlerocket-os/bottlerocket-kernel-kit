@@ -4,6 +4,10 @@ R __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/op
 d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/open-gpu 0755 root root - -
 R __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/grid - - - - -
 d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/grid 0755 root root - -
+R __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gdrcopy - - - - -
+d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gdrcopy 0755 root root - -
+d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gdrcopy/open-gpu 0755 root root - -
+d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gdrcopy/tesla 0755 root root - -
 C /etc/nvidia/fabricmanager.cfg - - - -
 C /etc/nvidia/fabricmanager.env - - - -
 C /etc/nvidia/gridd.conf - - - -
