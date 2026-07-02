@@ -1,3 +1,11 @@
+# v6.3.0 (2026-07-02)
+
+## OS Changes
+
+*  Add `gdrcopy` kernel module for nvidia open-source GPU drivers ([#462])
+
+[#462]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/462
+
 # v6.2.3 (2026-06-29)
 
 ## OS Changes
