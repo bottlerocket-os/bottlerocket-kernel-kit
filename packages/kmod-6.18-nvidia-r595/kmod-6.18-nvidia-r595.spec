@@ -3,6 +3,7 @@
 %global tesla_patch 05
 %global tesla_ver %{tesla_major}.%{tesla_minor}.%{tesla_patch}
 %global grid_ver grid-20.1
+%global gdrcopy_ver 2.6
 %if "%{?_cross_arch}" == "aarch64"
 %global nvidia_arch sbsa
 %else
@@ -80,6 +81,14 @@ Source503: load-open-gpu-kernel-modules.service.in
 Source504: copy-grid-kernel-modules.service.in
 Source505: load-grid-kernel-modules.service.in
 
+Source600: nvidia-gdrcopy-open-gpu-config.toml.in
+Source601: copy-gdrcopy-open-gpu-kernel-module.service.in
+Source602: load-gdrcopy-open-gpu-kernel-module.service.in
+Source603: nvidia-gdrcopy-tmpfiles.conf
+
+# GDRcopy
+Source700: https://github.com/NVIDIA/gdrcopy/archive/v%{gdrcopy_ver}/gdrcopy-%{gdrcopy_ver}.tar.gz
+
 Patch001: 0001-makefile-allow-to-use-any-kernel-arch.patch
 
 BuildRequires: %{_cross_os}kernel-6.18-devel
@@ -151,6 +160,16 @@ Summary: NVIDIA CUDA Multi-Process Service
 Requires: %{name}
 
 %description mps
+%{summary}.
+
+%package gdrcopy
+Summary: NVIDIA GDRCopy driver
+Version: %{gdrcopy_ver}
+License: MIT AND GPL-2.0-only
+Requires: %{_cross_os}variant-platform(aws)
+Requires: %{name}
+
+%description gdrcopy
 %{summary}.
 
 %prep
@@ -259,6 +278,24 @@ and .devid != "0x1EB4"
 and .devid != "0x2237")' supported-gpus.json | jq -s '{"open-gpu": .}' > open-gpu-supported-devices.json
 # confirm "NVIDIA H100" is in the resulting file to catch shape changes
 jq -e '."open-gpu"[] | select(."devid" == "0x2330") | ."features"| index("kernelopen")' open-gpu-supported-devices.json
+popd
+
+tar -xof %{S:700}
+pushd gdrcopy-%{gdrcopy_ver}/src/gdrdrv
+NVIDIA_SRC_DIR="%{_builddir}/NVIDIA-Linux-%{_cross_arch}-%{tesla_ver}/kernel-open/nvidia" \
+NVIDIA_IS_OPENSOURCE=y \
+HAVE_VM_FLAGS_SET=y \
+HAVE_PROC_OPS=y \
+make %{?_smp_mflags} \
+  -C %{kernel_sources} \
+  M="$PWD" \
+  ARCH=%{_cross_karch} \
+  CC=%{_cross_target}-gcc \
+  LD=%{_cross_target}-ld \
+  modules
+
+%{_cross_target}-strip -g --strip-unneeded gdrdrv.ko
+mv gdrdrv.ko ../../gdrdrv-open-gpu.ko
 popd
 
 %install
@@ -497,6 +534,26 @@ install -p -m 0755 usr/bin/nvidia-imex %{buildroot}%{_cross_bindir}
 install -p -m 0755 usr/bin/nvidia-imex-ctl %{buildroot}%{_cross_bindir}
 
 popd
+
+install -d %{buildroot}%{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers
+
+install -p -m 0644 gdrcopy-%{gdrcopy_ver}/gdrdrv-open-gpu.ko \
+  %{buildroot}%{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers/gdrdrv.ko
+
+install -p -m 0644 gdrcopy-%{gdrcopy_ver}/LICENSE gdrcopy-LICENSE
+
+sed -e 's|__NVIDIA_MODULES__|%{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers/|' %{S:600} > \
+  nvidia-gdrcopy-open-gpu.toml
+install -m 0644 nvidia-gdrcopy-open-gpu.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:601} > copy-gdrcopy-open-gpu-kernel-module.service
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:602} > load-gdrcopy-open-gpu-kernel-module.service
+install -p -m 0644 \
+  copy-gdrcopy-open-gpu-kernel-module.service \
+  load-gdrcopy-open-gpu-kernel-module.service \
+  %{buildroot}%{_cross_unitdir}
+
+install -p -m 0644 %{S:603} %{buildroot}%{_cross_tmpfilesdir}/nvidia-gdrcopy.conf
 
 %files
 %{_cross_attribution_file}
@@ -792,3 +849,15 @@ popd
 %{_cross_bindir}/nvidia-cuda-mps-server
 %{_cross_libexecdir}/nvidia/tesla/bin/nvidia-cuda-mps-control
 %{_cross_libexecdir}/nvidia/tesla/bin/nvidia-cuda-mps-server
+
+
+%files gdrcopy
+%license gdrcopy-LICENSE
+%dir %{_cross_datadir}/nvidia/gdrcopy
+%dir %{_cross_datadir}/nvidia/gdrcopy/open-gpu
+%dir %{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers
+%{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers/gdrdrv.ko
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-gdrcopy-open-gpu.toml
+%{_cross_tmpfilesdir}/nvidia-gdrcopy.conf
+%{_cross_unitdir}/copy-gdrcopy-open-gpu-kernel-module.service
+%{_cross_unitdir}/load-gdrcopy-open-gpu-kernel-module.service
