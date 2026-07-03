@@ -44,6 +44,9 @@ Patch1004: 1004-af_unix-increase-default-max_dgram_qlen-to-512.patch
 Patch1005: 1005-drm-simpledrm-Select-prerequisites-for-gpu-drivers.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1006: 1006-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
+# Fix undersized linear allocation in IPv* paged path
+Patch1007: 1007-ipv4-account-for-fraggap-on-the-paged-allocation-pat.patch
+Patch1008: 1008-ipv6-account-for-fraggap-on-the-paged-allocation-pat.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
