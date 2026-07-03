@@ -50,6 +50,9 @@ Patch1006: 1006-Select-prerequisites-for-gpu-drivers.patch
 Patch1007: 1007-strscpy-write-destination-buffer-only-once.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1008: 1008-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
+# Fix undersized linear allocation in IPv* paged path
+Patch1009: 1009-ipv6-account-for-fraggap-on-the-paged-allocation-pat.patch
+Patch1010: 1010-ipv4-account-for-fraggap-on-the-paged-allocation-pat.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
