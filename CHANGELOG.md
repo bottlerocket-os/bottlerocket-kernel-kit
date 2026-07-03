@@ -2,9 +2,11 @@
 
 ## OS Changes
 
-*  Add `gdrcopy` kernel module for nvidia open-source GPU drivers ([#462])
+* Add `gdrcopy` kernel module for nvidia open-source GPU drivers ([#462])
+* Backport patches to prevent undersized allocation in IPv* ([#481])
 
 [#462]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/462
+[#481]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/481
 
 # v6.2.3 (2026-06-29)
 
