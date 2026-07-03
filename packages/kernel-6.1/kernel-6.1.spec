@@ -48,6 +48,9 @@ Patch1005: 1005-Revert-Revert-drm-fb_helper-improve-CONFIG_FB-depend.patch
 Patch1006: 1006-strscpy-write-destination-buffer-only-once.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1007: 1007-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
+# Fix undersized linear allocation in IPv* paged path
+Patch1008: 1008-ipv4-account-for-fraggap-on-the-paged-allocation-pat.patch
+Patch1009: 1009-ipv6-account-for-fraggap-on-the-paged-allocation-pat.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel

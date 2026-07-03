@@ -1,0 +1,58 @@
+From 40d30498c8ea3e3495642f8cc5c263cb13d55b76 Mon Sep 17 00:00:00 2001
+From: Wongi Lee <qw3rtyp0@gmail.com>
+Date: Tue, 16 Jun 2026 22:38:29 +0900
+Subject: [PATCH] ipv4: account for fraggap on the paged allocation path
+
+In __ip_append_data(), when the paged-allocation branch is taken,
+alloclen and pagedlen are computed as
+
+	alloclen = fragheaderlen + transhdrlen;
+	pagedlen = datalen - transhdrlen;
+
+datalen already includes fraggap, but the fraggap bytes carried over
+from the previous skb are copied into the new skb's linear area at
+offset transhdrlen by the subsequent skb_copy_and_csum_bits(). The
+linear area is therefore undersized by fraggap bytes while pagedlen is
+overstated by the same amount.
+
+The non-paged branch sets alloclen to fraglen, which already accounts
+for fraggap because datalen does. Bring the paged branch in line by
+adding fraggap to alloclen and subtracting it from pagedlen.
+
+After this adjustment, copy no longer collapses to -fraggap on the
+paged path, so remove the stale comment describing that old arithmetic.
+
+Fixes: 8eb77cc73977 ("ipv4: avoid partial copy for zc")
+Signed-off-by: Jungwoo Lee <jwlee2217@gmail.com>
+Signed-off-by: Wongi Lee <qw3rtyp0@gmail.com>
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+Link: https://patch.msgid.link/ajFR1eLAIs42TN3g@DESKTOP-19IMU7U.localdomain
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+
+[Resolve merge conflict caused by missing 5204ccbfa223 which wraps
+INDIRECT_CALL_1. Resolve the merge conflict by keeping current logic.]
+
+Signed-off-by: Stanislav Uschakow <suschako@amazon.de>
+(cherry picked from commit d11d68214a0afab174ab8f712890452adcf7c196)
+---
+ net/ipv4/ip_output.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
+index f5a2ad2b2dbdf..778214137e4a2 100644
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -1117,8 +1117,8 @@ static int __ip_append_data(struct sock *sk,
+ 				  !(rt->dst.dev->features & NETIF_F_SG)))
+ 				alloclen = fraglen;
+ 			else {
+-				alloclen = fragheaderlen + transhdrlen;
+-				pagedlen = datalen - transhdrlen;
++				alloclen = fragheaderlen + transhdrlen + fraggap;
++				pagedlen = datalen - transhdrlen - fraggap;
+ 			}
+ 
+ 			alloclen += alloc_extra;
+-- 
+2.52.0
+
