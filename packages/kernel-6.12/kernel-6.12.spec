@@ -53,6 +53,11 @@ Patch1008: 1008-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
 # Fix undersized linear allocation in IPv* paged path
 Patch1009: 1009-ipv6-account-for-fraggap-on-the-paged-allocation-pat.patch
 Patch1010: 1010-ipv4-account-for-fraggap-on-the-paged-allocation-pat.patch
+# Fix use-after-free race in eventpoll file removal path
+Patch1011: 1011-eventpoll-split-__ep_remove.patch
+Patch1012: 1012-eventpoll-kill-__ep_remove.patch
+Patch1013: 1013-eventpoll-move-epi_fget-up.patch
+Patch1014: 1014-eventpoll-fix-ep_remove-struct-eventpoll-struct-file.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
