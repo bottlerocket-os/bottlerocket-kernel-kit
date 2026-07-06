@@ -1,3 +1,11 @@
+# v6.3.1 (2026-07-06)
+
+## OS Changes
+
+* Backport patches to fix a use-after-free bug in the `epoll` syscall ([#482])
+
+[#482]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/482
+
 # v6.3.0 (2026-07-02)
 
 ## OS Changes
