@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 6.12.92 Kernel Configuration
+# Linux/x86 6.12.94 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="x86_64-bottlerocket-linux-gnu-gcc (Buildroot 2025.05.1) 13.4.0"
 CONFIG_CC_IS_GCC=y
