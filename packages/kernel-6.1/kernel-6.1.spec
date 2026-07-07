@@ -2,13 +2,13 @@
 %global kmajor 6.1
 
 Name: %{_cross_os}kernel-6.1
-Version: 6.1.175
+Version: 6.1.176
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/dd019b47c5df1a1b9dfbbcc124f610f7945b3ca28fb438ffa226409688b6adf2/kernel-6.1.175-219.359.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/c7221f61e6ea6a37ef89202b4d5c11c3efae0b766d1164d59cab3549f24227e4/kernel-6.1.176-220.360.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
@@ -48,9 +48,6 @@ Patch1005: 1005-Revert-Revert-drm-fb_helper-improve-CONFIG_FB-depend.patch
 Patch1006: 1006-strscpy-write-destination-buffer-only-once.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1007: 1007-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
-# Fix undersized linear allocation in IPv* paged path
-Patch1008: 1008-ipv4-account-for-fraggap-on-the-paged-allocation-pat.patch
-Patch1009: 1009-ipv6-account-for-fraggap-on-the-paged-allocation-pat.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
