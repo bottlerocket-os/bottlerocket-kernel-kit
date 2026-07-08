@@ -50,6 +50,7 @@ Patch1006: 1006-Select-prerequisites-for-gpu-drivers.patch
 Patch1007: 1007-strscpy-write-destination-buffer-only-once.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1008: 1008-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
+Patch1009: 1009-AL2023-6.12-Update-ena-driver-to-2.17.2g.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
