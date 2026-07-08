@@ -4,13 +4,13 @@
 %global kmajor 6.12
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.12.92
+Version: 6.12.94
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/a574749641e3197ca8ed993adfd500106b6f413dfc9e9c1d0bf17f3833fe230e/kernel6.12-6.12.92-122.168.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/24acb6df83dcc77b3a4e83e670731ba122af62a8b7666ecfdda946985aa8dfb6/kernel6.12-6.12.94-123.176.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
@@ -50,14 +50,6 @@ Patch1006: 1006-Select-prerequisites-for-gpu-drivers.patch
 Patch1007: 1007-strscpy-write-destination-buffer-only-once.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1008: 1008-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
-# Fix undersized linear allocation in IPv* paged path
-Patch1009: 1009-ipv6-account-for-fraggap-on-the-paged-allocation-pat.patch
-Patch1010: 1010-ipv4-account-for-fraggap-on-the-paged-allocation-pat.patch
-# Fix use-after-free race in eventpoll file removal path
-Patch1011: 1011-eventpoll-split-__ep_remove.patch
-Patch1012: 1012-eventpoll-kill-__ep_remove.patch
-Patch1013: 1013-eventpoll-move-epi_fget-up.patch
-Patch1014: 1014-eventpoll-fix-ep_remove-struct-eventpoll-struct-file.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
