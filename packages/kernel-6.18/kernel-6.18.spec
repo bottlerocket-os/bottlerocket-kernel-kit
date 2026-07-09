@@ -45,6 +45,7 @@ Patch1005: 1005-drm-simpledrm-Select-prerequisites-for-gpu-drivers.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1006: 1006-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
 Patch1007: 1007-AL2023-6.18-Update-ena-driver-to-2.17.2g.patch
+Patch1008: 1008-futex-requeue-Revert-Prevent-NULL-pointer-dereferenc.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
