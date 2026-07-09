@@ -18,7 +18,6 @@ dependencies = [
  "kmod-6_12-nvidia-r580",
  "kmod-6_12-nvidia-r595",
  "kmod-6_18-efa",
- "kmod-6_18-neuron",
  "kmod-6_18-nvidia-r580",
  "kmod-6_18-nvidia-r595",
  "libkcapi",
@@ -105,13 +104,6 @@ dependencies = [
 
 [[package]]
 name = "kmod-6_18-efa"
-version = "0.1.0"
-dependencies = [
- "kernel-6_18",
-]
-
-[[package]]
-name = "kmod-6_18-neuron"
 version = "0.1.0"
 dependencies = [
  "kernel-6_18",
