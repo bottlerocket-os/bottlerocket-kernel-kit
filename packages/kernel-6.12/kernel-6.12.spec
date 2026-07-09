@@ -51,6 +51,9 @@ Patch1007: 1007-strscpy-write-destination-buffer-only-once.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1008: 1008-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
 Patch1009: 1009-AL2023-6.12-Update-ena-driver-to-2.17.2g.patch
+Patch1010: 1010-locking-mutex-Remove-wakeups-from-under-mutex-wait_l.patch
+Patch1011: 1011-locking-rtmutex-Fix-wake_q-logic-in-task_blocks_on_r.patch
+Patch1012: 1012-locking-rtmutex-Skip-remove_waiter-when-waiter-is-no.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
