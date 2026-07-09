@@ -17,7 +17,6 @@ kernel-6_1 = { path = "../../packages/kernel-6.1" }
 kernel-6_12 = { path = "../../packages/kernel-6.12" }
 kernel-6_18 = { path = "../../packages/kernel-6.18" }
 kmod-6_1-efa = { path = "../../packages/kmod-6.1-efa" }
-kmod-6_1-neuron = { path = "../../packages/kmod-6.1-neuron" }
 kmod-6_1-nvidia-r580 = { path = "../../packages/kmod-6.1-nvidia-r580" }
 kmod-6_1-nvidia-r595 = { path = "../../packages/kmod-6.1-nvidia-r595" }
 kmod-6_12-amdgpu = { path = "../../packages/kmod-6.12-amdgpu" }
