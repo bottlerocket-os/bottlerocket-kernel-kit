@@ -49,6 +49,7 @@ Patch1006: 1006-strscpy-write-destination-buffer-only-once.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1007: 1007-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
 Patch1008: 1008-AL2023-6.1-Update-ena-driver-to-2.17.2g.patch
+Patch1009: 1009-Revert-futex-requeue-Prevent-NULL-pointer-dereferenc.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel

@@ -1,0 +1,33 @@
+From d5cc0433591558f86e36a9bc3abd15ae9b991c73 Mon Sep 17 00:00:00 2001
+From: Piyush Jena <jepiyush@amazon.com>
+Date: Thu, 9 Jul 2026 23:27:09 +0000
+Subject: [PATCH] Revert "futex/requeue: Prevent NULL pointer dereference in
+ remove_waiter() on self-deadlock"
+
+This reverts commit b7b1013b729154502c30c22c71ab025e1edd89d0.
+
+Signed-off-by: Piyush Jena <jepiyush@amazon.com>
+---
+ kernel/futex/requeue.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
+index 8cf1234be..60b08247b 100644
+--- a/kernel/futex/requeue.c
++++ b/kernel/futex/requeue.c
+@@ -629,12 +629,6 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flags, u32 __user *uaddr2,
+ 			continue;
+ 		}
+ 
+-		/* Self-deadlock: non-top waiter already owns the PI futex. */
+-		if (rt_mutex_owner(&pi_state->pi_mutex) == this->task) {
+-			ret = -EDEADLK;
+-			break;
+-		}
+-
+ 		ret = rt_mutex_start_proxy_lock(&pi_state->pi_mutex,
+ 						this->rt_waiter,
+ 						this->task);
+-- 
+2.52.0
+
