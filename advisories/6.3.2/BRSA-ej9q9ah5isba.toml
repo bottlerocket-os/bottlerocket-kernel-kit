@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-ej9q9ah5isba"
+title = "kmod-*-neuron support ended"
+end-of-life = true
+severity = "low"
+description = "kmod-*-neuron are no longer included in Bottlerocket. All users must upgrade to a version of the OS that does not include these packages."
+
+[[advisory.products]]
+package-name = "kmod-6.1-neuron"
+patched-version = "6.1.176"
+patched-epoch = "1"
+
+[[advisory.products]]
+package-name = "kmod-6.12-neuron"
+patched-version = "6.12.94"
+patched-epoch = "1"
+
+[[advisory.products]]
+package-name = "kmod-6.18-neuron"
+patched-version = "6.18.36"
+patched-epoch = "1"
+
+[updateinfo]
+author = "agarrcia"
+issue-date = 2026-07-10T20:49:58Z
+arches = ["aarch64", "x86_64"]
+version = "6.3.2"
