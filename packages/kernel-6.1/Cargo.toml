@@ -17,5 +17,15 @@ url = "https://cdn.amazonlinux.com/al2023/blobstore/725cdce7c567c335d734c3f8ea65
 sha512 = "7acade938e770df818ed743dace8a35f1952bba38c54e51ba6fb3ee4b4fb42b0cd3e96fe49e0b6fea2a8b822ac389882374789660f3cc935f825e6655119c513"
 force-upstream = true
 
+[[package.metadata.build-package.external-files]]
+# Use latest-2.24-neuron-srpm-url.sh to get this.
+url = "https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm"
+sha512 = "ba2234e3aa8f5fb15a36304d811043abbed27e79bbd34bf2e0789f2f9a72d8f4c25c701be56622fc1cfdb70966d70b6bfa9d5f77127e76eec382fd0c9477f4ed"
+
+[[package.metadata.build-package.external-files]]
+# Use latest-neuron-srpm-url.sh to get this.
+url = "https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.26.10.0.noarch.rpm"
+sha512 = "ee49ab3aa9f4273a91aef305f30ed213c90c46317e72cfe46dd1d0e7088f0758039f998589ffc1080523f0af8f3348f9db4fe763b6fe8a0fd7d3119546cb1936"
+
 [build-dependencies]
 microcode = { path = "../microcode" }

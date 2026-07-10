@@ -2,6 +2,8 @@
 %global __strip /bin/true
 
 %global kmajor 6.18
+%global neuron_ver 2.26.10
+%global neuron_inf1_ver 2.24.13
 
 %global host_arch %(uname -m)
 
@@ -31,6 +33,35 @@ Source210: var-lib-kernel-devel-lower.mount.drop-in.conf.in
 # Bootconfig snippets to adjust the default kernel command line for the platform.
 Source300: bootconfig-aws.conf
 Source301: bootconfig-vmware.conf
+
+# Neuron driver RPMs - x86_64 only
+# Use latest-2.24-neuron-srpms-url.sh to get this.
+Source2: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-%{neuron_inf1_ver}.0.noarch.rpm
+# Use latest-neuron-srpm-url.sh to get this.
+Source3: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-%{neuron_ver}.0.noarch.rpm
+# Neuron driver 2.x.7372.0
+Source4: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.7372.0.noarch.rpm/e82516a77ab54f1c651a1f160e3a67b1cbca8bef391d78a6c683d6fc22442c8ee17df9d3fae1392ca8cffa676bb966b7088c32e634894ba142d83bef58dd2d81/aws-neuronx-dkms-2.x.7372.0.noarch.rpm
+# Neuron driver 2.x.7693.0
+Source5: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.7693.0.noarch.rpm/4411e3d28bc307bd096408f72f9c3d9e3edcadcbeab3ca409b0f94041ac1f589120353edfb1e11c45ff5a5421808297a308f18a6ac687459abe8c5e985653d3f/aws-neuronx-dkms-2.x.7693.0.noarch.rpm
+# Neuron driver 2.x.8072.0
+Source6: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8072.0.noarch.rpm/d96bd0fe73482684c97faae6f779bfa8a84e9b9ca09f796031d409322550fb1744a38e6c54f5fcc8c1221f051cf04f518694876ea825722f5ed7895c2e8bb22a/aws-neuronx-dkms-2.x.8072.0.noarch.rpm
+# Neuron driver 2.x.8689.0
+Source7: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8689.0.noarch.rpm/5d3ce7f81858d5aae62279369bce72e041dd321f71146a4ab8e61f9230f3965323f9c9230547476614f1c334b84c59edbd892524e2a87c35b46960a044502e9f/aws-neuronx-dkms-2.x.8689.0.noarch.rpm
+# Neuron driver 2.x.8586.0
+Source8: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8586.0.noarch.rpm/0c5bf7f6ffd9d1ef3585aad48c8bb9a1f3f242e32af63755c3f914d9d000dc1f999b53ea90718dfbbfb8c3318ac80c0c90fc68a4962ea25ce4948183d62eb732/aws-neuronx-dkms-2.x.8586.0.noarch.rpm
+# Neuron driver 2.x.8732.0
+Source9: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8732.0.noarch.rpm/089caa0289ff37219583a2fcb7f947520da0c130595ff2a5917a04eed3d6272064332deb48a4b401fa0385b5450cc5fc3195991ca59b42a321d5706641f435e5/aws-neuronx-dkms-2.x.8732.0.noarch.rpm
+Source10: gpgkey-00FA2C1079260870A76D2C285749CAD8646D9185.asc
+
+# Neuron-related configuration and unit files
+Source220: neuron-tmpfiles.conf.in
+Source221: neuron-inf1.toml.in
+Source222: load-neuron-inf1-modules.service
+Source223: neuron-latest.toml.in
+Source224: load-neuron-latest-modules.service
+
+# Neuron driver patches for kernel 6.18 compatibility.
+Patch2001: 2001-Rename-struct-mempool-to-struct-neuron_mempool.patch
 
 # Help out-of-tree module builds run `make prepare` automatically.
 Patch1001: 1001-Makefile-add-prepare-target-for-external-modules.patch
@@ -86,9 +117,7 @@ Requires: (%{name}-bootconfig-vmware if %{_cross_os}variant-platform(vmware))
 
 # Pull in platform-dependent modules.
 %if "%{_cross_arch}" == "x86_64"
-Requires: (%{_cross_os}kmod-6.18-neuron-latest if (%{_cross_os}variant-platform(aws) without (%{_cross_os}variant-flavor(nvidia) or %{_cross_os}variant-flavor(nvidia-fips))))
-Requires: (%{_cross_os}kmod-6.18-neuron-inf1 if (%{_cross_os}variant-platform(aws) without (%{_cross_os}variant-flavor(nvidia) or %{_cross_os}variant-flavor(nvidia-fips))))
-Requires: (%{_cross_os}kmod-6.18-neuron-extras if (%{_cross_os}variant-platform(aws) without (%{_cross_os}variant-flavor(nvidia) or %{_cross_os}variant-flavor(nvidia-fips))))
+Requires: (%{name}-modules-neuron if (%{_cross_os}variant-platform(aws) without (%{_cross_os}variant-flavor(nvidia) or %{_cross_os}variant-flavor(nvidia-fips))))
 %endif
 
 Requires: %{_cross_os}kmod-6.18-efa
@@ -134,6 +163,22 @@ Summary: Header files for the Linux kernel for use by glibc
 
 %description headers
 %{summary}.
+
+%if "%{_cross_arch}" == "x86_64"
+%package modules-neuron
+Summary: Modules for the Linux kernel with Neuron hardware
+Requires: %{name}
+Epoch: 1
+Requires: %{_cross_os}ghostdog
+Requires: %{_cross_os}variant-platform(aws)
+Conflicts: %{_cross_os}variant-flavor(nvidia)
+Conflicts: %{_cross_os}variant-flavor(nvidia-fips)
+
+Provides: %{_cross_os}kmod-6.18-neuron
+
+%description modules-neuron
+%{summary}.
+%endif
 
 %prep
 %if "%{_cross_arch}" == "aarch64"
@@ -214,6 +259,67 @@ fi
 rm -f ../config-* ../*.patch
 cd %{_builddir}
 
+# Neuron driver extraction (x86_64 only)
+%if "%{_cross_arch}" == "x86_64"
+rpmkeys --import %{S:10} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:2} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:3} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:4} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:5} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:6} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:7} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:8} --dbpath "${PWD}/rpmdb"
+rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:9} --dbpath "${PWD}/rpmdb"
+rm -rf "${PWD}/rpmdb"
+
+rpm2cpio %{S:2} | cpio -idmu './usr/src/aws-neuronx-*'
+find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2_24 \;
+rm -r usr
+
+rpm2cpio %{S:3} | cpio -idmu './usr/src/aws-neuronx-*'
+find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_latest \;
+rm -r usr
+
+# 2.x.7372.0 neuron driver
+rpm2cpio %{S:4} | cpio -idmu './usr/src/aws-neuronx-*'
+find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_7372 \;
+rm -r usr
+pushd neuron_2x_7372
+%patch -P 2001 -p1
+popd
+
+# 2.x.7693.0 neuron driver
+rpm2cpio %{S:5} | cpio -idmu './usr/src/aws-neuronx-*'
+find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_7693 \;
+rm -r usr
+pushd neuron_2x_7693
+%patch -P 2001 -p1
+popd
+
+# 2.x.8072.0 neuron driver
+rpm2cpio %{S:6} | cpio -idmu './usr/src/aws-neuronx-*'
+find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8072 \;
+rm -r usr
+pushd neuron_2x_8072
+%patch -P 2001 -p1
+popd
+
+# 2.x.8689.0 neuron driver (no patch needed - newer driver)
+rpm2cpio %{S:7} | cpio -idmu './usr/src/aws-neuronx-*'
+find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8689 \;
+rm -r usr
+
+# 2.x.8586.0 neuron driver (no patch needed - newer driver)
+rpm2cpio %{S:8} | cpio -idmu './usr/src/aws-neuronx-*'
+find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8586 \;
+rm -r usr
+
+# 2.x.8732.0 neuron driver (no patch needed - newer driver)
+rpm2cpio %{S:9} | cpio -idmu './usr/src/aws-neuronx-*'
+find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8732 \;
+rm -r usr
+%endif
+
 %global kmake %{shrink: \
 make -s \
   ARCH="%{_cross_karch}" \
@@ -229,12 +335,54 @@ make -s \
 %kmake %{?_smp_mflags} %{_cross_kimage}
 %kmake %{?_smp_mflags} modules
 
+# Build neuron modules (x86_64 only)
+%if "%{_cross_arch}" == "x86_64"
+%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2_24
+%kmake %{?_smp_mflags} M=%{_builddir}/neuron_latest
+%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_7372
+%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_7693
+%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8072
+%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8689
+%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8586
+%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8732
+%endif
+
 make -C tools/bpf/bpftool bootstrap
 ./tools/bpf/bpftool/bootstrap/bpftool btf dump file vmlinux format c > vmlinux.h
 
 %install
 %kmake %{?_smp_mflags} headers_install
 %kmake %{?_smp_mflags} modules_install
+
+# Install neuron modules (x86_64 only)
+%if "%{_cross_arch}" == "x86_64"
+install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2_24/
+install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_latest/
+install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_7372/
+install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_7693/
+install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8072/
+install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8689/
+install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8586/
+install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8732/
+
+%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2_24 M=%{_builddir}/neuron_2_24 modules_install
+%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_latest M=%{_builddir}/neuron_latest modules_install
+%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_7372 M=%{_builddir}/neuron_2x_7372 modules_install
+%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_7693 M=%{_builddir}/neuron_2x_7693 modules_install
+%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8072 M=%{_builddir}/neuron_2x_8072 modules_install
+%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8689 M=%{_builddir}/neuron_2x_8689 modules_install
+%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8586 M=%{_builddir}/neuron_2x_8586 modules_install
+%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8732 M=%{_builddir}/neuron_2x_8732 modules_install
+
+mv %{buildroot}%{_cross_kmoddir}/neuron_2_24/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2_24/
+mv %{buildroot}%{_cross_kmoddir}/neuron_latest/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_latest/
+mv %{buildroot}%{_cross_kmoddir}/neuron_2x_7372/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_7372/
+mv %{buildroot}%{_cross_kmoddir}/neuron_2x_7693/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_7693/
+mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8072/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8072/
+mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8689/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8689/
+mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8586/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8586/
+mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8732/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8732/
+%endif
 
 install -d %{buildroot}/boot
 install -T -m 0755 arch/%{_cross_karch}/boot/%{_cross_kimage} %{buildroot}/boot/vmlinuz
@@ -346,6 +494,26 @@ ln -s lts_6.18.conf %{buildroot}%{_cross_datadir}/xfsprogs/mkfs/default.conf
 install -d %{buildroot}%{_cross_bootconfigdir}
 install -p -m 0644 %{S:300} %{buildroot}%{_cross_bootconfigdir}/05-aws.conf
 install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
+
+%if "%{_cross_arch}" == "x86_64"
+# Add Neuron-related configuration files to load the module when the hardware is present.
+install -d 0644 %{buildroot}%{_cross_tmpfilesdir}
+sed \
+  -e "s|__KERNEL_VERSION__|%{version}|" \
+  -e "s|__PREFIX__|%{_cross_prefix}|" %{S:220} > neuron.conf
+install -p -m 0644 neuron.conf %{buildroot}%{_cross_tmpfilesdir}/
+install -d 0644 %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+# inf1
+sed -e 's|__NEURON_MODULES__|%{_cross_libexecdir}/neuron|' %{S:221} > \
+  neuron-inf1.toml
+install -m 0644 neuron-inf1.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+# latest
+sed -e 's|__NEURON_MODULES__|%{_cross_libexecdir}/neuron|' %{S:223} > \
+  neuron-latest.toml
+install -m 0644 neuron-latest.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+install -d %{buildroot}%{_cross_unitdir}
+install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
+%endif
 
 %files
 %license COPYING LICENSES/preferred/GPL-2.0 LICENSES/exceptions/Linux-syscall-note
@@ -1393,5 +1561,22 @@ install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
 %endif
 
 %exclude %{_cross_kmoddir}/kernel/drivers/amazon/net/efa/efa.%{_ko}
+
+%if "%{_cross_arch}" == "x86_64"
+%files modules-neuron
+%{_cross_libexecdir}/neuron/neuron_2_24/neuron.%{_ko}
+%{_cross_libexecdir}/neuron/neuron_latest/neuron.%{_ko}
+%{_cross_libexecdir}/neuron/neuron_2x_7372/neuron.%{_ko}
+%{_cross_libexecdir}/neuron/neuron_2x_7693/neuron.%{_ko}
+%{_cross_libexecdir}/neuron/neuron_2x_8072/neuron.%{_ko}
+%{_cross_libexecdir}/neuron/neuron_2x_8586/neuron.%{_ko}
+%{_cross_libexecdir}/neuron/neuron_2x_8689/neuron.%{_ko}
+%{_cross_libexecdir}/neuron/neuron_2x_8732/neuron.%{_ko}
+%{_cross_tmpfilesdir}/neuron.conf
+%{_cross_unitdir}/load-neuron-inf1-modules.service
+%{_cross_unitdir}/load-neuron-latest-modules.service
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/neuron-inf1.toml
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/neuron-latest.toml
+%endif
 
 %changelog
