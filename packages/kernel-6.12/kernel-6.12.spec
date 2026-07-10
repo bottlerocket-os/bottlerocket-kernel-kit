@@ -10,7 +10,7 @@ Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/24acb6df83dcc77b3a4e83e670731ba122af62a8b7666ecfdda946985aa8dfb6/kernel6.12-6.12.94-123.176.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/ac29623b03d9a2cc563774856b5b70efef8aa6e8ed4fe4f70890bce37410f16b/kernel6.12-6.12.94-123.180.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
