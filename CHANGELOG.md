@@ -1,3 +1,17 @@
+# v7.0.0 (2026-07-10)
+
+## OS Changes
+* Build Neuron kernel modules in-tree so they receive kernel module signing ([#487])
+* Update kernel from 6.1.175-219.359 to 6.1.176-221.360 ([#484], [#488])
+* Update kernel from 6.12.92-122.168 to 6.12.94-123.180 ([#484], [#489])
+* Update kernel from 6.18.35-68.129 to 6.18.36-69.138 ([#484], [#490])
+
+[#484]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/484
+[#487]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/487
+[#488]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/488
+[#489]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/489
+[#490]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/490
+
 # v6.3.1 (2026-07-06)
 
 ## OS Changes
