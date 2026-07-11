@@ -24,4 +24,4 @@ patched-epoch = "1"
 author = "agarrcia"
 issue-date = 2026-07-10T20:49:58Z
 arches = ["aarch64", "x86_64"]
-version = "6.3.2"
+version = "7.0.0"
