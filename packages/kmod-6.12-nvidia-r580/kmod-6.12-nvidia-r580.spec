@@ -216,6 +216,8 @@ rpm2cpio %{_sourcedir}/nvidia-imex-%{tesla_ver}-1.amzn2023.%{_cross_arch}.rpm | 
 # This recipe was based in the NVIDIA yum/dnf specs:
 # https://github.com/NVIDIA/yum-packaging-precompiled-kmod
 
+%build
+
 # Begin open driver build
 pushd NVIDIA-Linux-%{_cross_arch}-%{tesla_ver}/kernel-open
 
@@ -284,7 +286,7 @@ pushd NVIDIA-Linux-%{_cross_arch}-%{tesla_ver}/supported-gpus
 jq -r '.chips[] | select(.features[] | contains("kernelopen")) |
 select(.devid != "0x1DB1"
 and .devid != "0x1DB5"
-and .devid != "0x1DEB8"
+and .devid != "0x1EB8"
 and .devid != "0x1EB4"
 and .devid != "0x2237")' supported-gpus.json | jq -s '{"open-gpu": .}' > open-gpu-supported-devices.json
 # confirm "NVIDIA H100" is in the resulting file to catch shape changes

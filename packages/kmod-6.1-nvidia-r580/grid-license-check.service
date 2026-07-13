@@ -14,6 +14,3 @@ ExecStart=/usr/bin/grep -q "License Status.*: Licensed" /tmp/.nvidia-gridd-licen
 ExecStart=/usr/bin/touch /etc/drivers/.grid-licensed
 ExecStart=/usr/bin/systemctl stop grid-license-check.timer --no-block
 StandardOutput=append:/tmp/.nvidia-gridd-license
-
-[Install]
-WantedBy=nvidia-k8s-device-plugin.service
