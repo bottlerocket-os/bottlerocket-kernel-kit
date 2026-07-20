@@ -1,3 +1,17 @@
+# v7.1.0 (2026-07-20)
+
+## OS Changes
+* Fix NVIDIA fallback services to start on all variants ([#475])
+* Fix device ID for `g4dn` instances so the Tesla driver is loaded ([#475])
+* Update kernel from 6.1.176-221.360 to 6.1.176-221.367 ([#500])
+* Update kernel from 6.12.94-123.180 to 6.12.94-123.190 ([#498])
+* Update kernel from 6.18.36-69.138 to 6.18.38-73.137 ([#499])
+
+[#475]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/475
+[#498]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/498
+[#499]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/499
+[#500]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/500
+
 # v7.0.1 (2026-07-14)
 
 ## OS Changes
