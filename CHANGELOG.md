@@ -1,3 +1,11 @@
+# v7.2.0 (2026-07-23)
+
+## Build Changes
+
+* Update the Bottlerocket SDK to `v0.77.0` ([#491])
+
+[#491]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/491
+
 # v7.1.0 (2026-07-20)
 
 ## OS Changes
