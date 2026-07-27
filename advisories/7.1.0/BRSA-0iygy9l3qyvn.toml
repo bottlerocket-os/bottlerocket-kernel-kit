@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-0iygy9l3qyvn"
+title = "kernel CVE-2026-46324"
+cve = "CVE-2026-46324"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfilter: nf_tables: use list_del_rcu for netlink hooks"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.176"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.94"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-07-21T00:46:29Z
+arches = ["x86_64", "aarch64"]
+version = "7.1.0"

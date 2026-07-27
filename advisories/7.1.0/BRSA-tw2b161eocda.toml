@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-tw2b161eocda"
+title = "kernel CVE-2026-53359"
+cve = "CVE-2026-53359"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: KVM: x86: Fix shadow paging use-after-free due to unexpected role"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.176"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.94"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.38"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-07-21T00:46:29Z
+arches = ["aarch64", "x86_64"]
+version = "7.1.0"

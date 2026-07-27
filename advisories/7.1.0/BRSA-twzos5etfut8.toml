@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-twzos5etfut8"
+title = "kernel CVE-2026-53361"
+cve = "CVE-2026-53361"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: af_unix: Set gc_in_progress to true in unix_gc()."
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.38"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-07-21T00:46:29Z
+arches = ["aarch64", "x86_64"]
+version = "7.1.0"

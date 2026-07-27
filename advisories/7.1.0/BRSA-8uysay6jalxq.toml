@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-8uysay6jalxq"
+title = "kernel CVE-2026-53070"
+cve = "CVE-2026-53070"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: sctp: disable BH before calling udp_tunnel_xmit_skb()"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.38"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-07-21T00:46:29Z
+arches = ["x86_64", "aarch64"]
+version = "7.1.0"
