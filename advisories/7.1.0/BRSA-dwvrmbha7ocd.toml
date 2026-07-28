@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-dwvrmbha7ocd"
+title = "kernel CVE-2026-53078"
+cve = "CVE-2026-53078"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Fix same-register dst/src OOB read and pointer leak in sock_ops"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.176"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.94"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.38"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-07-21T00:46:29Z
+arches = ["x86_64", "aarch64"]
+version = "7.1.0"
