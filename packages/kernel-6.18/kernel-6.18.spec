@@ -2,7 +2,7 @@
 %global __strip /bin/true
 
 %global kmajor 6.18
-%global neuron_ver 2.26.10
+%global neuron_ver 2.29.0
 %global neuron_inf1_ver 2.24.13
 
 %global host_arch %(uname -m)
