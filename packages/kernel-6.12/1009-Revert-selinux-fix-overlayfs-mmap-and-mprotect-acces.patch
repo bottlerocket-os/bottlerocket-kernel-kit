@@ -1,4 +1,4 @@
-From 3caad90ec607313a1c05a6c33c0414094998ccdc Mon Sep 17 00:00:00 2001
+From fdae5c3fa77e6d74c112c3aa2804a2cd2decbe0a Mon Sep 17 00:00:00 2001
 From: Piyush Jena <jepiyush@amazon.com>
 Date: Mon, 13 Jul 2026 23:23:32 +0000
 Subject: [PATCH] Revert "selinux: fix overlayfs mmap() and mprotect() access
@@ -6,12 +6,12 @@ Subject: [PATCH] Revert "selinux: fix overlayfs mmap() and mprotect() access
 
 This reverts commit 8bacd09f12c27710228562e4d13163e58c5f4a45.
 ---
- security/selinux/hooks.c          | 242 ++++++++----------------------
+ security/selinux/hooks.c          | 248 ++++++++----------------------
  security/selinux/include/objsec.h |  11 --
- 2 files changed, 64 insertions(+), 189 deletions(-)
+ 2 files changed, 64 insertions(+), 195 deletions(-)
 
 diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 1b89c8d5f..8e31d3b60 100644
+index 23d680d..8e31d3b 100644
 --- a/security/selinux/hooks.c
 +++ b/security/selinux/hooks.c
 @@ -1724,72 +1724,49 @@ static inline int file_path_has_perm(const struct cred *cred,
@@ -92,11 +92,11 @@ index 1b89c8d5f..8e31d3b60 100644
 +	rc = 0;
  	if (av)
 -		return inode_has_perm(cred, inode, av, &ad);
--
--	return 0;
--}
 +		rc = inode_has_perm(cred, inode, av, &ad);
  
+-	return 0;
+-}
+-
 -/* Check whether a task can use an open file descriptor to
 -   access an inode in a given way.  Check access to the
 -   descriptor itself, and then use dentry_has_perm to
@@ -132,13 +132,13 @@ index 1b89c8d5f..8e31d3b60 100644
  /*
   * Check whether a task has the ioctl permission and cmd
   * operation to an inode.
-@@ -3804,55 +3770,42 @@ static int selinux_file_ioctl_compat(struct file *file, unsigned int cmd,
+@@ -3804,57 +3770,42 @@ static int selinux_file_ioctl_compat(struct file *file, unsigned int cmd,
  
  static int default_noexec __ro_after_init;
  
--static int __file_map_prot_check(const struct cred *cred,
--				 const struct file *file, unsigned long prot,
--				 bool shared, bool bf_user_file)
+-static int __file_map_prot_check(const struct file *file, unsigned long prot,
+-				 bool shared, bool mounter_check,
+-				 bool bf_user_file)
 +static int file_map_prot_check(struct file *file, unsigned long prot, int shared)
  {
 -	struct inode *inode = NULL;
@@ -152,10 +152,10 @@ index 1b89c8d5f..8e31d3b60 100644
 -			inode = file_inode(file);
 -	}
 -
--	if (default_noexec && prot_exec &&
+-	if (!mounter_check && default_noexec && prot_exec &&
 -	    (!file || IS_PRIVATE(inode) || (!shared && prot_write))) {
 -		int rc;
--		u32 sid = cred_sid(cred);
+-		u32 sid = current_sid();
 +	const struct cred *cred = current_cred();
 +	u32 sid = cred_sid(cred);
 +	int rc = 0;
@@ -180,6 +180,8 @@ index 1b89c8d5f..8e31d3b60 100644
  	}
  
  	if (file) {
+-		const struct cred *cred = mounter_check ?
+-				file->f_cred : current_cred();
 -		/* "read" always possible, "write" only if shared */
 +		/* read access is always possible with a mapping */
  		u32 av = FILE__READ;
@@ -200,22 +202,22 @@ index 1b89c8d5f..8e31d3b60 100644
 -	return 0;
 -}
 -
--static inline int file_map_prot_check(const struct cred *cred,
--				      const struct file *file,
--				      unsigned long prot, bool shared)
+-static inline int file_map_prot_check(const struct file *file,
+-				      unsigned long prot, bool shared,
+-				      bool mounter_check)
 -{
--	return __file_map_prot_check(cred, file, prot, shared, false);
+-	return __file_map_prot_check(file, prot, shared, mounter_check, false);
 +error:
 +	return rc;
  }
  
  static int selinux_mmap_addr(unsigned long addr)
-@@ -3868,80 +3821,36 @@ static int selinux_mmap_addr(unsigned long addr)
+@@ -3870,84 +3821,36 @@ static int selinux_mmap_addr(unsigned long addr)
  	return rc;
  }
  
--static int selinux_mmap_file_common(const struct cred *cred, struct file *file,
--				    unsigned long prot, bool shared)
+-static int selinux_mmap_file_common(struct file *file, unsigned long prot,
+-				    bool shared, bool mounter_check)
 +static int selinux_mmap_file(struct file *file,
 +			     unsigned long reqprot __always_unused,
 +			     unsigned long prot, unsigned long flags)
@@ -223,6 +225,8 @@ index 1b89c8d5f..8e31d3b60 100644
 -	if (file) {
 -		int rc;
 -		struct common_audit_data ad;
+-		const struct cred *cred = mounter_check ?
+-				file->f_cred : current_cred();
 +	struct common_audit_data ad;
 +	int rc;
  
@@ -236,15 +240,16 @@ index 1b89c8d5f..8e31d3b60 100644
  			return rc;
  	}
  
--	return file_map_prot_check(cred, file, prot, shared);
+-	return file_map_prot_check(file, prot, shared, mounter_check);
 -}
 -
 -static int selinux_mmap_file(struct file *file,
 -			     unsigned long reqprot __always_unused,
 -			     unsigned long prot, unsigned long flags)
 -{
--	return selinux_mmap_file_common(current_cred(), file, prot,
--					(flags & MAP_TYPE) == MAP_SHARED);
+-	return selinux_mmap_file_common(file, prot,
+-					(flags & MAP_TYPE) == MAP_SHARED,
+-					false);
 -}
 -
 -/**
@@ -276,8 +281,9 @@ index 1b89c8d5f..8e31d3b60 100644
 -	if (vma->vm_flags & VM_EXEC)
 -		prot |= PROT_EXEC;
 -
--	return selinux_mmap_file_common(backing_file->f_cred, backing_file,
--					prot, vma->vm_flags & VM_SHARED);
+-	return selinux_mmap_file_common(backing_file, prot,
+-					vma->vm_flags & VM_SHARED,
+-					true);
 +	return file_map_prot_check(file, prot,
 +				   (flags & MAP_TYPE) == MAP_SHARED);
  }
@@ -302,7 +308,7 @@ index 1b89c8d5f..8e31d3b60 100644
  		/*
  		 * We don't use the vma_is_initial_heap() helper as it has
  		 * a history of problems and is currently broken on systems
-@@ -3955,15 +3864,11 @@ static int selinux_file_mprotect(struct vm_area_struct *vma,
+@@ -3961,15 +3864,11 @@ static int selinux_file_mprotect(struct vm_area_struct *vma,
  		    vma->vm_end <= vma->vm_mm->brk) {
  			rc = avc_has_perm(sid, sid, SECCLASS_PROCESS,
  					  PROCESS__EXECHEAP, NULL);
@@ -320,7 +326,7 @@ index 1b89c8d5f..8e31d3b60 100644
  			/*
  			 * We are making executable a file mapping that has
  			 * had some COW done. Since pages might have been
-@@ -3971,29 +3876,13 @@ static int selinux_file_mprotect(struct vm_area_struct *vma,
+@@ -3977,29 +3876,13 @@ static int selinux_file_mprotect(struct vm_area_struct *vma,
  			 * modified content.  This typically should only
  			 * occur for text relocations.
  			 */
@@ -338,11 +344,11 @@ index 1b89c8d5f..8e31d3b60 100644
  		}
 -	}
 -
--	rc = __file_map_prot_check(cred, file, prot, shared, backing_file);
+-	rc = __file_map_prot_check(file, prot, shared, false, backing_file);
 -	if (rc)
 -		return rc;
 -	if (backing_file) {
--		rc = file_map_prot_check(file->f_cred, file, prot, shared);
+-		rc = file_map_prot_check(file, prot, shared, true);
  		if (rc)
  			return rc;
  	}
@@ -352,7 +358,7 @@ index 1b89c8d5f..8e31d3b60 100644
  }
  
  static int selinux_file_lock(struct file *file, unsigned int cmd)
-@@ -7071,7 +6960,6 @@ static void selinux_bpf_token_free(struct bpf_token *token)
+@@ -7077,7 +6960,6 @@ static void selinux_bpf_token_free(struct bpf_token *token)
  struct lsm_blob_sizes selinux_blob_sizes __ro_after_init = {
  	.lbs_cred = sizeof(struct task_security_struct),
  	.lbs_file = sizeof(struct file_security_struct),
@@ -360,7 +366,7 @@ index 1b89c8d5f..8e31d3b60 100644
  	.lbs_inode = sizeof(struct inode_security_struct),
  	.lbs_ipc = sizeof(struct ipc_security_struct),
  	.lbs_key = sizeof(struct key_security_struct),
-@@ -7277,11 +7165,9 @@ static struct security_hook_list selinux_hooks[] __ro_after_init = {
+@@ -7283,11 +7165,9 @@ static struct security_hook_list selinux_hooks[] __ro_after_init = {
  
  	LSM_HOOK_INIT(file_permission, selinux_file_permission),
  	LSM_HOOK_INIT(file_alloc_security, selinux_file_alloc_security),
@@ -373,7 +379,7 @@ index 1b89c8d5f..8e31d3b60 100644
  	LSM_HOOK_INIT(file_mprotect, selinux_file_mprotect),
  	LSM_HOOK_INIT(file_lock, selinux_file_lock),
 diff --git a/security/selinux/include/objsec.h b/security/selinux/include/objsec.h
-index dc42282a2..c88cae81e 100644
+index dc42282..c88cae8 100644
 --- a/security/selinux/include/objsec.h
 +++ b/security/selinux/include/objsec.h
 @@ -61,10 +61,6 @@ struct file_security_struct {
@@ -401,6 +407,6 @@ index dc42282a2..c88cae81e 100644
  static inline struct inode_security_struct *
  selinux_inode(const struct inode *inode)
  {
--- 
+--
 2.53.0
 
