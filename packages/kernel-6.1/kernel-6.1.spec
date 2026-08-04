@@ -1,6 +1,6 @@
 %global debug_package %{nil}
 %global kmajor 6.1
-%global neuron_ver 2.26.10
+%global neuron_ver 2.29.0
 %global neuron_inf1_ver 2.24.13
 
 Name: %{_cross_os}kernel-6.1

@@ -2,7 +2,7 @@
 %global __strip /bin/true
 
 %global kmajor 6.12
-%global neuron_ver 2.26.10
+%global neuron_ver 2.29.0
 %global neuron_inf1_ver 2.24.13
 
 Name: %{_cross_os}kernel-%{kmajor}
@@ -38,9 +38,9 @@ Source301: bootconfig-vmware.conf
 
 # Neuron driver sources (x86_64 only)
 # Use latest-2.24-neuron-srpms-url.sh to get this.
-Source400: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.24.13.0.noarch.rpm
+Source400: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-%{neuron_inf1_ver}.0.noarch.rpm
 # Use latest-neuron-srpm-url.sh to get this.
-Source401: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.26.10.0.noarch.rpm
+Source401: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-%{neuron_ver}.0.noarch.rpm
 # Neuron driver 2.x.7372.0
 Source402: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.7372.0.noarch.rpm/e82516a77ab54f1c651a1f160e3a67b1cbca8bef391d78a6c683d6fc22442c8ee17df9d3fae1392ca8cffa676bb966b7088c32e634894ba142d83bef58dd2d81/aws-neuronx-dkms-2.x.7372.0.noarch.rpm
 # Neuron driver 2.x.7693.0
