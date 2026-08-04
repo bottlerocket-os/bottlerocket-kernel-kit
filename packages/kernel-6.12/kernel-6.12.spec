@@ -6,13 +6,13 @@
 %global neuron_inf1_ver 2.24.13
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.12.94
+Version: 6.12.95
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/5f1a0fef7b8863f6e98bb5399868917d96115ee49e4feb5587b6450f7bffff84/kernel6.12-6.12.94-123.192.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/45af3375e37fd0b3b5e973eed92cf34c6c648b5aadad18efb6aac3f4f929c6ac/kernel6.12-6.12.95-124.187.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
