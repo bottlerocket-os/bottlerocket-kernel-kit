@@ -1,11 +1,22 @@
-# Unreleased
+# v7.3.0 (2026-08-04)
+
+## OS Changes
+
+* Update Neuron driver to 2.29.0.0 ([#514])
+* Update kernel from 6.1.176-223.369 to 6.1.177-224.371 ([#516])
+* Update kernel from 6.12.94-123.192 to 6.12.95-124.187 ([#517])
+* Update kernel from 6.18.38-76.139 to 6.18.39-79.141 ([#518])
 
 ## Build Changes
 
 * Update Twoliter to `0.22.1` ([#511], [#515])
 
 [#511]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/511
+[#514]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/514
 [#515]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/515
+[#516]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/516
+[#517]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/517
+[#518]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/518
 
 # v7.2.1 (2026-07-27)
 
