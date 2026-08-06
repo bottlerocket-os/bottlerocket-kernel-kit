@@ -27,6 +27,12 @@ Source111: config-full-bottlerocket-aarch64-on-aarch64
 Source112: config-full-bottlerocket-x86_64-on-x86_64
 Source113: config-full-bottlerocket-aarch64-on-x86_64
 
+# This list of FIPS modules is extracted from /etc/fipsmodules in the initramfs
+# after placing AL2023 in FIPS mode.
+Source200: check-fips-modules.drop-in.conf.in
+Source201: fipsmodules-x86_64
+Source202: fipsmodules-aarch64
+
 # Adjust kernel-devel mount behavior if not squashfs.
 Source210: var-lib-kernel-devel-lower.mount.drop-in.conf.in
 
@@ -103,9 +109,6 @@ Conflicts: %{_cross_os}image-feature(external-kmod-development)
 # Legacy iptables support is not enabled in this kernel.
 Conflicts: %{_cross_os}iptables-legacy
 
-# FIPS certification is not yet available for this kernel.
-Conflicts: %{_cross_os}image-feature(fips)
-
 # Pull in expected modules.
 Requires: %{name}-modules = %{version}-%{release}
 
@@ -122,6 +125,9 @@ Requires: (%{name}-modules-neuron if (%{_cross_os}variant-platform(aws) without 
 %endif
 
 Requires: %{_cross_os}kmod-6.18-efa
+
+# Pull in FIPS-related files if needed.
+Requires: (%{name}-fips if %{_cross_os}image-feature(fips))
 
 %global _cross_ksrcdir %{_cross_usrsrc}/kernels/%{version}
 %global _cross_kmoddir %{_cross_libdir}/modules/%{version}
@@ -163,6 +169,14 @@ Summary: mkfs configurations for the XFS filesystem
 Summary: Header files for the Linux kernel for use by glibc
 
 %description headers
+%{summary}.
+
+%package fips
+Summary: FIPS related configuration for the Linux kernel
+Requires: (%{_cross_os}image-feature(fips) and %{name})
+Conflicts: %{_cross_os}image-feature(no-fips)
+
+%description fips
 %{summary}.
 
 %if "%{_cross_arch}" == "x86_64"
@@ -475,6 +489,20 @@ ln -rs %{buildroot}%{_cross_kmoddir} %{buildroot}%{_cross_libdir}/modules/%{kmaj
 # Install a copy of System.map so that module dependencies can be regenerated.
 install -p -m 0600 System.map %{buildroot}%{_cross_kmoddir}
 
+# Ensure that each required FIPS module is loaded as a dependency of the
+# check-fips-module.service. The list of FIPS modules is different across
+# kernels but the check is consistent: it loads the "tcrypt" module after
+# the other modules are loaded.
+mkdir -p %{buildroot}%{_cross_unitdir}/check-fips-modules.service.d
+i=0
+for fipsmod in $(cat %{_sourcedir}/fipsmodules-%{_cross_arch}) ; do
+  [ "${fipsmod}" == "tcrypt" ] && continue
+  drop_in="$(printf "%03d\n" "${i}")-${fipsmod}.conf"
+  sed -e "s|__FIPS_MODULE__|${fipsmod}|g" %{S:200} \
+    > %{buildroot}%{_cross_unitdir}/check-fips-modules.service.d/"${drop_in}"
+  (( i+=1 ))
+done
+
 # Create the mount point for the runtime kernel-devel directory, and populate
 # with the linker script that driverdog needs.
 install -d %{buildroot}%{_cross_datadir}/bottlerocket/kernel-devel/%{version}/scripts
@@ -568,6 +596,9 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/source
 %{_cross_kmoddir}/build
 %attr(775, root, builder) %{_cross_ksrcdir}/scripts/*
+
+%files fips
+%{_cross_unitdir}/check-fips-modules.service.d/*.conf
 
 %files bootconfig-aws
 %{_cross_bootconfigdir}/05-aws.conf
