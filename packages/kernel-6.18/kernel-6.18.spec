@@ -82,6 +82,8 @@ Patch1005: 1005-drm-simpledrm-Select-prerequisites-for-gpu-drivers.patch
 # Disable incomplete measurement into PCR 9 on aarch64.
 Patch1006: 1006-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
 Patch1007: 1007-Revert-selinux-fix-overlayfs-mmap-and-mprotect-acces.patch
+# Fix incorrect FIPS crypto module path for x86_64 builds.
+Patch1008: 1008-kbuild-use-SRCARCH-in-crypto-module-folders.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
