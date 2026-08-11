@@ -60,8 +60,6 @@ Patch1004: 1004-af_unix-increase-default-max_dgram_qlen-to-512.patch
 Patch1005: 1005-Revert-Revert-drm-fb_helper-improve-CONFIG_FB-depend.patch
 # Backport patch to ensure NUL-terminated task->comm buffer
 Patch1006: 1006-strscpy-write-destination-buffer-only-once.patch
-# Disable incomplete measurement into PCR 9 on aarch64.
-Patch1007: 1007-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
