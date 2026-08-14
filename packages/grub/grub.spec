@@ -74,6 +74,8 @@ BuildRequires: automake
 BuildRequires: bison
 BuildRequires: flex
 BuildRequires: gettext-devel
+Provides: %{_cross_os}bootloader(efi)
+Conflicts: %{_cross_os}image-feature(uki-image)
 
 %description
 %{summary}.
