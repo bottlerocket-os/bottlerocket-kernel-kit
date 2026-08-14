@@ -1,3 +1,13 @@
+# v9.0.0 (2026-08-19)
+
+## OS Changes
+
+* Add support for FIPS modules in kernel 6.18 ([#512])
+* Add support for the UKI image format ([#523])
+
+[#512]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/512
+[#523]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/523
+
 # v8.0.0 (2026-08-17)
 
 ## OS Changes
