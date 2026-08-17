@@ -21,42 +21,42 @@ url = "https://aws-nvidia-license-agreement.s3.amazonaws.com/NvidiaGridAWSUserLi
 sha512 = "915d76bc26f7b39202883b6f902ebde1194d1f3e45e6c858ee42ac48615e4b315c658ba78d24bd72a3011289c2ea888ee17089f674497f1cba58d0e0c8f37c7a"
 
 [[package.metadata.build-package.external-files]]
-url = "https://us.download.nvidia.com/tesla/580.159.03/NVIDIA-Linux-x86_64-580.159.03.run"
-sha512 = "658c7bee6289f9e3d4d04fabc9fee5692ec2a61242d05dddbad61d5d667fbc47ea2cb57802079b6f139c240d9119da4b462548a79a03483dfac53de797ffb5cf"
+url = "https://us.download.nvidia.com/tesla/580.178.04/NVIDIA-Linux-x86_64-580.178.04.run"
+sha512 = "b463dec07dab14370e3bd89d559e54e5f81d5b01be9de2bac6c700334c10a8bce2f9049b978a01a97d515d5ebb16ec4ecf02ce35979a8833a619bc6bd97084de"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
-url = "https://us.download.nvidia.com/tesla/580.159.03/NVIDIA-Linux-aarch64-580.159.03.run"
-sha512 = "0213dff7afc53733ef0ec9d8d24b20f8f577aa3225470fa2b86bf74939075683eefa9cd12aef94b8239ba8366aacdec605ee13b8259da9a1393761d853c3e453"
+url = "https://us.download.nvidia.com/tesla/580.178.04/NVIDIA-Linux-aarch64-580.178.04.run"
+sha512 = "3753150ab1fc319137431d24d38aabab9d4dcb11d988cfe7f80813f946926a181415640ac874bf28104274b305ec2d29c7806fbea945224ea97fa5b4afb2475a"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
-url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-fabricmanager-580.159.03-1.amzn2023.x86_64.rpm"
-sha512 = "d8d5ab6e54137c6c30a479db7babb6e8fbf49174d9b559f21d38acdf7474a2eae8e72f5342f99be56bf176ffdb368aa6d6356c43e18a044351739c288679a2e5"
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-fabricmanager-580.178.04-1.amzn2023.x86_64.rpm"
+sha512 = "1935d2ace47e25ccae6e23b42abb35641b0da1ebb124b0f76d6966ce0010beb8fd8863019ef046b001a6d9f416687ad476f8e7bc90b7ec1707c1afae028b0135"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
-url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-fabricmanager-580.159.03-1.amzn2023.aarch64.rpm"
-sha512 = "f2c420e423ce68d2c0cce15b602601933eef24015e50ad87522c8d2b799b5276ad9773d7cc548002ce29d5763d2b68fa6bdd4472a505b1ba97eac596e56f3c0e"
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-fabricmanager-580.178.04-1.amzn2023.aarch64.rpm"
+sha512 = "acdddc210980a450fe6722f529c0f98ca377497749d967dbfb39e91fcb6b8c95ff86fd6d1d4f963a5c10364b826167ae722c592e971b690ba21a652488cf8ef2"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
-url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-imex-580.159.03-1.amzn2023.x86_64.rpm"
-sha512 = "cdada08355452be8dda9ee28177827073776877cfed800bbd9dcad66c065cbdfbf8a35bf234a108fe9634fd70ef31549fccdefee24c0a82e5a4947d620bbf700"
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-imex-580.178.04-1.amzn2023.x86_64.rpm"
+sha512 = "89f4b38004f5d621da2b79e15f10ff46365544d418fdd1349dfa5598dd980738cf35f223953b7ce8fe061c29e64025c604696613985e72b08fef52816a3f286f"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
-url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-imex-580.159.03-1.amzn2023.aarch64.rpm"
-sha512 = "8418ee6f39c9b1e925b4597decb7ba5bdea566a6caad25a352807efbf55c0ef24f5f51f7951776f32009ca9b0fbded01402ee04cb3856ec5e4853e07a804b1a3"
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-imex-580.178.04-1.amzn2023.aarch64.rpm"
+sha512 = "39e50f9bbf7d65c7926305757d0b71fec1f8529690d6f42dc66029bc05fd7db7f18027f4b2284ea00905313d32e908f0c53462edd0e3dfecc0609191a718594b"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
-url = "https://s3.amazonaws.com/ec2-linux-nvidia-drivers/grid-19.5/NVIDIA-Linux-x86_64-580.159.03-grid-aws.run"
-sha512 = "3429b0461f23cec3da26e936717247503f88368ac79754e275db5afe213d806a81b02c584ffa92f34bbcdf63bec73ded51e73eafd4fea755daafbda9e6625683"
+url = "https://s3.amazonaws.com/ec2-linux-nvidia-drivers/grid-19.6/NVIDIA-Linux-x86_64-580.178.04-grid-aws.run"
+sha512 = "5ca704b562a0810b7767fd3534313f0ed69e7dad8afac1d3fba4473cbc743da2ebd86187d411fa82ce03d0e610153d2443dca7e3034f41dfc61b6caa14f56dee"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
-url = "https://raw.githubusercontent.com/NVIDIA/open-gpu-kernel-modules/580.159.03/COPYING"
+url = "https://raw.githubusercontent.com/NVIDIA/open-gpu-kernel-modules/580.178.04/COPYING"
 sha512 = "f9cee68cbb12095af4b4e92d01c210461789ef41c70b64efefd6719d0b88468b7a67a3629c432d4d9304c730b5d1a942228a5bcc74a03ab1c411c77c758cd938"
 force-upstream = true
 
