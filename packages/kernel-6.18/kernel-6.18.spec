@@ -8,13 +8,13 @@
 %global host_arch %(uname -m)
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.18.39
+Version: 6.18.41
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/781fb7c91a27df1d0552a053ab4c5ddc274a95e053a95701beebf16bce6aee45/kernel6.18-6.18.39-79.141.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/a199b2b97de57114d6a4b1e1b97ce38a478c94b75237a7cab59daebdb524880c/kernel6.18-6.18.41-94.142.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
@@ -73,9 +73,6 @@ Patch1003: 1003-initramfs-unlink-INITRAMFS_FORCE-from-CMDLINE_-EXTEN.patch
 Patch1004: 1004-af_unix-increase-default-max_dgram_qlen-to-512.patch
 # Select prerequisites for GPU drivers.
 Patch1005: 1005-drm-simpledrm-Select-prerequisites-for-gpu-drivers.patch
-# Disable incomplete measurement into PCR 9 on aarch64.
-Patch1006: 1006-efi-libstub-don-t-measure-kernel-command-line-into-P.patch
-Patch1007: 1007-Revert-selinux-fix-overlayfs-mmap-and-mprotect-acces.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
@@ -628,9 +625,7 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/arch/arm64/crypto/sm4-ce-cipher.%{_ko}
 %{_cross_kmoddir}/kernel/arch/arm64/lib/xor-neon.%{_ko}
 %endif
-%{_cross_kmoddir}/kernel/crypto/af_alg.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/algif_aead.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/algif_hash.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/algif_rng.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/algif_skcipher.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/ansi_cprng.%{_ko}
