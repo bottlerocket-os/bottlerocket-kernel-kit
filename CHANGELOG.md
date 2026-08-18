@@ -1,3 +1,15 @@
+# v8.0.0 (2026-08-17)
+
+## OS Changes
+
+* Update kernel from 6.1.177-224.371 to 6.1.180-225.360 ([#526])
+* Update kernel from 6.12.95-124.187 to 6.12.100-125.179 ([#526])
+* Update kernel from 6.18.39-79.141 to 6.18.41-94.142 ([#526])
+* Remove AMD GPU driver ([#526])
+* Update EFA installer to 1.49.0 ([#526])
+
+[#526]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/526
+
 # v7.4.0 (2026-08-07)
 
 ## Build Changes

@@ -1,4 +1,4 @@
-%global efa_installer_ver 1.47.0
+%global efa_installer_ver 1.49.0
 %global kernel_sources %{_cross_usrsrc}/kernels/6.12
 %define _kernel_version %(cat %{kernel_sources}/include/config/kernel.release)
 %global _cross_kmoddir %{_cross_libdir}/modules/%{_kernel_version}

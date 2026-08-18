@@ -1,4 +1,4 @@
-%global efa_installer_ver 1.47.0
+%global efa_installer_ver 1.49.0
 %global kmajor 6.1
 %global kernel_sources %{_builddir}/kernel-devel
 %global _cross_kmoddir %{_cross_libdir}/modules/%{kmajor}
