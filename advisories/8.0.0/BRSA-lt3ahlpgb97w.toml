@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-lt3ahlpgb97w"
+title = "kernel CVE-2026-64555"
+cve = "CVE-2026-64555"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: KVM: arm64: nv: Fix SPSR_EL2 restore in kvm_hyp_handle_mops()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.41"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["x86_64", "aarch64"]
+version = "8.0.0"

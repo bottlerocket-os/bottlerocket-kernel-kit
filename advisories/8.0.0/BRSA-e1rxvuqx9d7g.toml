@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-e1rxvuqx9d7g"
+title = "kernel CVE-2026-64326"
+cve = "CVE-2026-64326"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: block: skip sync_blockdev() on surprise removal in bdev_mark_dead()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

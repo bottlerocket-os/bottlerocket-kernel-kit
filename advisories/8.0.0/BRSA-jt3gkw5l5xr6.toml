@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-jt3gkw5l5xr6"
+title = "kernel CVE-2026-64561"
+cve = "CVE-2026-64561"
+severity = "high"
+description = 'In the Linux kernel, the following vulnerability has been resolved: KVM: x86: Check for invalid/obsolete root *after* making MMU pages available Check for a "stale" page fault, i.e. for an invalid and/or obsolete root,'
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.41"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

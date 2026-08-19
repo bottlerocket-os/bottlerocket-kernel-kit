@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-zze3f4ryalwf"
+title = "kernel CVE-2026-64552"
+cve = "CVE-2026-64552"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: virtio-net: fix len check in receive_big()"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.41"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

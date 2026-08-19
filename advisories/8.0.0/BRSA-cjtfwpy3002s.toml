@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-cjtfwpy3002s"
+title = "kernel CVE-2026-64546"
+cve = "CVE-2026-64546"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: drm/edid: fix OOB read in drm_parse_tiled_block()"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.41"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["x86_64", "aarch64"]
+version = "8.0.0"

@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-qdjafsahwkgf"
+title = "kernel CVE-2026-64382"
+cve = "CVE-2026-64382"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: smb: client: fix double-free in SMB2_open() replay"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["x86_64", "aarch64"]
+version = "8.0.0"

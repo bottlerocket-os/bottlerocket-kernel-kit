@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-h2axvpxhac4d"
+title = "kernel CVE-2026-64286"
+cve = "CVE-2026-64286"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: KVM: arm64: Clear __hyp_running_vcpu when flushing the pKVM hyp vCPU"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["x86_64", "aarch64"]
+version = "8.0.0"

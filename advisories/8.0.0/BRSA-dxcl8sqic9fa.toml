@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-dxcl8sqic9fa"
+title = "kernel CVE-2026-63806"
+cve = "CVE-2026-63806"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: KVM: Replace guest-triggerable BUG_ON() in ioeventfd datamatch with get_unaligned()"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

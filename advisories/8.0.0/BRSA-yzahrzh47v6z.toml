@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-yzahrzh47v6z"
+title = "kernel CVE-2026-64472"
+cve = "CVE-2026-64472"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: vfio/mlx5: Fix racy bitfields and tighten struct layout"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.41"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["x86_64", "aarch64"]
+version = "8.0.0"

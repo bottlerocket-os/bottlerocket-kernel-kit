@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-kawhzqz6mrd0"
+title = "kernel CVE-2026-64312"
+cve = "CVE-2026-64312"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: crypto: pcrypt - restore callback for non-parallel fallback"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

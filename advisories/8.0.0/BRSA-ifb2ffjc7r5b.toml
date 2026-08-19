@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-ifb2ffjc7r5b"
+title = "kernel CVE-2026-64296"
+cve = "CVE-2026-64296"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: exfat: bound uniname advance in exfat_find_dir_entry()"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

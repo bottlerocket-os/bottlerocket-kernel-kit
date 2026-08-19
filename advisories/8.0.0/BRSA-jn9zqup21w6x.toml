@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-jn9zqup21w6x"
+title = "kernel CVE-2026-64425"
+cve = "CVE-2026-64425"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: io_uring/io-wq: re-check IO_WQ_BIT_EXIT for each linked work item"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["x86_64", "aarch64"]
+version = "8.0.0"

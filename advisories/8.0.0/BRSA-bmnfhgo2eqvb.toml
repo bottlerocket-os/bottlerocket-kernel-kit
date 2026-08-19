@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-bmnfhgo2eqvb"
+title = "kernel CVE-2026-64284"
+cve = "CVE-2026-64284"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: KVM: x86: Ensure vendor's exit handler runs before fastpath userspace exits"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

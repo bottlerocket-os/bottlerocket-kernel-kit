@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-x3bcghydl8tf"
+title = "kernel CVE-2026-63970"
+cve = "CVE-2026-63970"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: vsock/virtio: bind uarg before filling zerocopy skb"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

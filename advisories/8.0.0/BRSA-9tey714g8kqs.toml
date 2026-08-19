@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-9tey714g8kqs"
+title = "kernel CVE-2026-68086"
+cve = "CVE-2026-68086"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: mm/khugepaged: write all dirty file folios when collapsing"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["x86_64", "aarch64"]
+version = "8.0.0"

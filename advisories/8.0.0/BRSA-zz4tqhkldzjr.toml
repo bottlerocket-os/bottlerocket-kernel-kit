@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-zz4tqhkldzjr"
+title = "kernel CVE-2026-63829"
+cve = "CVE-2026-63829"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: net: ip_gre: require CAP_NET_ADMIN in the device netns for changelink"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["x86_64", "aarch64"]
+version = "8.0.0"
