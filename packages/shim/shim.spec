@@ -10,7 +10,7 @@
 
 %global boot_efi_image boot%{_cross_efi_arch}.efi
 
-%global shimver 16.0
+%global shimver 16.1
 %global commit 18d98bfb34be583a5fe2987542e4b15e0db9cb61
 
 Name: %{_cross_os}shim
