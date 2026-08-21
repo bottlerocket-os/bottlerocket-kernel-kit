@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-ax2h50tg3kfg"
+title = "kernel CVE-2026-53402"
+cve = "CVE-2026-53402"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: fbdev: fbcon: fix out-of-bounds read in err_out of fbcon_do_set_font() When fbcon_do_set_font() fails (e.g., due to a memory allocation failure"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-9fzsiyymc57b"
+title = "kernel CVE-2026-64476"
+cve = "CVE-2026-64476"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: vfio/pci: Latch disable_idle_d3 per device"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.180"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-7hml3tq26ecv"
+title = "kernel CVE-2026-64265"
+cve = "CVE-2026-64265"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: fuse: clear intr_entry in fuse_resend and fuse_remove_pending_req"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

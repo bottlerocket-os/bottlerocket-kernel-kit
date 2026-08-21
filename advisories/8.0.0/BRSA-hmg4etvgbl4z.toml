@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-hmg4etvgbl4z"
+title = "kernel CVE-2026-64192"
+cve = "CVE-2026-64192"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Reject BPF_MAP_TYPE_INODE_STORAGE creation if BPF LSM is uninitialized When CONFIG_BPF_LSM=y is set, BPF inode storage maps"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.41"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

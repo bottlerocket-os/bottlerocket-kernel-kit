@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-zyo8kknhgucc"
+title = "kernel CVE-2026-64415"
+cve = "CVE-2026-64415"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: mm/swap: add cond_resched() in swap_reclaim_full_clusters to prevent softlockup"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"

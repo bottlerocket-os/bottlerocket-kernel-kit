@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-csbvtfuvylyb"
+title = "kernel CVE-2026-64543"
+cve = "CVE-2026-64543"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: tipc: fix use-after-free of the discoverer in tipc_disc_rcv()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.100"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.41"
+patched-epoch = "0"
+
+[updateinfo]
+author = "tianlyu"
+issue-date = 2026-08-19T00:36:43Z
+arches = ["aarch64", "x86_64"]
+version = "8.0.0"
