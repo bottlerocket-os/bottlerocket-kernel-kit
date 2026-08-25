@@ -1,3 +1,20 @@
+# v9.0.0 (2026-08-24)
+
+## OS Changes
+* Enable FIPS support for kernel-6.18 ([#512])
+* Enable kernel measurements for PCR9 ([#523])
+* Add a sub-package in `shim` to support `systemd-boot` ([#523])
+* Provide `bootloader(eif)` capability in `grub` ([#523])
+
+### Third Party Package Updates
+* Update `shim` to v16.1 ([#529])
+* Update NVIDIA 580 drivers, 595 drivers and grid drivers ([#525])
+
+[#512]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/512
+[#523]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/523
+[#525]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/525
+[#529]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/529
+
 # v8.0.0 (2026-08-17)
 
 ## OS Changes
