@@ -1,8 +1,0 @@
-[nvidia-grid-copy-only]
-lib-modules-path = "kernel/drivers/extra/video/nvidia/grid"
-
-[nvidia-grid-copy-only.kernel-modules."nvidia-drm.ko"]
-copy-source = "__NVIDIA_MODULES__"
-
-[nvidia-grid-copy-only.kernel-modules."nvidia-peermem.ko"]
-copy-source = "__NVIDIA_MODULES__"

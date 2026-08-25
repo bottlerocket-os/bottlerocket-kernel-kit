@@ -1,6 +1,8 @@
 [Unit]
 Description=Copy open GPU kernel modules
 RequiresMountsFor=PREFIX/lib/modules PREFIX/src/kernels
+# Order after the branch overlay so ghostdog/driverdog see files at canonical paths.
+After=nvidia-lts-overlay-driver.service nvidia-fb-overlay-driver.service
 # Rerunning this service after the system is fully loaded will override
 # the already linked kernel modules. This doesn't affect the running system,
 # since kernel modules are linked early in the boot sequence, but we still
@@ -11,8 +13,8 @@ RefuseManualStop=true
 [Service]
 Type=oneshot
 ExecCondition=/usr/bin/ghostdog match-nvidia-driver open-gpu
-ExecStart=/usr/bin/driverdog --modules-set nvidia-open-gpu link-modules
-ExecStart=/usr/bin/driverdog --modules-set nvidia-open-gpu-copy-only link-modules
+ExecStart=/usr/bin/driverdog --modules-set nvidia-fb-open-gpu link-modules
+ExecStart=/usr/bin/driverdog --modules-set nvidia-fb-open-gpu-copy-only link-modules
 RemainAfterExit=true
 StandardError=journal+console
 

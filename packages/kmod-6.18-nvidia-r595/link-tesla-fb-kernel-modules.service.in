@@ -1,6 +1,8 @@
 [Unit]
 Description=Link Tesla kernel modules
 RequiresMountsFor=PREFIX/lib/modules PREFIX/src/kernels
+# Order after the branch overlay so ghostdog/driverdog see files at canonical paths.
+After=nvidia-lts-overlay-driver.service nvidia-fb-overlay-driver.service
 # Rerunning this service after the system is fully loaded will override
 # the already linked kernel modules. This doesn't affect the running system,
 # since kernel modules are linked early in the boot sequence, but we still
@@ -11,7 +13,7 @@ RefuseManualStop=true
 [Service]
 Type=oneshot
 ExecCondition=/usr/bin/ghostdog match-nvidia-driver tesla
-ExecStart=/usr/bin/driverdog --modules-set nvidia-tesla link-modules
+ExecStart=/usr/bin/driverdog --modules-set nvidia-fb-tesla link-modules
 RemainAfterExit=true
 StandardError=journal+console
 

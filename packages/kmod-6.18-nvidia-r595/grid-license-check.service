@@ -2,6 +2,8 @@
 Description=GRID License Check
 RefuseManualStart=true
 RefuseManualStop=true
+# Order after the branch overlay so ghostdog/nvidia-smi see files at canonical paths.
+After=nvidia-lts-overlay-driver.service nvidia-fb-overlay-driver.service
 After=nvidia-gridd.service
 Requires=nvidia-gridd.service
 
