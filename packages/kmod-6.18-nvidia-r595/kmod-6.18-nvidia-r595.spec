@@ -67,6 +67,10 @@ Source211: grid-license-check.timer
 Source212: open-gpu-license-fallback.service
 Source213: tesla-license-fallback.service
 Source214: grid-license-file-check.conf
+Source215: nvidia-imex.service
+Source216: nvidia-imex.cfg
+Source217: nvidia-imex-tmpfiles.conf
+Source218: nvidia-imex-default-channel.conf
 
 # NVIDIA tesla conf files from 300 to 399
 Source300: nvidia-tesla-fb-tmpfiles.conf
@@ -137,6 +141,13 @@ Requires: %{name}
 Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-imex
 
 %description imex
+%{summary}.
+
+%package imex-config
+Summary: NVIDIA IMEX modprobe configuration
+Requires: %{name}-imex
+
+%description imex-config
 %{summary}.
 
 %package open-gpu
@@ -562,9 +573,15 @@ install -p -m 0755 usr/bin/nvidia-imex-ctl %{buildroot}%{nvidia_root}/bin
 
 popd
 
-# IMEX config storage dir. Owned by the base package so the overlay service's
-# lowerdir always exists; populated by the imex subpackage when present.
+# NVIDIA IMEX service, config, and tmpfiles
+install -p -m 0644 %{S:215} %{buildroot}%{_cross_unitdir}
 install -d %{buildroot}%{nvidia_root}/etc-nvidia-imex
+install -p -m 0644 %{S:216} %{buildroot}%{nvidia_root}/etc-nvidia-imex/config.cfg
+install -p -m 0644 %{S:217} %{buildroot}%{_cross_tmpfilesdir}/nvidia-imex.conf
+
+# NVIDIA IMEX modprobe config
+install -d %{buildroot}%{_cross_libdir}/modprobe.d
+install -p -m 0644 %{S:218} %{buildroot}%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
 
 install -d %{buildroot}%{nvidia_root}/share-nvidia/gdrcopy/open-gpu/drivers
 
@@ -906,6 +923,12 @@ install -d %{buildroot}%{_cross_datadir}/egl
 %files imex
 %{nvidia_root}/bin/nvidia-imex
 %{nvidia_root}/bin/nvidia-imex-ctl
+%{_cross_unitdir}/nvidia-imex.service
+%{nvidia_root}/etc-nvidia-imex/config.cfg
+%{_cross_tmpfilesdir}/nvidia-imex.conf
+
+%files imex-config
+%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
 
 %files mps
 %{nvidia_root}/bin/nvidia-cuda-mps-control
