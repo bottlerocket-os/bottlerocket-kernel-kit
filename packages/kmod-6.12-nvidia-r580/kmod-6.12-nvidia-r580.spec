@@ -1,8 +1,8 @@
 %global tesla_major 580
-%global tesla_minor 159
-%global tesla_patch 03
+%global tesla_minor 178
+%global tesla_patch 04
 %global tesla_ver %{tesla_major}.%{tesla_minor}.%{tesla_patch}
-%global grid_ver grid-19.5
+%global grid_ver grid-19.6
 %global gdrcopy_ver 2.6
 %if "%{?_cross_arch}" == "aarch64"
 %global nvidia_arch sbsa
