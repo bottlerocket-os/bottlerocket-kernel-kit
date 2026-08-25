@@ -1,0 +1,36 @@
+[Unit]
+Description=NVIDIA lts branch driver library/binary and kernel-module overlays
+DefaultDependencies=no
+Before=drivers.target
+# The modules re-layer's upper/work live under /var/lib/kernel-modules, which
+# prepare-var.service creates
+Wants=prepare-var.service
+After=prepare-var.service
+RequiresMountsFor=/var /usr/lib/modules
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+StandardError=journal+console
+
+# The /usr/lib64 overlay shadows the /usr/lib/modules mount.
+# To preserve /usr/lib/modules, we bind the lib-modules
+# overlay to a second path and then re-layer it as a lowerdir
+ExecStart=/usr/bin/mkdir -p \
+    /run/nvidia/base-modules \
+    /var/lib/kernel-modules/.nvidia/upper \
+    /var/lib/kernel-modules/.nvidia/work
+ExecStart=/usr/bin/mount --bind /usr/lib/modules /run/nvidia/base-modules
+ExecStart=/usr/bin/mount -t overlay overlay --options ro,nodev,noatime,lowerdir=/usr/nvidia/lts/lib64:/usr/lib64 /usr/lib64
+# Remount /run/nvidia/base-modules on /usr/lib/modules bringing back the original
+# /lib/modules as the lowerdir with new upperdir and workdir for write access
+ExecStart=/usr/bin/mount -t overlay nvidia-modules --options rw,nosuid,nodev,noexec,noatime,context=system_u:object_r:state_t:s0,lowerdir=/run/nvidia/base-modules,upperdir=/var/lib/kernel-modules/.nvidia/upper,workdir=/var/lib/kernel-modules/.nvidia/work /usr/lib/modules
+
+ExecStart=/usr/bin/mount -t overlay overlay --options ro,nosuid,nodev,noexec,noatime,lowerdir=/usr/nvidia/lts/share-nvidia:/usr/share/nvidia /usr/share/nvidia
+ExecStart=/usr/bin/mount -t overlay overlay --options ro,nodev,noatime,lowerdir=/usr/nvidia/lts/bin:/usr/bin /usr/bin
+ExecStart=/usr/bin/mount -t overlay overlay --options ro,nosuid,nodev,noexec,noatime,lowerdir=/usr/nvidia/lts/share-vulkan:/usr/share/vulkan /usr/share/vulkan
+ExecStart=/usr/bin/mount -t overlay overlay --options ro,nosuid,nodev,noexec,noatime,lowerdir=/usr/nvidia/lts/share-glvnd:/usr/share/glvnd /usr/share/glvnd
+ExecStart=/usr/bin/mount -t overlay overlay --options ro,nosuid,nodev,noexec,noatime,lowerdir=/usr/nvidia/lts/share-egl:/usr/share/egl /usr/share/egl
+
+[Install]
+RequiredBy=drivers.target

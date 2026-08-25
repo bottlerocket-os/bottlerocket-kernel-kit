@@ -1,8 +1,8 @@
 [Unit]
 Description=Load GDRCopy kernel module (open-gpu)
 RequiresMountsFor=PREFIX/lib/modules PREFIX/src/kernels
-After=copy-gdrcopy-open-gpu-kernel-module.service load-open-gpu-kernel-modules.service
-Requires=copy-gdrcopy-open-gpu-kernel-module.service load-open-gpu-kernel-modules.service
+After=nvidia-lts-copy-gdrcopy-open-gpu-kernel-module.service nvidia-lts-load-open-gpu-kernel-modules.service
+Requires=nvidia-lts-copy-gdrcopy-open-gpu-kernel-module.service nvidia-lts-load-open-gpu-kernel-modules.service
 # Disable manual restarts to prevent loading kernel modules
 # that weren't linked by the running system
 RefuseManualStart=true
@@ -11,7 +11,7 @@ RefuseManualStop=true
 [Service]
 Type=oneshot
 ExecCondition=/usr/bin/ghostdog match-nvidia-driver open-gpu
-ExecStart=/usr/bin/driverdog --modules-set nvidia-gdrcopy-open-gpu load-modules
+ExecStart=/usr/bin/driverdog --modules-set nvidia-lts-gdrcopy-open-gpu load-modules
 ExecStart=/usr/bin/ghostdog create-device gdrdrv 0 --path /dev/gdrdrv
 RemainAfterExit=true
 StandardError=journal+console

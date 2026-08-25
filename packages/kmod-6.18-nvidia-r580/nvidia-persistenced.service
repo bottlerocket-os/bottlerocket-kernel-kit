@@ -1,6 +1,8 @@
 [Unit]
 Description=NVIDIA Persistence Daemon
-After=load-tesla-kernel-modules.service load-open-gpu-kernel-modules.service load-grid-kernel-modules.service
+# Ensure persistenced starts after /dev/nvidia* exists
+After=nvidia-lts-load-tesla-kernel-modules.service nvidia-lts-load-open-gpu-kernel-modules.service nvidia-lts-load-grid-kernel-modules.service
+After=nvidia-fb-load-tesla-kernel-modules.service nvidia-fb-load-open-gpu-kernel-modules.service nvidia-fb-load-grid-kernel-modules.service
 
 [Service]
 Type=forking
