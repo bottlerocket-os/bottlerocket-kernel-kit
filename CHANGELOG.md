@@ -1,3 +1,10 @@
+# v9.0.1 (2026-08-27)
+
+## OS Changes
+* Revert selinux change to fix overlayfs mmap and mprotect access checks in kernel-6.12 and kernel-6.18 ([#535])
+
+[#535]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/535
+
 # v9.0.0 (2026-08-24)
 
 ## OS Changes
