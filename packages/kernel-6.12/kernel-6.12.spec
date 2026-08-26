@@ -70,6 +70,7 @@ Patch1005: 1005-Lustre-cast-unsigned-long-to-pointer.patch
 Patch1006: 1006-Select-prerequisites-for-gpu-drivers.patch
 # Backport patch to ensure NUL-terminated task->comm buffer
 Patch1007: 1007-strscpy-write-destination-buffer-only-once.patch
+Patch1008: 1008-Revert-selinux-fix-overlayfs-mmap-and-mprotect-acces.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
