@@ -9,7 +9,14 @@ bail() {
 }
 
 find_sdk() {
-  grep -A5 '^\[sdk\]' Twoliter.lock | grep '^source' | cut -d'"' -f2
+  local sdk_source sdk_override
+  sdk_source="$(grep -A5 '^\[sdk\]' Twoliter.lock | grep '^source' | cut -d'"' -f2)"
+  if [[ -s "Twoliter.override" ]]; then
+    echo "Resolving SDK via twoliter update" >&2
+    sdk_override="$(./tools/twoliter/twoliter update 2>&1 \
+      | awk -F'overridden-to: ' 'NF>1 {split($2, a, ")"); print a[1]; exit}')"
+  fi
+  echo "${sdk_override:-$sdk_source}"
 }
 
 SCRIPT_PATH="$1"
