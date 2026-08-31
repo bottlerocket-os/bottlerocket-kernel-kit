@@ -1,3 +1,20 @@
+# v9.0.2 (2026-08-31)
+
+## OS Changes
+* Update kernel from 6.1.180-225.360 to 6.1.182-227.379 ([#541])
+* Update kernel from 6.12.100-125.179 to 6.12.103-127.188 ([#542])
+* Update kernel from 6.18.41-94.142 to 6.18.44-99.149 ([#540])
+
+## Build Changes
+* Update Twoliter to `v0.24.0` ([#538])
+* Add support for `Twoliter.override` in `make full-config` ([#539])
+
+[#538]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/538
+[#539]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/539
+[#540]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/540
+[#541]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/541
+[#542]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/542
+
 # v9.0.1 (2026-08-27)
 
 ## OS Changes
