@@ -2,6 +2,10 @@
 Description=NVIDIA Grid Daemon
 Wants=systemd-resolved.service network-online.target nvidia-persistenced.service
 After=systemd-resolved.service network-online.target nvidia-persistenced.service
+# Order after the branch overlays: needs libs/binary (driver overlay) and
+# /etc/nvidia/gridd.conf (config overlay) at their canonical paths.
+After=nvidia-lts-overlay-driver.service nvidia-fb-overlay-driver.service
+After=nvidia-lts-overlay-config.service nvidia-fb-overlay-config.service
 
 [Service]
 Type=forking

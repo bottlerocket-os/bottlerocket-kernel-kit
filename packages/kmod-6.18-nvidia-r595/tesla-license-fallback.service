@@ -1,5 +1,7 @@
 [Unit]
 Description=Tesla GRID License Check Fallback
+# Order after the branch overlay so ghostdog reads the supported-devices json at its canonical path.
+After=nvidia-lts-overlay-driver.service nvidia-fb-overlay-driver.service
 RefuseManualStart=true
 RefuseManualStop=true
 

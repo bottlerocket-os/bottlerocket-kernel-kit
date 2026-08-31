@@ -4,6 +4,11 @@
 %global tesla_ver %{tesla_major}.%{tesla_minor}.%{tesla_patch}
 %global grid_ver grid-20.2
 %global gdrcopy_ver 2.6
+# Branch name for namespaced multi-driver paths
+%global nvidia_branch fb
+# Branch-namespaced storage root for files that are overlaid onto canonical paths
+# at boot. Resolved to /usr/nvidia/fb
+%global nvidia_root %{_cross_prefix}/nvidia/%{nvidia_branch}
 %if "%{?_cross_arch}" == "aarch64"
 %global nvidia_arch sbsa
 %else
@@ -62,32 +67,42 @@ Source211: grid-license-check.timer
 Source212: open-gpu-license-fallback.service
 Source213: tesla-license-fallback.service
 Source214: grid-license-file-check.conf
+Source215: nvidia-imex.service
+Source216: nvidia-imex.cfg
+Source217: nvidia-imex-tmpfiles.conf
+Source218: nvidia-imex-default-channel.conf
 
 # NVIDIA tesla conf files from 300 to 399
-Source300: nvidia-tesla-tmpfiles.conf
-Source301: nvidia-tesla-build-config.toml.in
+Source300: nvidia-tesla-fb-tmpfiles.conf
+Source301: nvidia-tesla-fb-build-config.toml.in
 
 # Driverdog config templates from 400 to 499
-Source400: nvidia-open-gpu-config.toml.in
-Source401: nvidia-open-gpu-copy-only-config.toml.in
-Source402: nvidia-grid-config.toml.in
-Source403: nvidia-grid-copy-only-config.toml.in
+Source400: nvidia-open-gpu-fb-config.toml.in
+Source401: nvidia-open-gpu-copy-only-fb-config.toml.in
+Source402: nvidia-grid-fb-config.toml.in
+Source403: nvidia-grid-copy-only-fb-config.toml.in
 
 # Systemd service templates from 500 to 599
-Source500: link-tesla-kernel-modules.service.in
-Source501: load-tesla-kernel-modules.service.in
-Source502: copy-open-gpu-kernel-modules.service.in
-Source503: load-open-gpu-kernel-modules.service.in
-Source504: copy-grid-kernel-modules.service.in
-Source505: load-grid-kernel-modules.service.in
+Source500: link-tesla-fb-kernel-modules.service.in
+Source501: load-tesla-fb-kernel-modules.service.in
+Source502: copy-open-gpu-fb-kernel-modules.service.in
+Source503: load-open-gpu-fb-kernel-modules.service.in
+Source504: copy-grid-fb-kernel-modules.service.in
+Source505: load-grid-fb-kernel-modules.service.in
 
-Source600: nvidia-gdrcopy-open-gpu-config.toml.in
-Source601: copy-gdrcopy-open-gpu-kernel-module.service.in
-Source602: load-gdrcopy-open-gpu-kernel-module.service.in
-Source603: nvidia-gdrcopy-tmpfiles.conf
+Source600: nvidia-gdrcopy-open-gpu-fb-config.toml.in
+Source601: copy-gdrcopy-open-gpu-fb-kernel-module.service.in
+Source602: load-gdrcopy-open-gpu-fb-kernel-module.service.in
+Source603: nvidia-gdrcopy-fb-tmpfiles.conf
 
 # GDRcopy
 Source700: https://github.com/NVIDIA/gdrcopy/archive/v%{gdrcopy_ver}/gdrcopy-%{gdrcopy_ver}.tar.gz
+
+# Overlay activation units, split by concern: driver (lib/bin/modules) and config
+# (/etc). Run unconditionally in a single-driver image; gated per-branch by
+# kmod-nvidia-multi in a multi image.
+Source800: nvidia-fb-overlay-driver.service
+Source801: nvidia-fb-overlay-config.service
 
 Patch001: 0001-makefile-allow-to-use-any-kernel-arch.patch
 
@@ -101,6 +116,12 @@ Requires: %{name}-grid
 %endif
 Requires: %{name}-mps
 
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}
+
+# Refuse to co-install the lts and fb branches without the multi-driver
+# meta-package, so a variant that pulls in both fails to resolve.
+Conflicts: (%{_cross_os}kmod-6.18-nvidia-lts unless %{_cross_os}kmod-6.18-nvidia-multi)
+
 %description
 %{summary}.
 
@@ -109,6 +130,7 @@ Summary: NVIDIA fabricmanager config and service files
 Requires: %{name}-tesla(fabricmanager)
 Requires: %{_cross_os}nvlsm
 Requires: %{name}-imex
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-fabricmanager
 
 %description fabricmanager
 %{summary}.
@@ -116,8 +138,16 @@ Requires: %{name}-imex
 %package imex
 Summary: NVIDIA IMEX config and service files
 Requires: %{name}
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-imex
 
 %description imex
+%{summary}.
+
+%package imex-config
+Summary: NVIDIA IMEX modprobe configuration
+Requires: %{name}-imex
+
+%description imex-config
 %{summary}.
 
 %package open-gpu
@@ -126,6 +156,7 @@ Version: %{tesla_ver}
 License: MIT AND GPL-2.0-only
 Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-open-gpu
 
 %description open-gpu
 %{summary}.
@@ -138,6 +169,7 @@ License: MIT AND GPL-2.0-only AND LicenceRef-NVIDIA-GRID-AWS-EULA
 Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
 Requires: %{_cross_os}libstdc++
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-grid
 
 %description grid
 %{summary}.
@@ -151,6 +183,7 @@ Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
 Requires: %{name}-fabricmanager
 Provides: %{name}-tesla(fabricmanager)
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-tesla
 
 %description tesla
 %{summary}
@@ -158,6 +191,7 @@ Provides: %{name}-tesla(fabricmanager)
 %package mps
 Summary: NVIDIA CUDA Multi-Process Service
 Requires: %{name}
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-mps
 
 %description mps
 %{summary}.
@@ -166,6 +200,7 @@ Requires: %{name}
 Summary: NVIDIA GDRCopy driver
 Version: %{gdrcopy_ver}
 License: MIT AND GPL-2.0-only
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-gdrcopy
 Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
 
@@ -301,12 +336,12 @@ mv gdrdrv.ko ../../gdrdrv-open-gpu.ko
 popd
 
 %install
-install -d %{buildroot}%{_cross_libdir}
-install -d %{buildroot}%{_cross_libdir}/nvidia/tesla
+install -d %{buildroot}%{nvidia_root}/lib64
+install -d %{buildroot}%{nvidia_root}/lib64/tesla
 install -d %{buildroot}%{_cross_tmpfilesdir}
 install -d %{buildroot}%{_cross_unitdir}
 install -d %{buildroot}%{_cross_sysusersdir}
-install -d %{buildroot}%{_cross_bindir}
+install -d %{buildroot}%{nvidia_root}/bin
 
 sed \
   -e "s|__KERNEL_VERSION__|%{kernel_major}|" \
@@ -319,142 +354,143 @@ install -p -m 0644 %{S:202} %{buildroot}%{_cross_libdir}/modules-load.d/nvidia-d
 
 # NVIDIA fabric manager service unit and config
 install -p -m 0644 %{S:203} %{buildroot}%{_cross_unitdir}
-install -d %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/nvidia
+install -d %{buildroot}%{nvidia_root}/etc-nvidia
 install -d %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
-install -p -m 0644 %{S:204} %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/nvidia/fabricmanager.cfg
-install -p -m 0644 %{S:207} %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/nvidia/fabricmanager.env
+install -p -m 0644 %{S:204} %{buildroot}%{nvidia_root}/etc-nvidia/fabricmanager.cfg
+install -p -m 0644 %{S:207} %{buildroot}%{nvidia_root}/etc-nvidia/fabricmanager.env
 
 # Begin NVIDIA tesla driver
 pushd NVIDIA-Linux-%{_cross_arch}-%{tesla_ver}
 # Proprietary driver
-install -d %{buildroot}%{_cross_bindir}
-install -d %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin
-install -d %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
-install -d %{buildroot}%{_cross_factorydir}/nvidia/tesla
-install -d %{buildroot}%{_cross_factorydir}/nvidia/open-gpu
+install -d %{buildroot}%{nvidia_root}/bin
+install -d %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin
+install -d %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
+install -d %{buildroot}%{_cross_factorydir}/nvidia/%{nvidia_branch}/tesla
+install -d %{buildroot}%{_cross_factorydir}/nvidia/%{nvidia_branch}/open-gpu
 %if "%{_cross_arch}" == "x86_64"
-install -d %{buildroot}%{_cross_factorydir}/nvidia/grid
+install -d %{buildroot}%{_cross_factorydir}/nvidia/%{nvidia_branch}/grid
 %endif
-install -d %{buildroot}%{_cross_datadir}/nvidia/open-gpu/drivers
+install -d %{buildroot}%{nvidia_root}/share-nvidia/open-gpu/drivers
 
-install -m 0644 %{S:300} %{buildroot}%{_cross_tmpfilesdir}/nvidia-tesla.conf
-sed -e 's|__NVIDIA_MODULES__|%{_cross_datadir}/nvidia/tesla/module-objects.d/|' %{S:301} > \
-  nvidia-tesla.toml
-install -m 0644 nvidia-tesla.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
-sed -e 's|__NVIDIA_MODULES__|%{_cross_datadir}/nvidia/open-gpu/drivers/|' %{S:400} > \
-  nvidia-open-gpu.toml
-install -m 0644 nvidia-open-gpu.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
-sed -e 's|__NVIDIA_MODULES__|%{_cross_datadir}/nvidia/open-gpu/drivers/|' %{S:401} > \
-  nvidia-open-gpu-copy-only.toml
-install -m 0644 nvidia-open-gpu-copy-only.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+install -m 0644 %{S:300} %{buildroot}%{_cross_tmpfilesdir}/nvidia-%{nvidia_branch}-tesla.conf
+
+sed -e 's|__NVIDIA_MODULES__|%{nvidia_root}/share-nvidia/tesla/module-objects.d/|' %{S:301} > \
+  nvidia-%{nvidia_branch}-tesla.toml
+install -m 0644 nvidia-%{nvidia_branch}-tesla.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+sed -e 's|__NVIDIA_MODULES__|%{nvidia_root}/share-nvidia/open-gpu/drivers/|' %{S:400} > \
+  nvidia-%{nvidia_branch}-open-gpu.toml
+install -m 0644 nvidia-%{nvidia_branch}-open-gpu.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+sed -e 's|__NVIDIA_MODULES__|%{nvidia_root}/share-nvidia/open-gpu/drivers/|' %{S:401} > \
+  nvidia-%{nvidia_branch}-open-gpu-copy-only.toml
+install -m 0644 nvidia-%{nvidia_branch}-open-gpu-copy-only.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
 
 %if "%{_cross_arch}" == "x86_64"
-sed -e 's|__NVIDIA_MODULES__|%{_cross_datadir}/nvidia/grid/drivers/|' %{S:402} > \
-  nvidia-grid.toml
-install -m 0644 nvidia-grid.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
-sed -e 's|__NVIDIA_MODULES__|%{_cross_datadir}/nvidia/grid/drivers/|' %{S:403} > \
-  nvidia-grid-copy-only.toml
-install -m 0644 nvidia-grid-copy-only.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+sed -e 's|__NVIDIA_MODULES__|%{nvidia_root}/share-nvidia/grid/drivers/|' %{S:402} > \
+  nvidia-%{nvidia_branch}-grid.toml
+install -m 0644 nvidia-%{nvidia_branch}-grid.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+sed -e 's|__NVIDIA_MODULES__|%{nvidia_root}/share-nvidia/grid/drivers/|' %{S:403} > \
+  nvidia-%{nvidia_branch}-grid-copy-only.toml
+install -m 0644 nvidia-%{nvidia_branch}-grid-copy-only.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
 %endif
-# Services to link/copy/load modules
-sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:500} > link-tesla-kernel-modules.service
-sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:501} > load-tesla-kernel-modules.service
+
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:500} > nvidia-%{nvidia_branch}-link-tesla-kernel-modules.service
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:501} > nvidia-%{nvidia_branch}-load-tesla-kernel-modules.service
 install -p -m 0644 \
-  link-tesla-kernel-modules.service \
-  load-tesla-kernel-modules.service \
+  nvidia-%{nvidia_branch}-link-tesla-kernel-modules.service \
+  nvidia-%{nvidia_branch}-load-tesla-kernel-modules.service \
   %{buildroot}%{_cross_unitdir}
 
-sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:502} > copy-open-gpu-kernel-modules.service
-sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:503} > load-open-gpu-kernel-modules.service
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:502} > nvidia-%{nvidia_branch}-copy-open-gpu-kernel-modules.service
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:503} > nvidia-%{nvidia_branch}-load-open-gpu-kernel-modules.service
 install -p -m 0644 \
-  copy-open-gpu-kernel-modules.service \
-  load-open-gpu-kernel-modules.service \
+  nvidia-%{nvidia_branch}-copy-open-gpu-kernel-modules.service \
+  nvidia-%{nvidia_branch}-load-open-gpu-kernel-modules.service \
   %{buildroot}%{_cross_unitdir}
 
 %if "%{_cross_arch}" == "x86_64"
-sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:504} > copy-grid-kernel-modules.service
-sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:505} > load-grid-kernel-modules.service
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:504} > nvidia-%{nvidia_branch}-copy-grid-kernel-modules.service
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:505} > nvidia-%{nvidia_branch}-load-grid-kernel-modules.service
 install -p -m 0644 \
-  copy-grid-kernel-modules.service \
-  load-grid-kernel-modules.service \
+  nvidia-%{nvidia_branch}-copy-grid-kernel-modules.service \
+  nvidia-%{nvidia_branch}-load-grid-kernel-modules.service \
   %{buildroot}%{_cross_unitdir}
 %endif
 
 # proprietary driver
-install kernel/nvidia.mod.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
-install kernel/nvidia/nv-interface.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
-install kernel/nvidia/nv-kernel.o_binary %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d/nv-kernel.o
+install kernel/nvidia.mod.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
+install kernel/nvidia/nv-interface.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
+install kernel/nvidia/nv-kernel.o_binary %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d/nv-kernel.o
 
 # module-common object
-install kernel/.module-common.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d/.module-common.o
+install kernel/.module-common.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d/.module-common.o
 
 # uvm
-install kernel/nvidia-uvm.mod.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
-install kernel/nvidia-uvm.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
+install kernel/nvidia-uvm.mod.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
+install kernel/nvidia-uvm.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
 
 # modeset
-install kernel/nvidia-modeset.mod.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
-install kernel/nvidia-modeset/nv-modeset-interface.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
-install kernel/nvidia-modeset/nv-modeset-kernel.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
+install kernel/nvidia-modeset.mod.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
+install kernel/nvidia-modeset/nv-modeset-interface.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
+install kernel/nvidia-modeset/nv-modeset-kernel.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
 
 # peermem
-install kernel/nvidia-peermem.mod.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
-install kernel/nvidia-peermem/nvidia-peermem.o %{buildroot}%{_cross_datadir}/nvidia/tesla/module-objects.d
+install kernel/nvidia-peermem.mod.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
+install kernel/nvidia-peermem/nvidia-peermem.o %{buildroot}%{nvidia_root}/share-nvidia/tesla/module-objects.d
 
 # drm
-install kernel/nvidia-drm.mod.o %{buildroot}/%{_cross_datadir}/nvidia/tesla/module-objects.d
-install kernel/nvidia-drm.o %{buildroot}/%{_cross_datadir}/nvidia/tesla/module-objects.d
+install kernel/nvidia-drm.mod.o %{buildroot}/%{nvidia_root}/share-nvidia/tesla/module-objects.d
+install kernel/nvidia-drm.o %{buildroot}/%{nvidia_root}/share-nvidia/tesla/module-objects.d
 
 # open driver
-install -d %{buildroot}%{_cross_datadir}/nvidia/open-gpu/drivers/
-install kernel-open/nvidia.ko %{buildroot}%{_cross_datadir}/nvidia/open-gpu/drivers/
+install -d %{buildroot}%{nvidia_root}/share-nvidia/open-gpu/drivers/
+install kernel-open/nvidia.ko %{buildroot}%{nvidia_root}/share-nvidia/open-gpu/drivers/
 
-# add various vulkan icd/config
-install -d %{buildroot}%{_cross_datadir}/vulkan/icd.d
-install -d %{buildroot}%{_cross_datadir}/vulkan/implicit_layer.d
-install -m 0644 nvidia_icd.json %{buildroot}%{_cross_datadir}/vulkan/icd.d/nvidia_icd.json
-install -m 0644 nvidia_layers.json %{buildroot}%{_cross_datadir}/vulkan/icd.d/nvidia_layers.json
-install -d %{buildroot}%{_cross_datadir}/glvnd/egl_vendor.d
-install -m 0644 10_nvidia.json %{buildroot}%{_cross_datadir}/glvnd/egl_vendor.d/10_nvidia.json
-install -d %{buildroot}%{_cross_datadir}/egl/egl_external_platform.d
-install -m 0644 10_nvidia_wayland.json %{buildroot}%{_cross_datadir}/egl/egl_external_platform.d/10_nvidia_wayland.json
-install -m 0644 15_nvidia_gbm.json %{buildroot}%{_cross_datadir}/egl/egl_external_platform.d/15_nvidia_gbm.json
-ln -rs %{buildroot}%{_cross_datadir}/vulkan/icd.d/nvidia_layers.json %{buildroot}%{_cross_datadir}/vulkan/implicit_layer.d/nvidia_layers.json
+# add various vulkan icd/config under a branch-namespaced subdir
+install -d %{buildroot}%{nvidia_root}/share-vulkan/icd.d
+install -d %{buildroot}%{nvidia_root}/share-vulkan/implicit_layer.d
+install -m 0644 nvidia_icd.json %{buildroot}%{nvidia_root}/share-vulkan/icd.d/nvidia_icd.json
+install -m 0644 nvidia_layers.json %{buildroot}%{nvidia_root}/share-vulkan/icd.d/nvidia_layers.json
+install -d %{buildroot}%{nvidia_root}/share-glvnd/egl_vendor.d
+install -m 0644 10_nvidia.json %{buildroot}%{nvidia_root}/share-glvnd/egl_vendor.d/10_nvidia.json
+install -d %{buildroot}%{nvidia_root}/share-egl/egl_external_platform.d
+install -m 0644 10_nvidia_wayland.json %{buildroot}%{nvidia_root}/share-egl/egl_external_platform.d/10_nvidia_wayland.json
+install -m 0644 15_nvidia_gbm.json %{buildroot}%{nvidia_root}/share-egl/egl_external_platform.d/15_nvidia_gbm.json
+ln -rs %{buildroot}%{nvidia_root}/share-vulkan/icd.d/nvidia_layers.json %{buildroot}%{nvidia_root}/share-vulkan/implicit_layer.d/nvidia_layers.json
 
 # uvm
-install kernel-open/nvidia-uvm.ko %{buildroot}%{_cross_datadir}/nvidia/open-gpu/drivers/
+install kernel-open/nvidia-uvm.ko %{buildroot}%{nvidia_root}/share-nvidia/open-gpu/drivers/
 
 # modeset
-install kernel-open/nvidia-modeset.ko %{buildroot}%{_cross_datadir}/nvidia/open-gpu/drivers/
+install kernel-open/nvidia-modeset.ko %{buildroot}%{nvidia_root}/share-nvidia/open-gpu/drivers/
 
 # peermem
-install kernel-open/nvidia-peermem.ko %{buildroot}%{_cross_datadir}/nvidia/open-gpu/drivers/
+install kernel-open/nvidia-peermem.ko %{buildroot}%{nvidia_root}/share-nvidia/open-gpu/drivers/
 
 # drm
-install kernel-open/nvidia-drm.ko %{buildroot}%{_cross_datadir}/nvidia/open-gpu/drivers/
+install kernel-open/nvidia-drm.ko %{buildroot}%{nvidia_root}/share-nvidia/open-gpu/drivers/
 # end open driver
 
 %if "%{_cross_arch}" == "x86_64"
 # GRID driver
 pushd ../NVIDIA-Linux-x86_64-%{tesla_ver}-grid-aws
-install -d %{buildroot}%{_cross_datadir}/nvidia/grid/drivers/
-install kernel-open/nvidia.ko %{buildroot}%{_cross_datadir}/nvidia/grid/drivers/
+install -d %{buildroot}%{nvidia_root}/share-nvidia/grid/drivers/
+install kernel-open/nvidia.ko %{buildroot}%{nvidia_root}/share-nvidia/grid/drivers/
 
 # uvm
-install kernel-open/nvidia-uvm.ko %{buildroot}%{_cross_datadir}/nvidia/grid/drivers/
+install kernel-open/nvidia-uvm.ko %{buildroot}%{nvidia_root}/share-nvidia/grid/drivers/
 
 # modeset
-install kernel-open/nvidia-modeset.ko %{buildroot}%{_cross_datadir}/nvidia/grid/drivers/
+install kernel-open/nvidia-modeset.ko %{buildroot}%{nvidia_root}/share-nvidia/grid/drivers/
 
 # peermem
-install kernel-open/nvidia-peermem.ko %{buildroot}%{_cross_datadir}/nvidia/grid/drivers/
+install kernel-open/nvidia-peermem.ko %{buildroot}%{nvidia_root}/share-nvidia/grid/drivers/
 
 # drm
-install kernel-open/nvidia-drm.ko %{buildroot}%{_cross_datadir}/nvidia/grid/drivers/
+install kernel-open/nvidia-drm.ko %{buildroot}%{nvidia_root}/share-nvidia/grid/drivers/
 
 # Install nvidia-gridd and related files
-install -m 755 nvidia-gridd %{buildroot}%{_cross_bindir}/nvidia-gridd
-install -m 644 %{S:208} %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/nvidia/gridd.conf
+install -m 755 nvidia-gridd %{buildroot}%{nvidia_root}/bin/nvidia-gridd
+install -m 644 %{S:208} %{buildroot}%{nvidia_root}/etc-nvidia/gridd.conf
 install -p -m 0644 %{S:209} %{S:210} %{S:211} %{S:212} %{S:213} %{buildroot}%{_cross_unitdir}
 install -d %{buildroot}%{_cross_unitdir}/nvidia-k8s-device-plugin.service.d
 install -p -m 0644 %{S:214} %{buildroot}%{_cross_unitdir}/nvidia-k8s-device-plugin.service.d
@@ -463,21 +499,21 @@ popd
 %endif
 
 # Binaries
-install -m 755 nvidia-smi %{buildroot}%{_cross_bindir}
-install -m 755 nvidia-debugdump %{buildroot}%{_cross_bindir}
-install -m 755 nvidia-cuda-mps-control %{buildroot}%{_cross_bindir}
-install -m 755 nvidia-cuda-mps-server %{buildroot}%{_cross_bindir}
-install -m 755 nvidia-persistenced %{buildroot}%{_cross_bindir}
-install -m 4755 nvidia-modprobe %{buildroot}%{_cross_bindir}
-install -m 755 nvoptix.bin %{buildroot}%{_cross_datadir}/nvidia/
-ln -rs %{buildroot}%{_cross_bindir}/nvidia-smi %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-smi
-ln -rs %{buildroot}%{_cross_bindir}/nvidia-debugdump %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-debugdump
-ln -rs %{buildroot}%{_cross_bindir}/nvidia-cuda-mps-control %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-cuda-mps-control
-ln -rs %{buildroot}%{_cross_bindir}/nvidia-cuda-mps-server %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-cuda-mps-server
-ln -rs %{buildroot}%{_cross_bindir}/nvidia-persistenced %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-persistenced
+install -m 755 nvidia-smi %{buildroot}%{nvidia_root}/bin
+install -m 755 nvidia-debugdump %{buildroot}%{nvidia_root}/bin
+install -m 755 nvidia-cuda-mps-control %{buildroot}%{nvidia_root}/bin
+install -m 755 nvidia-cuda-mps-server %{buildroot}%{nvidia_root}/bin
+install -m 755 nvidia-persistenced %{buildroot}%{nvidia_root}/bin
+install -m 4755 nvidia-modprobe %{buildroot}%{nvidia_root}/bin
+install -m 755 nvoptix.bin %{buildroot}%{nvidia_root}/share-nvidia/
+ln -rs %{buildroot}%{nvidia_root}/bin/nvidia-smi %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-smi
+ln -rs %{buildroot}%{nvidia_root}/bin/nvidia-debugdump %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-debugdump
+ln -rs %{buildroot}%{nvidia_root}/bin/nvidia-cuda-mps-control %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-cuda-mps-control
+ln -rs %{buildroot}%{nvidia_root}/bin/nvidia-cuda-mps-server %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-cuda-mps-server
+ln -rs %{buildroot}%{nvidia_root}/bin/nvidia-persistenced %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-persistenced
 %if "%{_cross_arch}" == "x86_64"
-install -m 755 nvidia-ngx-updater %{buildroot}%{_cross_bindir}
-ln -rs %{buildroot}%{_cross_bindir}/nvidia-ngx-updater %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-ngx-updater
+install -m 755 nvidia-ngx-updater %{buildroot}%{nvidia_root}/bin
+ln -rs %{buildroot}%{nvidia_root}/bin/nvidia-ngx-updater %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-ngx-updater
 %endif
 
 # Users
@@ -488,7 +524,7 @@ install -m 0644 %{S:206} %{buildroot}%{_cross_unitdir}
 
 # We install all the libraries, and filter them out in the 'files' section,
 # so we can catch when new libraries are added
-install -m 755 *.so* %{buildroot}/%{_cross_libdir}/
+install -m 755 *.so* %{buildroot}/%{nvidia_root}/lib64/
 
 # This library has the same SONAME as libEGL.so.1.1.0, this will cause
 # collisions while the symlinks are created. For now, we only symlink
@@ -498,11 +534,11 @@ EXCLUDED_LIBS="libEGL.so.%{tesla_ver}"
 for lib in $(find . -maxdepth 1 -type f -name 'lib*.so.*' -printf '%%P\n'); do
   [[ "${EXCLUDED_LIBS}" =~ "${lib}" ]] && continue
   # Create backwards-compatibility symlink in nvidia/tesla/
-  ln -rs "%{buildroot}/%{_cross_libdir}/${lib}" "%{buildroot}/%{_cross_libdir}/nvidia/tesla/${lib}"
+  ln -rs "%{buildroot}/%{nvidia_root}/lib64/${lib}" "%{buildroot}/%{nvidia_root}/lib64/tesla/${lib}"
   soname="$(%{_cross_target}-readelf -d "${lib}" | awk '/SONAME/{print $5}' | tr -d '[]')"
   [ -n "${soname}" ] || continue
   [ "${lib}" == "${soname}" ] && continue
-  ln -s "${lib}" %{buildroot}/%{_cross_libdir}/"${soname}"
+  ln -s "${lib}" %{buildroot}/%{nvidia_root}/lib64/"${soname}"
 done
 
 # Include the firmware file for GSP support
@@ -512,157 +548,198 @@ install -p -m 0644 firmware/gsp_tu10x.bin %{buildroot}%{_cross_libdir}/firmware/
 
 # Include the open driver supported devices file for runtime matching of the
 # driver. This is consumed by ghostdog to match the driver to this list
-install -p -m 0644 supported-gpus/open-gpu-supported-devices.json %{buildroot}%{_cross_datadir}/nvidia/open-gpu-supported-devices.json
+install -p -m 0644 supported-gpus/open-gpu-supported-devices.json %{buildroot}%{nvidia_root}/share-nvidia/open-gpu-supported-devices.json
 
 popd
 
 # Begin NVIDIA fabric manager binaries and topologies
 pushd fabricmanager-linux-%{nvidia_arch}-%{tesla_ver}-archive
-install -p -m 0755 usr/bin/nv-fabricmanager %{buildroot}%{_cross_bindir}
-install -p -m 0755 usr/bin/nvswitch-audit %{buildroot}%{_cross_bindir}
-ln -rs %{buildroot}%{_cross_bindir}/nv-fabricmanager %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin/nv-fabricmanager
-ln -rs %{buildroot}%{_cross_bindir}/nvswitch-audit %{buildroot}%{_cross_libexecdir}/nvidia/tesla/bin/nvswitch-audit
+install -p -m 0755 usr/bin/nv-fabricmanager %{buildroot}%{nvidia_root}/bin
+install -p -m 0755 usr/bin/nvswitch-audit %{buildroot}%{nvidia_root}/bin
+ln -rs %{buildroot}%{nvidia_root}/bin/nv-fabricmanager %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nv-fabricmanager
+ln -rs %{buildroot}%{nvidia_root}/bin/nvswitch-audit %{buildroot}%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvswitch-audit
 
-install -d %{buildroot}%{_cross_datadir}/nvidia/tesla/nvswitch
+install -d %{buildroot}%{nvidia_root}/share-nvidia/tesla/nvswitch
 for t in usr/share/nvidia/nvswitch/*_topology ; do
-  install -p -m 0644 "${t}" %{buildroot}%{_cross_datadir}/nvidia/tesla/nvswitch
+  install -p -m 0644 "${t}" %{buildroot}%{nvidia_root}/share-nvidia/tesla/nvswitch
 done
 
 popd
 
 # Begin IMEX binaries and configuration files
 pushd imex-%{nvidia_arch}-%{tesla_ver}-archive
-install -p -m 0755 usr/bin/nvidia-imex %{buildroot}%{_cross_bindir}
-install -p -m 0755 usr/bin/nvidia-imex-ctl %{buildroot}%{_cross_bindir}
+install -p -m 0755 usr/bin/nvidia-imex %{buildroot}%{nvidia_root}/bin
+install -p -m 0755 usr/bin/nvidia-imex-ctl %{buildroot}%{nvidia_root}/bin
 
 popd
 
-install -d %{buildroot}%{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers
+# NVIDIA IMEX service, config, and tmpfiles
+install -p -m 0644 %{S:215} %{buildroot}%{_cross_unitdir}
+install -d %{buildroot}%{nvidia_root}/etc-nvidia-imex
+install -p -m 0644 %{S:216} %{buildroot}%{nvidia_root}/etc-nvidia-imex/config.cfg
+install -p -m 0644 %{S:217} %{buildroot}%{_cross_tmpfilesdir}/nvidia-imex.conf
+
+# NVIDIA IMEX modprobe config
+install -d %{buildroot}%{_cross_libdir}/modprobe.d
+install -p -m 0644 %{S:218} %{buildroot}%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
+
+install -d %{buildroot}%{nvidia_root}/share-nvidia/gdrcopy/open-gpu/drivers
 
 install -p -m 0644 gdrcopy-%{gdrcopy_ver}/gdrdrv-open-gpu.ko \
-  %{buildroot}%{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers/gdrdrv.ko
+  %{buildroot}%{nvidia_root}/share-nvidia/gdrcopy/open-gpu/drivers/gdrdrv.ko
 
 install -p -m 0644 gdrcopy-%{gdrcopy_ver}/LICENSE gdrcopy-LICENSE
 
-sed -e 's|__NVIDIA_MODULES__|%{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers/|' %{S:600} > \
-  nvidia-gdrcopy-open-gpu.toml
-install -m 0644 nvidia-gdrcopy-open-gpu.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
+sed -e 's|__NVIDIA_MODULES__|%{nvidia_root}/share-nvidia/gdrcopy/open-gpu/drivers/|' %{S:600} > \
+  nvidia-%{nvidia_branch}-gdrcopy-open-gpu.toml
+install -m 0644 nvidia-%{nvidia_branch}-gdrcopy-open-gpu.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
 
-sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:601} > copy-gdrcopy-open-gpu-kernel-module.service
-sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:602} > load-gdrcopy-open-gpu-kernel-module.service
+sed -e 's|PREFIX|%{_cross_prefix}|g' \
+  %{S:601} > nvidia-%{nvidia_branch}-copy-gdrcopy-open-gpu-kernel-module.service
+sed -e 's|PREFIX|%{_cross_prefix}|g' \
+  %{S:602} > nvidia-%{nvidia_branch}-load-gdrcopy-open-gpu-kernel-module.service
 install -p -m 0644 \
-  copy-gdrcopy-open-gpu-kernel-module.service \
-  load-gdrcopy-open-gpu-kernel-module.service \
+  nvidia-%{nvidia_branch}-copy-gdrcopy-open-gpu-kernel-module.service \
+  nvidia-%{nvidia_branch}-load-gdrcopy-open-gpu-kernel-module.service \
   %{buildroot}%{_cross_unitdir}
 
-install -p -m 0644 %{S:603} %{buildroot}%{_cross_tmpfilesdir}/nvidia-gdrcopy.conf
+install -p -m 0644 %{S:603} %{buildroot}%{_cross_tmpfilesdir}/nvidia-%{nvidia_branch}-gdrcopy.conf
+
+# Overlay activation services
+install -p -m 0644 %{S:800} %{buildroot}%{_cross_unitdir}/nvidia-fb-overlay-driver.service
+install -p -m 0644 %{S:801} %{buildroot}%{_cross_unitdir}/nvidia-fb-overlay-config.service
+
+# Canonical overlay mountpoints. The branch files now live under %{nvidia_root};
+# these empty directories are the targets the overlay service mounts onto, and
+# must exist in the image or the mount fails. (/usr/lib64 and /usr/bin already
+# exist in the base OS, so only the /usr/share/* targets are created here.)
+install -d %{buildroot}%{_cross_datadir}/nvidia
+install -d %{buildroot}%{_cross_datadir}/vulkan
+install -d %{buildroot}%{_cross_datadir}/glvnd
+install -d %{buildroot}%{_cross_datadir}/egl
 
 %files
 %{_cross_attribution_file}
 %dir %{_cross_libexecdir}/nvidia
-%dir %{_cross_libdir}/nvidia
+# Branch-namespaced storage root (overlaid onto canonical paths at boot)
+%dir %{_cross_prefix}/nvidia
+%dir %{nvidia_root}
+%dir %{nvidia_root}/lib64
+%dir %{nvidia_root}/lib64/tesla
+%{nvidia_root}/lib64/tesla/*
+# Canonical overlay mountpoint (empty; overlay service mounts the branch here)
 %dir %{_cross_datadir}/nvidia
 %dir %{_cross_libdir}/modules-load.d
+# Flat, shared /etc/drivers factory dir (both branches ship branch-named tomls
+# here; %dir is non-%%-exclusive so co-owning it across branches is fine).
 %dir %{_cross_factorydir}%{_cross_sysconfdir}/drivers
-%dir %{_cross_factorydir}%{_cross_sysconfdir}/nvidia
+# Base package owns the etc-nvidia storage dirs so the overlay service's lowerdirs
+# always exist even when the fabricmanager/grid/imex subpackages are absent.
+%dir %{nvidia_root}/etc-nvidia
+%dir %{nvidia_root}/etc-nvidia-imex
 %{_cross_tmpfilesdir}/nvidia.conf
 %{_cross_libdir}/modules-load.d/nvidia-dependencies.conf
+
+# Overlay activation services
+%{_cross_unitdir}/nvidia-fb-overlay-driver.service
+%{_cross_unitdir}/nvidia-fb-overlay-config.service
 
 %files tesla
 %license NVidiaEULAforAWS.pdf
 %license fabricmanager-linux-%{nvidia_arch}-%{tesla_ver}-archive/usr/share/licenses/nvidia-fabricmanager/third-party-notices.txt
 %dir %{_cross_datadir}/egl
-%dir %{_cross_datadir}/egl/egl_external_platform.d
+%dir %{nvidia_root}/share-egl
+%dir %{nvidia_root}/share-egl/egl_external_platform.d
 %dir %{_cross_datadir}/glvnd
-%dir %{_cross_datadir}/glvnd/egl_vendor.d
-%dir %{_cross_datadir}/nvidia/tesla
-%dir %{_cross_datadir}/nvidia/tesla/module-objects.d
+%dir %{nvidia_root}/share-glvnd
+%dir %{nvidia_root}/share-glvnd/egl_vendor.d
+%dir %{nvidia_root}/share-nvidia/tesla
+%dir %{nvidia_root}/share-nvidia/tesla/module-objects.d
 %dir %{_cross_datadir}/vulkan
-%dir %{_cross_datadir}/vulkan/icd.d
-%dir %{_cross_datadir}/vulkan/implicit_layer.d
-%dir %{_cross_factorydir}/nvidia/tesla
+%dir %{nvidia_root}/share-vulkan
+%dir %{nvidia_root}/share-vulkan/icd.d
+%dir %{nvidia_root}/share-vulkan/implicit_layer.d
+%dir %{_cross_factorydir}/nvidia/%{nvidia_branch}/tesla
 %dir %{_cross_libdir}/firmware/nvidia/%{tesla_ver}
-%dir %{_cross_libdir}/nvidia/tesla
-%{_cross_libdir}/nvidia/tesla/*
-%dir %{_cross_libexecdir}/nvidia/tesla/bin
+%dir %{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin
 
-# Service files for link/copy/loading drivers
-%{_cross_unitdir}/link-tesla-kernel-modules.service
-%{_cross_unitdir}/load-tesla-kernel-modules.service
-%{_cross_unitdir}/copy-open-gpu-kernel-modules.service
-%{_cross_unitdir}/load-open-gpu-kernel-modules.service
+# Service files for link/copy/loading drivers (branch-namespaced filenames)
+%{_cross_unitdir}/nvidia-%{nvidia_branch}-link-tesla-kernel-modules.service
+%{_cross_unitdir}/nvidia-%{nvidia_branch}-load-tesla-kernel-modules.service
+%{_cross_unitdir}/nvidia-%{nvidia_branch}-copy-open-gpu-kernel-modules.service
+%{_cross_unitdir}/nvidia-%{nvidia_branch}-load-open-gpu-kernel-modules.service
 %if "%{_cross_arch}" == "x86_64"
-%{_cross_unitdir}/copy-grid-kernel-modules.service
-%{_cross_unitdir}/load-grid-kernel-modules.service
+%{_cross_unitdir}/nvidia-%{nvidia_branch}-copy-grid-kernel-modules.service
+%{_cross_unitdir}/nvidia-%{nvidia_branch}-load-grid-kernel-modules.service
 %endif
 
 # Binaries
-%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-debugdump
-%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-smi
-%{_cross_libexecdir}/nvidia/tesla/bin/nv-fabricmanager
-%{_cross_libexecdir}/nvidia/tesla/bin/nvswitch-audit
-%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-persistenced
-%{_cross_bindir}/nvidia-debugdump
-%{_cross_bindir}/nvidia-smi
-%{_cross_bindir}/nv-fabricmanager
-%{_cross_bindir}/nvswitch-audit
-%{_cross_bindir}/nvidia-persistenced
-%{_cross_bindir}/nvidia-modprobe
+%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-debugdump
+%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-smi
+%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nv-fabricmanager
+%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvswitch-audit
+%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-persistenced
+%{nvidia_root}/bin/nvidia-debugdump
+%{nvidia_root}/bin/nvidia-smi
+%{nvidia_root}/bin/nv-fabricmanager
+%{nvidia_root}/bin/nvswitch-audit
+%{nvidia_root}/bin/nvidia-persistenced
+%{nvidia_root}/bin/nvidia-modprobe
 
 # nvswitch topologies
-%dir %{_cross_datadir}/nvidia/tesla/nvswitch
-%{_cross_datadir}/nvidia/tesla/nvswitch/dgxa100_hgxa100_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/dgx2_hgx2_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/dgxh100_hgxh100_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/dgxh800_hgxh800_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/dgxgh200_hgxgh200_16gpus_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/dgxgh200_hgxgh200_32gpus_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/dgxgh200_hgxgh200_8gpus_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl36r1_c2g2_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl36r1_c2g4_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl4r1_c2g2_etf_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl576r16_c2g4_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl576r4_c2g4_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl72r1_c2g4_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl72r2_c2g2_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl72r2_c2g4_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl8r1_c2g4_etf_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb200_nvl8r1_c2g4_etf_nso_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb300_nvl72r1_c2g4_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb300_nvl72r1_c2g4_kyber_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gb300_nvl72r2_c2g4_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/gh200_nvlink_32gpus_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/mgxh20_nvl16_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/vr_nvl144r1_c2g4_topology
-%{_cross_datadir}/nvidia/tesla/nvswitch/vr_nvl16r1_c2g4_rtf_topology
+%dir %{nvidia_root}/share-nvidia/tesla/nvswitch
+%{nvidia_root}/share-nvidia/tesla/nvswitch/dgxa100_hgxa100_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/dgx2_hgx2_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/dgxh100_hgxh100_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/dgxh800_hgxh800_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/dgxgh200_hgxgh200_16gpus_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/dgxgh200_hgxgh200_32gpus_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/dgxgh200_hgxgh200_8gpus_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl36r1_c2g2_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl36r1_c2g4_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl4r1_c2g2_etf_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl576r16_c2g4_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl576r4_c2g4_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl72r1_c2g4_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl72r2_c2g2_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl72r2_c2g4_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl8r1_c2g4_etf_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb200_nvl8r1_c2g4_etf_nso_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb300_nvl72r1_c2g4_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb300_nvl72r1_c2g4_kyber_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gb300_nvl72r2_c2g4_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/gh200_nvlink_32gpus_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/mgxh20_nvl16_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/vr_nvl144r1_c2g4_topology
+%{nvidia_root}/share-nvidia/tesla/nvswitch/vr_nvl16r1_c2g4_rtf_topology
 
 # Configuration files
-%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-tesla.toml
-%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-open-gpu.toml
-%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-open-gpu-copy-only.toml
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-%{nvidia_branch}-tesla.toml
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-%{nvidia_branch}-open-gpu.toml
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-%{nvidia_branch}-open-gpu-copy-only.toml
 %if "%{_cross_arch}" == "x86_64"
-%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-grid.toml
-%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-grid-copy-only.toml
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-%{nvidia_branch}-grid.toml
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-%{nvidia_branch}-grid-copy-only.toml
 %endif
-%{_cross_datadir}/nvidia/open-gpu-supported-devices.json
+%{nvidia_root}/share-nvidia/open-gpu-supported-devices.json
 
 # driver
-%{_cross_datadir}/nvidia/tesla/module-objects.d/nvidia.mod.o
-%{_cross_datadir}/nvidia/tesla/module-objects.d/nv-interface.o
-%{_cross_datadir}/nvidia/tesla/module-objects.d/nv-kernel.o
-%{_cross_datadir}/nvidia/tesla/module-objects.d/.module-common.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/nvidia.mod.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/nv-interface.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/nv-kernel.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/.module-common.o
 
 # uvm
-%{_cross_datadir}/nvidia/tesla/module-objects.d/nvidia-uvm.mod.o
-%{_cross_datadir}/nvidia/tesla/module-objects.d/nvidia-uvm.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/nvidia-uvm.mod.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/nvidia-uvm.o
 
 # modeset
-%{_cross_datadir}/nvidia/tesla/module-objects.d/nv-modeset-interface.o
-%{_cross_datadir}/nvidia/tesla/module-objects.d/nv-modeset-kernel.o
-%{_cross_datadir}/nvidia/tesla/module-objects.d/nvidia-modeset.mod.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/nv-modeset-interface.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/nv-modeset-kernel.o
+%{nvidia_root}/share-nvidia/tesla/module-objects.d/nvidia-modeset.mod.o
 
 # tmpfiles
-%{_cross_tmpfilesdir}/nvidia-tesla.conf
+%{_cross_tmpfilesdir}/nvidia-%{nvidia_branch}-tesla.conf
 
 # sysuser files
 %{_cross_sysusersdir}/nvidia.conf
@@ -670,95 +747,96 @@ install -p -m 0644 %{S:603} %{buildroot}%{_cross_tmpfilesdir}/nvidia-gdrcopy.con
 # systemd units
 %{_cross_unitdir}/nvidia-persistenced.service
 
-# ICD / vendor descriptors
-%{_cross_datadir}/vulkan/icd.d/nvidia_icd.json
-%{_cross_datadir}/vulkan/icd.d/nvidia_layers.json
-%{_cross_datadir}/vulkan/implicit_layer.d/nvidia_layers.json
-%{_cross_datadir}/glvnd/egl_vendor.d/10_nvidia.json
-%{_cross_datadir}/egl/egl_external_platform.d/10_nvidia_wayland.json
-%{_cross_datadir}/egl/egl_external_platform.d/15_nvidia_gbm.json
+# ICD / vendor descriptors (branch-namespaced; overlaid onto the canonical path
+# by nvidia-fb-overlay-driver.service)
+%{nvidia_root}/share-vulkan/icd.d/nvidia_icd.json
+%{nvidia_root}/share-vulkan/icd.d/nvidia_layers.json
+%{nvidia_root}/share-vulkan/implicit_layer.d/nvidia_layers.json
+%{nvidia_root}/share-glvnd/egl_vendor.d/10_nvidia.json
+%{nvidia_root}/share-egl/egl_external_platform.d/10_nvidia_wayland.json
+%{nvidia_root}/share-egl/egl_external_platform.d/15_nvidia_gbm.json
 
 # We only install the libraries required by all the DRIVER_CAPABILITIES, described here:
 # https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html#driver-capabilities
 
 # Utility libs
-%{_cross_libdir}/libnvidia-api.so.1
-%{_cross_libdir}/libnvidia-ml.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-ml.so.1
-%{_cross_libdir}/libnvidia-cfg.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-cfg.so.1
-%{_cross_libdir}/libnvidia-nvvm.so.4
-%{_cross_libdir}/libnvidia-nvvm.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-nvvm70.so.4
+%{nvidia_root}/lib64/libnvidia-api.so.1
+%{nvidia_root}/lib64/libnvidia-ml.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-ml.so.1
+%{nvidia_root}/lib64/libnvidia-cfg.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-cfg.so.1
+%{nvidia_root}/lib64/libnvidia-nvvm.so.4
+%{nvidia_root}/lib64/libnvidia-nvvm.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-nvvm70.so.4
 
 # Compute libs
-%{_cross_libdir}/libcuda.so.%{tesla_ver}
-%{_cross_libdir}/libcuda.so.1
-%{_cross_libdir}/libcudadebugger.so.%{tesla_ver}
-%{_cross_libdir}/libcudadebugger.so.1
-%{_cross_libdir}/libnvidia-opencl.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-opencl.so.1
-%{_cross_libdir}/libnvidia-ptxjitcompiler.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-ptxjitcompiler.so.1
-%{_cross_libdir}/libnvidia-allocator.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-allocator.so.1
-%{_cross_libdir}/libOpenCL.so.1.0.0
-%{_cross_libdir}/libOpenCL.so.1
-%{_cross_libdir}/libnvidia-gpucomp.so.%{tesla_ver}
+%{nvidia_root}/lib64/libcuda.so.%{tesla_ver}
+%{nvidia_root}/lib64/libcuda.so.1
+%{nvidia_root}/lib64/libcudadebugger.so.%{tesla_ver}
+%{nvidia_root}/lib64/libcudadebugger.so.1
+%{nvidia_root}/lib64/libnvidia-opencl.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-opencl.so.1
+%{nvidia_root}/lib64/libnvidia-ptxjitcompiler.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-ptxjitcompiler.so.1
+%{nvidia_root}/lib64/libnvidia-allocator.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-allocator.so.1
+%{nvidia_root}/lib64/libOpenCL.so.1.0.0
+%{nvidia_root}/lib64/libOpenCL.so.1
+%{nvidia_root}/lib64/libnvidia-gpucomp.so.%{tesla_ver}
 %if "%{_cross_arch}" == "x86_64"
-%{_cross_libdir}/libnvidia-pkcs11.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-pkcs11-openssl3.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-pkcs11.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-pkcs11-openssl3.so.%{tesla_ver}
 %endif
 
 # Video libs
-%{_cross_libdir}/libvdpau_nvidia.so.%{tesla_ver}
-%{_cross_libdir}/libvdpau_nvidia.so.1
-%{_cross_libdir}/libnvidia-encode.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-encode.so.1
-%{_cross_libdir}/libnvidia-opticalflow.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-opticalflow.so.1
-%{_cross_libdir}/libnvcuvid.so.%{tesla_ver}
-%{_cross_libdir}/libnvcuvid.so.1
+%{nvidia_root}/lib64/libvdpau_nvidia.so.%{tesla_ver}
+%{nvidia_root}/lib64/libvdpau_nvidia.so.1
+%{nvidia_root}/lib64/libnvidia-encode.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-encode.so.1
+%{nvidia_root}/lib64/libnvidia-opticalflow.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-opticalflow.so.1
+%{nvidia_root}/lib64/libnvcuvid.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvcuvid.so.1
 
 # Graphics libs
-%{_cross_libdir}/libnvidia-eglcore.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-glcore.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-tls.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-tileiras.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-glsi.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-rtcore.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-fbc.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-fbc.so.1
-%{_cross_libdir}/libnvoptix.so.%{tesla_ver}
-%{_cross_libdir}/libnvoptix.so.1
-%{_cross_datadir}/nvidia/nvoptix.bin
+%{nvidia_root}/lib64/libnvidia-eglcore.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-glcore.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-tls.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-tileiras.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-glsi.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-rtcore.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-fbc.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-fbc.so.1
+%{nvidia_root}/lib64/libnvoptix.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvoptix.so.1
+%{nvidia_root}/share-nvidia/nvoptix.bin
 
 # Graphics GLVND libs
-%{_cross_libdir}/libnvidia-glvkspirv.so.%{tesla_ver}
-%{_cross_libdir}/libGLX_nvidia.so.%{tesla_ver}
-%{_cross_libdir}/libGLX_nvidia.so.0
-%{_cross_libdir}/libEGL_nvidia.so.%{tesla_ver}
-%{_cross_libdir}/libEGL_nvidia.so.0
-%{_cross_libdir}/libGLESv2_nvidia.so.%{tesla_ver}
-%{_cross_libdir}/libGLESv2_nvidia.so.2
-%{_cross_libdir}/libGLESv1_CM_nvidia.so.%{tesla_ver}
-%{_cross_libdir}/libGLESv1_CM_nvidia.so.1
-%{_cross_libdir}/libnvidia-present.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-glvkspirv.so.%{tesla_ver}
+%{nvidia_root}/lib64/libGLX_nvidia.so.%{tesla_ver}
+%{nvidia_root}/lib64/libGLX_nvidia.so.0
+%{nvidia_root}/lib64/libEGL_nvidia.so.%{tesla_ver}
+%{nvidia_root}/lib64/libEGL_nvidia.so.0
+%{nvidia_root}/lib64/libGLESv2_nvidia.so.%{tesla_ver}
+%{nvidia_root}/lib64/libGLESv2_nvidia.so.2
+%{nvidia_root}/lib64/libGLESv1_CM_nvidia.so.%{tesla_ver}
+%{nvidia_root}/lib64/libGLESv1_CM_nvidia.so.1
+%{nvidia_root}/lib64/libnvidia-present.so.%{tesla_ver}
 
 # Graphics compat
-%{_cross_libdir}/libEGL.so.1.1.0
-%{_cross_libdir}/libEGL.so.1
-%{_cross_libdir}/libEGL.so.%{tesla_ver}
-%{_cross_libdir}/libGL.so.1.7.0
-%{_cross_libdir}/libGL.so.1
-%{_cross_libdir}/libGLESv1_CM.so.1.2.0
-%{_cross_libdir}/libGLESv1_CM.so.1
-%{_cross_libdir}/libGLESv2.so.2.1.0
-%{_cross_libdir}/libGLESv2.so.2
+%{nvidia_root}/lib64/libEGL.so.1.1.0
+%{nvidia_root}/lib64/libEGL.so.1
+%{nvidia_root}/lib64/libEGL.so.%{tesla_ver}
+%{nvidia_root}/lib64/libGL.so.1.7.0
+%{nvidia_root}/lib64/libGL.so.1
+%{nvidia_root}/lib64/libGLESv1_CM.so.1.2.0
+%{nvidia_root}/lib64/libGLESv1_CM.so.1
+%{nvidia_root}/lib64/libGLESv2.so.2.1.0
+%{nvidia_root}/lib64/libGLESv2.so.2
 
 # NGX
-%{_cross_libdir}/libnvidia-ngx.so.%{tesla_ver}
-%{_cross_libdir}/libnvidia-ngx.so.1
+%{nvidia_root}/lib64/libnvidia-ngx.so.%{tesla_ver}
+%{nvidia_root}/lib64/libnvidia-ngx.so.1
 
 # Firmware
 %{_cross_libdir}/firmware/nvidia/%{tesla_ver}/gsp_ga10x.bin
@@ -766,52 +844,52 @@ install -p -m 0644 %{S:603} %{buildroot}%{_cross_tmpfilesdir}/nvidia-gdrcopy.con
 
 # Neither nvidia-peermem nor nvidia-drm are included in driver container images, we exclude them
 # for now, and we will add them if requested
-%exclude %{_cross_datadir}/nvidia/tesla/module-objects.d/nvidia-peermem.mod.o
-%exclude %{_cross_datadir}/nvidia/tesla/module-objects.d/nvidia-peermem.o
-%exclude %{_cross_datadir}/nvidia/tesla/module-objects.d/nvidia-drm.mod.o
-%exclude %{_cross_datadir}/nvidia/tesla/module-objects.d/nvidia-drm.o
+%exclude %{nvidia_root}/share-nvidia/tesla/module-objects.d/nvidia-peermem.mod.o
+%exclude %{nvidia_root}/share-nvidia/tesla/module-objects.d/nvidia-peermem.o
+%exclude %{nvidia_root}/share-nvidia/tesla/module-objects.d/nvidia-drm.mod.o
+%exclude %{nvidia_root}/share-nvidia/tesla/module-objects.d/nvidia-drm.o
 %if "%{_cross_arch}" == "x86_64"
-%exclude %{_cross_libexecdir}/nvidia/tesla/bin/nvidia-ngx-updater
-%exclude %{_cross_bindir}/nvidia-ngx-updater
+%exclude %{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-ngx-updater
+%exclude %{nvidia_root}/bin/nvidia-ngx-updater
 %endif
 
 # None of these libraries are required by libnvidia-container, so they
 # won't be used by a containerized workload
-%exclude %{_cross_libdir}/libGLX.so.0
-%exclude %{_cross_libdir}/libGLdispatch.so.0
-%exclude %{_cross_libdir}/libOpenGL.so.0
-%exclude %{_cross_libdir}/libglxserver_nvidia.so.%{tesla_ver}
-%exclude %{_cross_libdir}/libnvidia-gtk2.so.%{tesla_ver}
-%exclude %{_cross_libdir}/libnvidia-gtk3.so.%{tesla_ver}
-%exclude %{_cross_libdir}/nvidia_drv.so
-%exclude %{_cross_libdir}/libnvidia-egl-wayland.so.1
-%exclude %{_cross_libdir}/libnvidia-egl-gbm.so.1
-%exclude %{_cross_libdir}/libnvidia-egl-gbm.so.1.1.3
-%exclude %{_cross_libdir}/libnvidia-egl-wayland.so.1.1.20
-%exclude %{_cross_libdir}/libnvidia-egl-wayland2.so.1
-%exclude %{_cross_libdir}/libnvidia-egl-wayland2.so.1.0.1
-%exclude %{_cross_libdir}/libnvidia-egl-xcb.so.1
-%exclude %{_cross_libdir}/libnvidia-egl-xcb.so.1.0.5
-%exclude %{_cross_libdir}/libnvidia-egl-xlib.so.1
-%exclude %{_cross_libdir}/libnvidia-egl-xlib.so.1.0.5
-%exclude %{_cross_libdir}/libnvidia-sandboxutils.so.1
-%exclude %{_cross_libdir}/libnvidia-sandboxutils.so.%{tesla_ver}
+%exclude %{nvidia_root}/lib64/libGLX.so.0
+%exclude %{nvidia_root}/lib64/libGLdispatch.so.0
+%exclude %{nvidia_root}/lib64/libOpenGL.so.0
+%exclude %{nvidia_root}/lib64/libglxserver_nvidia.so.%{tesla_ver}
+%exclude %{nvidia_root}/lib64/libnvidia-gtk2.so.%{tesla_ver}
+%exclude %{nvidia_root}/lib64/libnvidia-gtk3.so.%{tesla_ver}
+%exclude %{nvidia_root}/lib64/nvidia_drv.so
+%exclude %{nvidia_root}/lib64/libnvidia-egl-wayland.so.1
+%exclude %{nvidia_root}/lib64/libnvidia-egl-gbm.so.1
+%exclude %{nvidia_root}/lib64/libnvidia-egl-gbm.so.1.1.3
+%exclude %{nvidia_root}/lib64/libnvidia-egl-wayland.so.1.1.20
+%exclude %{nvidia_root}/lib64/libnvidia-egl-wayland2.so.1
+%exclude %{nvidia_root}/lib64/libnvidia-egl-wayland2.so.1.0.1
+%exclude %{nvidia_root}/lib64/libnvidia-egl-xcb.so.1
+%exclude %{nvidia_root}/lib64/libnvidia-egl-xcb.so.1.0.5
+%exclude %{nvidia_root}/lib64/libnvidia-egl-xlib.so.1
+%exclude %{nvidia_root}/lib64/libnvidia-egl-xlib.so.1.0.5
+%exclude %{nvidia_root}/lib64/libnvidia-sandboxutils.so.1
+%exclude %{nvidia_root}/lib64/libnvidia-sandboxutils.so.%{tesla_ver}
 %if "%{_cross_arch}" == "x86_64"
-%exclude %{_cross_libdir}/libnvidia-vksc-core.so.1
-%exclude %{_cross_libdir}/libnvidia-vksc-core.so.%{tesla_ver}
-%exclude %{_cross_libdir}/libnvidia-wayland-client.so.%{tesla_ver}
+%exclude %{nvidia_root}/lib64/libnvidia-vksc-core.so.1
+%exclude %{nvidia_root}/lib64/libnvidia-vksc-core.so.%{tesla_ver}
+%exclude %{nvidia_root}/lib64/libnvidia-wayland-client.so.%{tesla_ver}
 %endif
 
 %files open-gpu
 %license COPYING
-%dir %{_cross_datadir}/nvidia/open-gpu/drivers
-%dir %{_cross_factorydir}/nvidia/open-gpu
+%dir %{nvidia_root}/share-nvidia/open-gpu/drivers
+%dir %{_cross_factorydir}/nvidia/%{nvidia_branch}/open-gpu
 
-%{_cross_datadir}/nvidia/open-gpu/drivers/nvidia.ko
-%{_cross_datadir}/nvidia/open-gpu/drivers/nvidia-uvm.ko
-%{_cross_datadir}/nvidia/open-gpu/drivers/nvidia-modeset.ko
-%{_cross_datadir}/nvidia/open-gpu/drivers/nvidia-drm.ko
-%{_cross_datadir}/nvidia/open-gpu/drivers/nvidia-peermem.ko
+%{nvidia_root}/share-nvidia/open-gpu/drivers/nvidia.ko
+%{nvidia_root}/share-nvidia/open-gpu/drivers/nvidia-uvm.ko
+%{nvidia_root}/share-nvidia/open-gpu/drivers/nvidia-modeset.ko
+%{nvidia_root}/share-nvidia/open-gpu/drivers/nvidia-drm.ko
+%{nvidia_root}/share-nvidia/open-gpu/drivers/nvidia-peermem.ko
 
 # GRID driver files
 %if "%{_cross_arch}" == "x86_64"
@@ -819,10 +897,10 @@ install -p -m 0644 %{S:603} %{buildroot}%{_cross_tmpfilesdir}/nvidia-gdrcopy.con
 %license COPYING
 %license NvidiaGridAWSUserLicenseAgreement.DOCX
 %license NVIDIA-Linux-x86_64-%{tesla_ver}-grid-aws/grid-third-party-licenses.txt
-%dir %{_cross_datadir}/nvidia/grid/drivers
-%dir %{_cross_factorydir}/nvidia/grid
-%{_cross_bindir}/nvidia-gridd
-%{_cross_factorydir}%{_cross_sysconfdir}/nvidia/gridd.conf
+%dir %{nvidia_root}/share-nvidia/grid/drivers
+%dir %{_cross_factorydir}/nvidia/%{nvidia_branch}/grid
+%{nvidia_root}/bin/nvidia-gridd
+%{nvidia_root}/etc-nvidia/gridd.conf
 %{_cross_unitdir}/nvidia-gridd.service
 %{_cross_unitdir}/grid-license-check.service
 %{_cross_unitdir}/grid-license-check.timer
@@ -830,36 +908,41 @@ install -p -m 0644 %{S:603} %{buildroot}%{_cross_tmpfilesdir}/nvidia-gdrcopy.con
 %{_cross_unitdir}/tesla-license-fallback.service
 %{_cross_unitdir}/nvidia-k8s-device-plugin.service.d/grid-license-file-check.conf
 
-%{_cross_datadir}/nvidia/grid/drivers/nvidia.ko
-%{_cross_datadir}/nvidia/grid/drivers/nvidia-uvm.ko
-%{_cross_datadir}/nvidia/grid/drivers/nvidia-modeset.ko
-%{_cross_datadir}/nvidia/grid/drivers/nvidia-drm.ko
-%{_cross_datadir}/nvidia/grid/drivers/nvidia-peermem.ko
+%{nvidia_root}/share-nvidia/grid/drivers/nvidia.ko
+%{nvidia_root}/share-nvidia/grid/drivers/nvidia-uvm.ko
+%{nvidia_root}/share-nvidia/grid/drivers/nvidia-modeset.ko
+%{nvidia_root}/share-nvidia/grid/drivers/nvidia-drm.ko
+%{nvidia_root}/share-nvidia/grid/drivers/nvidia-peermem.ko
 %endif
 
 %files fabricmanager
-%{_cross_factorydir}%{_cross_sysconfdir}/nvidia/fabricmanager.cfg
-%{_cross_factorydir}%{_cross_sysconfdir}/nvidia/fabricmanager.env
+%{nvidia_root}/etc-nvidia/fabricmanager.cfg
+%{nvidia_root}/etc-nvidia/fabricmanager.env
 %{_cross_unitdir}/nvidia-fabricmanager.service
 
 %files imex
-%{_cross_bindir}/nvidia-imex
-%{_cross_bindir}/nvidia-imex-ctl
+%{nvidia_root}/bin/nvidia-imex
+%{nvidia_root}/bin/nvidia-imex-ctl
+%{_cross_unitdir}/nvidia-imex.service
+%{nvidia_root}/etc-nvidia-imex/config.cfg
+%{_cross_tmpfilesdir}/nvidia-imex.conf
+
+%files imex-config
+%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
 
 %files mps
-%{_cross_bindir}/nvidia-cuda-mps-control
-%{_cross_bindir}/nvidia-cuda-mps-server
-%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-cuda-mps-control
-%{_cross_libexecdir}/nvidia/tesla/bin/nvidia-cuda-mps-server
-
+%{nvidia_root}/bin/nvidia-cuda-mps-control
+%{nvidia_root}/bin/nvidia-cuda-mps-server
+%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-cuda-mps-control
+%{_cross_libexecdir}/nvidia/%{nvidia_branch}/tesla/bin/nvidia-cuda-mps-server
 
 %files gdrcopy
 %license gdrcopy-LICENSE
-%dir %{_cross_datadir}/nvidia/gdrcopy
-%dir %{_cross_datadir}/nvidia/gdrcopy/open-gpu
-%dir %{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers
-%{_cross_datadir}/nvidia/gdrcopy/open-gpu/drivers/gdrdrv.ko
-%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-gdrcopy-open-gpu.toml
-%{_cross_tmpfilesdir}/nvidia-gdrcopy.conf
-%{_cross_unitdir}/copy-gdrcopy-open-gpu-kernel-module.service
-%{_cross_unitdir}/load-gdrcopy-open-gpu-kernel-module.service
+%dir %{nvidia_root}/share-nvidia/gdrcopy
+%dir %{nvidia_root}/share-nvidia/gdrcopy/open-gpu
+%dir %{nvidia_root}/share-nvidia/gdrcopy/open-gpu/drivers
+%{nvidia_root}/share-nvidia/gdrcopy/open-gpu/drivers/gdrdrv.ko
+%{_cross_factorydir}%{_cross_sysconfdir}/drivers/nvidia-%{nvidia_branch}-gdrcopy-open-gpu.toml
+%{_cross_tmpfilesdir}/nvidia-%{nvidia_branch}-gdrcopy.conf
+%{_cross_unitdir}/nvidia-%{nvidia_branch}-copy-gdrcopy-open-gpu-kernel-module.service
+%{_cross_unitdir}/nvidia-%{nvidia_branch}-load-gdrcopy-open-gpu-kernel-module.service

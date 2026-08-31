@@ -3,6 +3,10 @@ Description=NVIDIA fabric manager service
 Wants=modprobe@ib_umad.service
 After=modprobe@ib_umad.service nvlsm-online.service
 Requires=nvlsm-online.service
+# nv-fabricmanager and its /etc/nvidia config come from the branch overlays;
+# order after both branches' overlays (absent branch is a no-op).
+After=nvidia-lts-overlay-driver.service nvidia-fb-overlay-driver.service
+After=nvidia-lts-overlay-config.service nvidia-fb-overlay-config.service
 
 [Service]
 EnvironmentFile=/etc/nvidia/fabricmanager.env

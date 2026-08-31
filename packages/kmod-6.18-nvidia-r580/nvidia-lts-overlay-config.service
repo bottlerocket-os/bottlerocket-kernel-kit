@@ -1,0 +1,24 @@
+[Unit]
+Description=NVIDIA lts branch /etc config overlays
+DefaultDependencies=no
+Before=drivers.target
+# Upper/workdir live on the /etc tmpfs
+RequiresMountsFor=/etc
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+StandardError=journal+console
+# Project the branch's /etc/nvidia config onto the canonical path. Used by
+# nvidia-fabricmanager, nvidia-gridd and nvlsm
+ExecStart=/usr/bin/mkdir -p \
+    /etc/nvidia \
+    /etc/nvidia-imex \
+    /etc/.nvidia-config-overlay/upper \
+    /etc/.nvidia-config-overlay/work
+ExecStart=/usr/bin/mount -t overlay nvidia-etc --options rw,nosuid,nodev,noexec,noatime,context=system_u:object_r:etc_t:s0,lowerdir=/usr/nvidia/lts/etc-nvidia:/etc/nvidia,upperdir=/etc/.nvidia-config-overlay/upper,workdir=/etc/.nvidia-config-overlay/work /etc/nvidia
+
+ExecStart=/usr/bin/mount -t overlay overlay --options ro,nosuid,nodev,noexec,noatime,lowerdir=/usr/nvidia/lts/etc-nvidia-imex:/etc/nvidia-imex /etc/nvidia-imex
+
+[Install]
+RequiredBy=drivers.target

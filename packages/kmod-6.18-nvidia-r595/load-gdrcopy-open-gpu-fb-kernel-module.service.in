@@ -1,0 +1,20 @@
+[Unit]
+Description=Load GDRCopy kernel module (open-gpu)
+RequiresMountsFor=PREFIX/lib/modules PREFIX/src/kernels
+After=nvidia-fb-copy-gdrcopy-open-gpu-kernel-module.service nvidia-fb-load-open-gpu-kernel-modules.service
+Requires=nvidia-fb-copy-gdrcopy-open-gpu-kernel-module.service nvidia-fb-load-open-gpu-kernel-modules.service
+# Disable manual restarts to prevent loading kernel modules
+# that weren't linked by the running system
+RefuseManualStart=true
+RefuseManualStop=true
+
+[Service]
+Type=oneshot
+ExecCondition=/usr/bin/ghostdog match-nvidia-driver open-gpu
+ExecStart=/usr/bin/driverdog --modules-set nvidia-fb-gdrcopy-open-gpu load-modules
+ExecStart=/usr/bin/ghostdog create-device gdrdrv 0 --path /dev/gdrdrv
+RemainAfterExit=true
+StandardError=journal+console
+
+[Install]
+RequiredBy=drivers.target
