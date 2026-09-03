@@ -1,0 +1,43 @@
+name: CheckConfig
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'packages/kernel-*/**'
+      - 'packages/microcode/**'
+      - 'tools/latest-kernel-full-config.sh'
+      - 'tools/docker-run.sh'
+      - 'Makefile'
+      - 'Twoliter.lock'
+      - '.github/workflows/check-config.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-config-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-config:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    name: "Check Config ${{ matrix.arch }}"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - run: make full-config
+      - name: Fail if configs changed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::'make full-config' produced changes on ${{ matrix.arch }}. Run 'make full-config' locally and commit the regenerated kernel configs."
+            git status --porcelain
+            git diff
+            exit 1
+          fi
