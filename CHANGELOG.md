@@ -1,3 +1,11 @@
+# v9.1.0 (2026-09-03)
+
+## Build Changes
+
+* Update the Bottlerocket SDK to `v0.79.0` ([#545])
+
+[#545]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/545
+
 # v9.0.2 (2026-08-31)
 
 ## OS Changes
