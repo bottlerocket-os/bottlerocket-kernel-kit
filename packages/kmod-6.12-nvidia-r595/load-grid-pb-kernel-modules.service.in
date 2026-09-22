@@ -1,8 +1,8 @@
 [Unit]
 Description=Load GRID kernel modules
 RequiresMountsFor=PREFIX/lib/modules PREFIX/src/kernels
-After=copy-grid-kernel-modules.service
-Requires=copy-grid-kernel-modules.service
+After=nvidia-pb-copy-grid-kernel-modules.service
+Requires=nvidia-pb-copy-grid-kernel-modules.service
 # Disable manual restarts to prevent loading kernel modules
 # that weren't linked by the running system
 RefuseManualStart=true
@@ -11,7 +11,7 @@ RefuseManualStop=true
 [Service]
 Type=oneshot
 ExecCondition=/usr/bin/ghostdog match-nvidia-driver grid
-ExecStart=/usr/bin/driverdog --modules-set nvidia-grid load-modules
+ExecStart=/usr/bin/driverdog --modules-set nvidia-pb-grid load-modules
 RemainAfterExit=true
 StandardError=journal+console
 
