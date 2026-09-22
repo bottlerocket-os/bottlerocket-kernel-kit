@@ -108,6 +108,13 @@ Requires: %{_cross_os}kmod-6.1-efa
 # Pull in FIPS-related files if needed.
 Requires: (%{name}-fips if %{_cross_os}image-feature(fips))
 
+# Only one kernel may be installed per image. Making this explicit (rather than
+# relying on the implicit /boot/vmlinuz file collision) lets the dependency
+# resolver pick the kmod matching this image's kernel when satisfying an
+# unversioned capability such as nvidia-lts / nvidia-pb.
+Conflicts: %{_cross_os}kernel-6.12
+Conflicts: %{_cross_os}kernel-6.18
+
 %global _cross_ksrcdir %{_cross_usrsrc}/kernels
 %global _cross_kmoddir %{_cross_libdir}/modules/%{version}
 

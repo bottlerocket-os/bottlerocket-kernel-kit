@@ -115,6 +115,13 @@ Conflicts: %{_cross_os}image-feature(external-kmod-development)
 # Legacy iptables support is not enabled in this kernel.
 Conflicts: %{_cross_os}iptables-legacy
 
+# Only one kernel may be installed per image. Making this explicit (rather than
+# relying on the implicit /boot/vmlinuz file collision) lets the dependency
+# resolver pick the kmod matching this image's kernel when satisfying an
+# unversioned capability such as nvidia-lts / nvidia-pb.
+Conflicts: %{_cross_os}kernel-6.1
+Conflicts: %{_cross_os}kernel-6.12
+
 # Pull in expected modules.
 Requires: %{name}-modules = %{version}-%{release}
 
