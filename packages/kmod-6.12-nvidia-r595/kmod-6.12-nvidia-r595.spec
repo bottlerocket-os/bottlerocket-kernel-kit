@@ -52,6 +52,10 @@ Source5: NvidiaGridAWSUserLicenseAgreement.DOCX
 Source10: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.x86_64.rpm
 Source11: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.aarch64.rpm
 
+# IMEX for GB200
+Source20: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-imex-%{tesla_ver}-1.amzn2023.x86_64.rpm
+Source21: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-imex-%{tesla_ver}-1.amzn2023.aarch64.rpm
+
 # Common NVIDIA conf files from 200 to 299
 Source200: nvidia-tmpfiles.conf.in
 Source202: nvidia-dependencies-modules-load.conf
@@ -67,6 +71,10 @@ Source211: grid-license-check.timer
 Source212: open-gpu-license-fallback.service
 Source213: tesla-license-fallback.service
 Source214: grid-license-file-check.conf
+Source215: nvidia-imex.service
+Source216: nvidia-imex.cfg
+Source217: nvidia-imex-tmpfiles.conf
+Source218: nvidia-imex-default-channel.conf
 
 # NVIDIA tesla conf files from 300 to 399
 Source300: nvidia-tesla-pb-tmpfiles.conf
@@ -121,9 +129,25 @@ Provides: %{_cross_os}kmod-6.12-nvidia-%{nvidia_branch}
 Summary: NVIDIA fabricmanager config and service files
 Requires: %{name}-tesla(fabricmanager)
 Requires: %{_cross_os}nvlsm
+Requires: %{name}-imex
 Provides: %{_cross_os}kmod-6.12-nvidia-%{nvidia_branch}-fabricmanager
 
 %description fabricmanager
+%{summary}.
+
+%package imex
+Summary: NVIDIA IMEX config and service files
+Requires: %{name}
+Provides: %{_cross_os}kmod-6.12-nvidia-%{nvidia_branch}-imex
+
+%description imex
+%{summary}.
+
+%package imex-config
+Summary: NVIDIA IMEX modprobe configuration
+Requires: %{name}-imex
+
+%description imex-config
 %{summary}.
 
 %package open-gpu
@@ -212,6 +236,11 @@ rpm2cpio %{_sourcedir}/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.%{_cross_arc
 
 # Add the license.
 install -p -m 0644 %{S:3} %{S:4} %{S:5} .
+
+# Extract imex from the rpm via cpio rather than `%%setup` since the
+# correct source is architecture-dependent.
+mkdir imex-%{nvidia_arch}-%{tesla_ver}-archive
+rpm2cpio %{_sourcedir}/nvidia-imex-%{tesla_ver}-1.amzn2023.%{_cross_arch}.rpm | cpio -idmV -D imex-%{nvidia_arch}-%{tesla_ver}-archive
 
 # This recipe was based in the NVIDIA yum/dnf specs:
 # https://github.com/NVIDIA/yum-packaging-precompiled-kmod
@@ -543,6 +572,23 @@ done
 
 popd
 
+# Begin IMEX binaries and configuration files
+pushd imex-%{nvidia_arch}-%{tesla_ver}-archive
+install -p -m 0755 usr/bin/nvidia-imex %{buildroot}%{nvidia_bindir}
+install -p -m 0755 usr/bin/nvidia-imex-ctl %{buildroot}%{nvidia_bindir}
+
+popd
+
+# NVIDIA IMEX service, config, and tmpfiles
+install -p -m 0644 %{S:215} %{buildroot}%{_cross_unitdir}
+install -d %{buildroot}%{nvidia_sysconfdir}/nvidia-imex
+install -p -m 0644 %{S:216} %{buildroot}%{nvidia_sysconfdir}/nvidia-imex/config.cfg
+install -p -m 0644 %{S:217} %{buildroot}%{_cross_tmpfilesdir}/nvidia-imex.conf
+
+# NVIDIA IMEX modprobe config
+install -d %{buildroot}%{_cross_libdir}/modprobe.d
+install -p -m 0644 %{S:218} %{buildroot}%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
+
 install -d %{buildroot}%{nvidia_datadir}/nvidia/gdrcopy/open-gpu/drivers
 
 install -p -m 0644 gdrcopy-%{gdrcopy_ver}/gdrdrv-open-gpu.ko \
@@ -595,9 +641,10 @@ install -d %{buildroot}%{_cross_datadir}/egl
 %dir %{_cross_datadir}/nvidia
 %dir %{_cross_libdir}/modules-load.d
 %dir %{_cross_factorydir}%{_cross_sysconfdir}/drivers
-# Base package owns the etc/nvidia storage dir so the overlay service's lowerdir
-# always exists even when the fabricmanager/grid subpackages are absent.
+# Base package owns the etc/nvidia storage dirs so the overlay service's lowerdirs
+# always exist even when the fabricmanager/grid/imex subpackages are absent.
 %dir %{nvidia_sysconfdir}/nvidia
+%dir %{nvidia_sysconfdir}/nvidia-imex
 %{_cross_tmpfilesdir}/nvidia.conf
 %{_cross_libdir}/modules-load.d/nvidia-dependencies.conf
 
@@ -880,6 +927,16 @@ install -d %{buildroot}%{_cross_datadir}/egl
 %{nvidia_sysconfdir}/nvidia/fabricmanager.cfg
 %{nvidia_sysconfdir}/nvidia/fabricmanager.env
 %{_cross_unitdir}/nvidia-fabricmanager.service
+
+%files imex
+%{nvidia_bindir}/nvidia-imex
+%{nvidia_bindir}/nvidia-imex-ctl
+%{_cross_unitdir}/nvidia-imex.service
+%{nvidia_sysconfdir}/nvidia-imex/config.cfg
+%{_cross_tmpfilesdir}/nvidia-imex.conf
+
+%files imex-config
+%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
 
 %files mps
 %{nvidia_bindir}/nvidia-cuda-mps-control
