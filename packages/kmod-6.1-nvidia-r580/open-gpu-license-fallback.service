@@ -1,5 +1,6 @@
 [Unit]
 Description=Open GPU GRID License Check Fallback
+After=nvidia-lts-overlay-driver.service nvidia-pb-overlay-driver.service
 RefuseManualStart=true
 RefuseManualStop=true
 

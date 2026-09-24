@@ -103,6 +103,13 @@ Conflicts: %{_cross_os}image-feature(no-erofs-root-partition)
 # No runtime kernel-devel support
 Conflicts: %{_cross_os}image-feature(external-kmod-development)
 
+# Only one kernel may be installed per image. Making this explicit (rather than
+# relying on the implicit /boot/vmlinuz file collision) lets the dependency
+# resolver pick the kmod matching this image's kernel when satisfying an
+# unversioned capability such as nvidia-lts / nvidia-pb.
+Conflicts: %{_cross_os}kernel-6.1
+Conflicts: %{_cross_os}kernel-6.18
+
 # Pull in expected modules.
 Requires: %{name}-modules = %{version}-%{release}
 

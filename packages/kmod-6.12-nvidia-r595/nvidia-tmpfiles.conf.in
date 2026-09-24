@@ -8,8 +8,8 @@ R __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gd
 d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gdrcopy 0755 root root - -
 d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gdrcopy/open-gpu 0755 root root - -
 d __PREFIX__/lib/modules/__KERNEL_VERSION__/kernel/drivers/extra/video/nvidia/gdrcopy/tesla 0755 root root - -
-C /etc/nvidia/fabricmanager.cfg - - - -
-C /etc/nvidia/fabricmanager.env - - - -
-C /etc/nvidia/gridd.conf - - - -
+# fabricmanager.cfg/.env and gridd.conf are added via an overlay mount; this
+# creates the mountpoint that overlay needs.
+d /etc/nvidia 0755 root root -
 d /run/nvidia 0755 root root -
 D /var/run/nvidia-persistenced 0755 nvidia nvidia - -
