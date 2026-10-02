@@ -1,0 +1,5 @@
+[nvidia-lts-gdrcopy-open-gpu]
+lib-modules-path = "kernel/drivers/extra/video/nvidia/gdrcopy/open-gpu"
+
+[nvidia-lts-gdrcopy-open-gpu.kernel-modules."gdrdrv.ko"]
+copy-source = "__NVIDIA_MODULES__"
