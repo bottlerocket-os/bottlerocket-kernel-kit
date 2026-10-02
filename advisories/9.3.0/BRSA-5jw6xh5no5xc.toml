@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-5jw6xh5no5xc"
+title = "kernel CVE-2026-74347"
+cve = "CVE-2026-74347"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfilter: cttimeout: detach dataplane timeout policy and repurpose refcount"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.110"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jepiyush"
+issue-date = 2026-09-30T00:47:47Z
+arches = ["aarch64", "x86_64"]
+version = "9.3.0"
