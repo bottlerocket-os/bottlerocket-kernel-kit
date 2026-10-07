@@ -1,0 +1,23 @@
+[Unit]
+Description=Rebuild ld.so.cache with the NVIDIA pb branch libraries
+DefaultDependencies=no
+Before=drivers.target
+After=nvidia-pb-overlay-driver.service
+Requires=nvidia-pb-overlay-driver.service
+# ldconfig.service writes the same cache through the same temporary file, so
+# never run concurrently with it, and always finish last
+After=ldconfig.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+StandardError=journal+console
+# libnvidia-container (legacy runtime mode) finds the driver libraries through
+# /etc/ld.so.cache. ldconfig.service builds the cache during sysinit, before
+# the overlay exists, so rebuild it now. -X skips the SONAME links.
+# Nothing in the kernel-module link/load chain reads the cache, so this runs
+# in parallel with it instead of delaying it.
+ExecStart=/usr/sbin/ldconfig -X
+
+[Install]
+RequiredBy=drivers.target
