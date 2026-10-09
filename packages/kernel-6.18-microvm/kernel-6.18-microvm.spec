@@ -4,72 +4,33 @@
 %global kmajor 6.18
 # Location where kernel-6.18-shared-configs installs the base config fragments.
 %global kernel_configdir %{_cross_datadir}/bottlerocket/kernel-configs
-%global neuron_ver 2.29.0
-%global neuron_inf1_ver 2.24.13
 
 %global host_arch %(uname -m)
 
-Name: %{_cross_os}kernel-%{kmajor}
+Name: %{_cross_os}kernel-%{kmajor}-microvm
 Version: 6.18.51
 Release: 1%{?dist}
-Summary: The Linux kernel
+Summary: The Linux kernel, configured for microvm guests
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
-# Use latest-kernel-srpm-url.sh to get this.
+# Keep this in sync with packages/kernel-6.18 so both kernels are built from the
+# same source. Use that package's latest-kernel-srpm-url.sh to get this.
 Source0: https://cdn.amazonlinux.com/al2023/blobstore/39f4c2db4f790d9f1525e77e5597d80d8080f9c1db893482267c7b7d4321f2b0/kernel6.18-6.18.51-120.163.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
+# Overrides that make this kernel bootable as a microvm guest.
+Source103: config-microvm
 # Fully generated kernel configurations used for validation.
 Source110: config-full-bottlerocket-x86_64-on-aarch64
 Source111: config-full-bottlerocket-aarch64-on-aarch64
 Source112: config-full-bottlerocket-x86_64-on-x86_64
 Source113: config-full-bottlerocket-aarch64-on-x86_64
 
-# This list of FIPS modules is extracted from /etc/fipsmodules in the initramfs
-# after placing AL2023 in FIPS mode.
-Source200: check-fips-modules.drop-in.conf.in
-Source201: fipsmodules-x86_64
-Source202: fipsmodules-aarch64
-
 # Adjust kernel-devel mount behavior if not squashfs.
 Source210: var-lib-kernel-devel-lower.mount.drop-in.conf.in
 
-# Bootconfig snippets to adjust the default kernel command line for the platform.
+# Bootconfig snippet to adjust the default kernel command line for the platform.
 Source300: bootconfig-aws.conf
-Source301: bootconfig-vmware.conf
-
-# Neuron driver RPMs - x86_64 only
-Source2: gpgkey-00FA2C1079260870A76D2C285749CAD8646D9185.asc
-# Use latest-2.24-neuron-srpms-url.sh to get this.
-Source3: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-%{neuron_inf1_ver}.0.noarch.rpm
-# Use latest-neuron-srpm-url.sh to get this.
-Source4: https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-%{neuron_ver}.0.noarch.rpm
-# Neuron driver 2.x.7372.0
-Source5: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.7372.0.noarch.rpm/e82516a77ab54f1c651a1f160e3a67b1cbca8bef391d78a6c683d6fc22442c8ee17df9d3fae1392ca8cffa676bb966b7088c32e634894ba142d83bef58dd2d81/aws-neuronx-dkms-2.x.7372.0.noarch.rpm
-# Neuron driver 2.x.7693.0
-Source6: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.7693.0.noarch.rpm/4411e3d28bc307bd096408f72f9c3d9e3edcadcbeab3ca409b0f94041ac1f589120353edfb1e11c45ff5a5421808297a308f18a6ac687459abe8c5e985653d3f/aws-neuronx-dkms-2.x.7693.0.noarch.rpm
-# Neuron driver 2.x.8072.0
-Source7: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8072.0.noarch.rpm/d96bd0fe73482684c97faae6f779bfa8a84e9b9ca09f796031d409322550fb1744a38e6c54f5fcc8c1221f051cf04f518694876ea825722f5ed7895c2e8bb22a/aws-neuronx-dkms-2.x.8072.0.noarch.rpm
-# Neuron driver 2.x.8689.0
-Source8: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8689.0.noarch.rpm/5d3ce7f81858d5aae62279369bce72e041dd321f71146a4ab8e61f9230f3965323f9c9230547476614f1c334b84c59edbd892524e2a87c35b46960a044502e9f/aws-neuronx-dkms-2.x.8689.0.noarch.rpm
-# Neuron driver 2.x.8586.0
-Source9: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8586.0.noarch.rpm/0c5bf7f6ffd9d1ef3585aad48c8bb9a1f3f242e32af63755c3f914d9d000dc1f999b53ea90718dfbbfb8c3318ac80c0c90fc68a4962ea25ce4948183d62eb732/aws-neuronx-dkms-2.x.8586.0.noarch.rpm
-# Neuron driver 2.x.8732.0
-Source10: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8732.0.noarch.rpm/089caa0289ff37219583a2fcb7f947520da0c130595ff2a5917a04eed3d6272064332deb48a4b401fa0385b5450cc5fc3195991ca59b42a321d5706641f435e5/aws-neuronx-dkms-2.x.8732.0.noarch.rpm
-# Neuron driver 2.x.8890.0
-Source11: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.8890.0.noarch.rpm/ca47b7d70c7be5e60bb372c85ff20380188dfe06648aed9277a95d3ebdf4cc1212c6c92a608b1201f6fe2ef53cf58836b50f59034878141632345f04aee543e3/aws-neuronx-dkms-2.x.8890.0.noarch.rpm
-# Neuron driver 2.x.9456.0
-Source12: https://cache.bottlerocket.aws/aws-neuronx-dkms-2.x.9456.0.noarch.rpm/a124ce5f6c0ab767532262da447c6b55754b6667301cb79ddb60dde109dbe95d2ca9024b4446a65eea83a8f59961dbeb745db9a1b6429d4ada0e62dc33aad2a5/aws-neuronx-dkms-2.x.9456.0.noarch.rpm
-
-# Neuron-related configuration and unit files
-Source220: neuron-tmpfiles.conf.in
-Source221: neuron-inf1.toml.in
-Source222: load-neuron-inf1-modules.service
-Source223: neuron-latest.toml.in
-Source224: load-neuron-latest-modules.service
-
-# Neuron driver patches for kernel 6.18 compatibility.
-Patch2001: 2001-Rename-struct-mempool-to-struct-neuron_mempool.patch
 
 # Help out-of-tree module builds run `make prepare` automatically.
 Patch1001: 1001-Makefile-add-prepare-target-for-external-modules.patch
@@ -97,7 +58,7 @@ BuildRequires: %{_cross_os}kernel-6.18-shared-configs
 
 # CPU microcode updates are included as "extra firmware" so the files don't
 # need to be installed on the root filesystem. However, we want the license and
-# attribution files to be available in the usual place.
+# attribution files to be available in the usual place. x86_64 only.
 %if "%{_cross_arch}" == "x86_64"
 BuildRequires: %{_cross_os}microcode-ec2
 Requires: %{_cross_os}microcode-licenses
@@ -123,17 +84,6 @@ Requires: (%{name}-mkfs-xfs-conf if %{_cross_os}xfsprogs)
 
 # Pull in platform-dependent boot config snippets.
 Requires: (%{name}-bootconfig-aws if %{_cross_os}variant-platform(aws))
-Requires: (%{name}-bootconfig-vmware if %{_cross_os}variant-platform(vmware))
-
-# Pull in platform-dependent modules.
-%if "%{_cross_arch}" == "x86_64"
-Requires: (%{name}-modules-neuron if (%{_cross_os}variant-platform(aws) without (%{_cross_os}variant-flavor(nvidia) or %{_cross_os}variant-flavor(nvidia-fips))))
-%endif
-
-Requires: %{_cross_os}kmod-6.18-efa
-
-# Pull in FIPS-related files if needed.
-Requires: (%{name}-fips if %{_cross_os}image-feature(fips))
 
 %global _cross_ksrcdir %{_cross_usrsrc}/kernels/%{version}
 %global _cross_kmoddir %{_cross_libdir}/modules/%{version}
@@ -153,12 +103,6 @@ Summary: Boot config snippet for the Linux kernel on AWS
 %description bootconfig-aws
 %{summary}.
 
-%package bootconfig-vmware
-Summary: Boot config snippet for the Linux kernel on VMware
-
-%description bootconfig-vmware
-%{summary}.
-
 %package modules
 Summary: Modules for the Linux kernel
 
@@ -176,30 +120,6 @@ Summary: Header files for the Linux kernel for use by glibc
 
 %description headers
 %{summary}.
-
-%package fips
-Summary: FIPS related configuration for the Linux kernel
-Requires: (%{_cross_os}image-feature(fips) and %{name})
-Conflicts: %{_cross_os}image-feature(no-fips)
-
-%description fips
-%{summary}.
-
-%if "%{_cross_arch}" == "x86_64"
-%package modules-neuron
-Summary: Modules for the Linux kernel with Neuron hardware
-Requires: %{name}
-Epoch: 1
-Requires: %{_cross_os}ghostdog
-Requires: %{_cross_os}variant-platform(aws)
-Conflicts: %{_cross_os}variant-flavor(nvidia)
-Conflicts: %{_cross_os}variant-flavor(nvidia-fips)
-
-Provides: %{_cross_os}kmod-6.18-neuron
-
-%description modules-neuron
-%{summary}.
-%endif
 
 %prep
 %if "%{_cross_arch}" == "aarch64"
@@ -253,7 +173,8 @@ scripts/kconfig/merge_config.sh \
 %else
   %{kernel_configdir}/config-bottlerocket-aarch64 \
 %endif
-  %{kernel_configdir}/config-bottlerocket
+  %{kernel_configdir}/config-bottlerocket \
+  %{S:103}
 
 # Select the full kernel config based on host and target architecture.
 # Kernel 6.18 uses host-arch-specific configs because config generation
@@ -280,79 +201,6 @@ fi
 rm -f ../config-* ../*.patch
 cd %{_builddir}
 
-# Neuron driver extraction (x86_64 only)
-%if "%{_cross_arch}" == "x86_64"
-rpmkeys --import %{S:2} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:3} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:4} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:5} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:6} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:7} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:8} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:9} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:10} --dbpath "${PWD}/rpmdb"
-rpmkeys --define "_pkgverify_flags 0x0" --checksig %{S:11} --dbpath "${PWD}/rpmdb"
-rpmkeys --checksig %{S:12} --dbpath "${PWD}/rpmdb"
-rm -rf "${PWD}/rpmdb"
-
-rpm2cpio %{S:3} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2_24 \;
-rm -r usr
-
-rpm2cpio %{S:4} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_latest \;
-rm -r usr
-
-# 2.x.7372.0 neuron driver
-rpm2cpio %{S:5} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_7372 \;
-rm -r usr
-pushd neuron_2x_7372
-%patch -P 2001 -p1
-popd
-
-# 2.x.7693.0 neuron driver
-rpm2cpio %{S:6} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_7693 \;
-rm -r usr
-pushd neuron_2x_7693
-%patch -P 2001 -p1
-popd
-
-# 2.x.8072.0 neuron driver
-rpm2cpio %{S:7} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8072 \;
-rm -r usr
-pushd neuron_2x_8072
-%patch -P 2001 -p1
-popd
-
-# 2.x.8689.0 neuron driver (no patch needed - newer driver)
-rpm2cpio %{S:8} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8689 \;
-rm -r usr
-
-# 2.x.8586.0 neuron driver (no patch needed - newer driver)
-rpm2cpio %{S:9} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8586 \;
-rm -r usr
-
-# 2.x.8732.0 neuron driver (no patch needed - newer driver)
-rpm2cpio %{S:10} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8732 \;
-rm -r usr
-
-# 2.x.8890.0 neuron driver (no patch needed - newer driver)
-rpm2cpio %{S:11} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_8890 \;
-rm -r usr
-
-# 2.x.9456.0 neuron driver (no patch needed - newer driver)
-rpm2cpio %{S:12} | cpio -idmu './usr/src/aws-neuronx-*'
-find usr/src/ -mindepth 1 -maxdepth 1 -type d -exec mv {} neuron_2x_9456 \;
-rm -r usr
-%endif
-
 %global kmake %{shrink: \
 make -s \
   ARCH="%{_cross_karch}" \
@@ -368,20 +216,6 @@ make -s \
 %kmake %{?_smp_mflags} %{_cross_kimage}
 %kmake %{?_smp_mflags} modules
 
-# Build neuron modules (x86_64 only)
-%if "%{_cross_arch}" == "x86_64"
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2_24
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_latest
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_7372
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_7693
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8072
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8689
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8586
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8732
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_8890
-%kmake %{?_smp_mflags} M=%{_builddir}/neuron_2x_9456
-%endif
-
 make -C tools/bpf/bpftool bootstrap
 ./tools/bpf/bpftool/bootstrap/bpftool btf dump file vmlinux format c > vmlinux.h
 
@@ -389,44 +223,8 @@ make -C tools/bpf/bpftool bootstrap
 %kmake %{?_smp_mflags} headers_install
 %kmake %{?_smp_mflags} modules_install
 
-# Install neuron modules (x86_64 only)
-%if "%{_cross_arch}" == "x86_64"
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2_24/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_latest/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_7372/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_7693/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8072/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8689/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8586/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8732/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8890/
-install -d %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_9456/
-
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2_24 M=%{_builddir}/neuron_2_24 modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_latest M=%{_builddir}/neuron_latest modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_7372 M=%{_builddir}/neuron_2x_7372 modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_7693 M=%{_builddir}/neuron_2x_7693 modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8072 M=%{_builddir}/neuron_2x_8072 modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8689 M=%{_builddir}/neuron_2x_8689 modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8586 M=%{_builddir}/neuron_2x_8586 modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8732 M=%{_builddir}/neuron_2x_8732 modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_8890 M=%{_builddir}/neuron_2x_8890 modules_install
-%kmake %{?_smp_mflags} INSTALL_MOD_DIR=neuron_2x_9456 M=%{_builddir}/neuron_2x_9456 modules_install
-
-mv %{buildroot}%{_cross_kmoddir}/neuron_2_24/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2_24/
-mv %{buildroot}%{_cross_kmoddir}/neuron_latest/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_latest/
-mv %{buildroot}%{_cross_kmoddir}/neuron_2x_7372/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_7372/
-mv %{buildroot}%{_cross_kmoddir}/neuron_2x_7693/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_7693/
-mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8072/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8072/
-mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8689/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8689/
-mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8586/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8586/
-mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8732/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8732/
-mv %{buildroot}%{_cross_kmoddir}/neuron_2x_8890/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_8890/
-mv %{buildroot}%{_cross_kmoddir}/neuron_2x_9456/neuron.%{_ko} %{buildroot}%{_cross_libexecdir}/neuron/neuron_2x_9456/
-%endif
-
 install -d %{buildroot}/boot
-install -T -m 0755 arch/%{_cross_karch}/boot/%{_cross_kimage} %{buildroot}/boot/vmlinuz
+install -T -m 0755 arch/%{_cross_karch}/boot/%{_cross_kimage} %{buildroot}/boot/%{_cross_kimage}
 install -m 0644 .config %{buildroot}/boot/config
 
 find %{buildroot}%{_cross_prefix} \
@@ -515,20 +313,6 @@ ln -rs %{buildroot}%{_cross_kmoddir} %{buildroot}%{_cross_libdir}/modules/%{kmaj
 # Install a copy of System.map so that module dependencies can be regenerated.
 install -p -m 0600 System.map %{buildroot}%{_cross_kmoddir}
 
-# Ensure that each required FIPS module is loaded as a dependency of the
-# check-fips-module.service. The list of FIPS modules is different across
-# kernels but the check is consistent: it loads the "tcrypt" module after
-# the other modules are loaded.
-mkdir -p %{buildroot}%{_cross_unitdir}/check-fips-modules.service.d
-i=0
-for fipsmod in $(cat %{_sourcedir}/fipsmodules-%{_cross_arch}) ; do
-  [ "${fipsmod}" == "tcrypt" ] && continue
-  drop_in="$(printf "%03d\n" "${i}")-${fipsmod}.conf"
-  sed -e "s|__FIPS_MODULE__|${fipsmod}|g" %{S:200} \
-    > %{buildroot}%{_cross_unitdir}/check-fips-modules.service.d/"${drop_in}"
-  (( i+=1 ))
-done
-
 # Create the mount point for the runtime kernel-devel directory, and populate
 # with the linker script that driverdog needs.
 install -d %{buildroot}%{_cross_datadir}/bottlerocket/kernel-devel/%{version}/scripts
@@ -548,32 +332,11 @@ ln -s lts_6.18.conf %{buildroot}%{_cross_datadir}/xfsprogs/mkfs/default.conf
 # Install platform-specific bootconfig snippets.
 install -d %{buildroot}%{_cross_bootconfigdir}
 install -p -m 0644 %{S:300} %{buildroot}%{_cross_bootconfigdir}/05-aws.conf
-install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
-
-%if "%{_cross_arch}" == "x86_64"
-# Add Neuron-related configuration files to load the module when the hardware is present.
-install -d 0644 %{buildroot}%{_cross_tmpfilesdir}
-sed \
-  -e "s|__KERNEL_VERSION__|%{version}|" \
-  -e "s|__PREFIX__|%{_cross_prefix}|" %{S:220} > neuron.conf
-install -p -m 0644 neuron.conf %{buildroot}%{_cross_tmpfilesdir}/
-install -d 0644 %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
-# inf1
-sed -e 's|__NEURON_MODULES__|%{_cross_libexecdir}/neuron|' %{S:221} > \
-  neuron-inf1.toml
-install -m 0644 neuron-inf1.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
-# latest
-sed -e 's|__NEURON_MODULES__|%{_cross_libexecdir}/neuron|' %{S:223} > \
-  neuron-latest.toml
-install -m 0644 neuron-latest.toml %{buildroot}%{_cross_factorydir}%{_cross_sysconfdir}/drivers
-install -d %{buildroot}%{_cross_unitdir}
-install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
-%endif
 
 %files
 %license COPYING LICENSES/preferred/GPL-2.0 LICENSES/exceptions/Linux-syscall-note
 %{_cross_attribution_file}
-/boot/vmlinuz
+/boot/%{_cross_kimage}
 /boot/config
 %dir %{_cross_usrsrc}/kernels
 %dir %{_cross_datadir}/bottlerocket/kernel-devel
@@ -623,71 +386,17 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/build
 %attr(775, root, builder) %{_cross_ksrcdir}/scripts/*
 
-%files fips
-%{_cross_unitdir}/check-fips-modules.service.d/*.conf
-
 %files bootconfig-aws
 %{_cross_bootconfigdir}/05-aws.conf
-
-%files bootconfig-vmware
-%{_cross_bootconfigdir}/05-vmware.conf
 
 %files modules
 %dir %{_cross_libdir}/modules
 %{_cross_libdir}/modules/%{kmajor}
 %dir %{_cross_kmoddir}
-%{_cross_kmoddir}/modules.alias
-%{_cross_kmoddir}/modules.alias.bin
-%{_cross_kmoddir}/modules.builtin
-%{_cross_kmoddir}/modules.builtin.alias.bin
-%{_cross_kmoddir}/modules.builtin.bin
-%{_cross_kmoddir}/modules.builtin.modinfo
-%{_cross_kmoddir}/modules.dep
-%{_cross_kmoddir}/modules.dep.bin
-%{_cross_kmoddir}/modules.devname
-%{_cross_kmoddir}/modules.order
-%{_cross_kmoddir}/modules.softdep
-%{_cross_kmoddir}/modules.symbols
-%{_cross_kmoddir}/modules.symbols.bin
-%{_cross_kmoddir}/modules.weakdep
+%{_cross_kmoddir}/modules.*
 %{_cross_kmoddir}/System.map
-
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/arch/x86/crypto/blowfish-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/camellia-aesni-avx2.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/camellia-aesni-avx-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/camellia-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/cast5-avx-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/cast6-avx-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/des3_ede-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/ghash-clmulni-intel.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/serpent-avx2.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/serpent-avx-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/serpent-sse2-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/twofish-avx-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/twofish-x86_64-3way.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/crypto/twofish-x86_64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/kvm/kvm-amd.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/kvm/kvm-intel.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/kvm/kvm.%{_ko}
-%{_cross_kmoddir}/kernel/arch/x86/platform/intel/iosf_mbi.%{_ko}
-%endif
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/aes-arm64.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/aes-ce-blk.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/aes-ce-ccm.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/aes-ce-cipher.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/aes-neon-blk.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/aes-neon-bs.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/ghash-ce.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/sha3-ce.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/sm3-ce.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/crypto/sm4-ce-cipher.%{_ko}
-%{_cross_kmoddir}/kernel/arch/arm64/lib/xor-neon.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/crypto/algif_aead.%{_ko}
+# Modules built on both architectures.
 %{_cross_kmoddir}/kernel/crypto/algif_rng.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/algif_skcipher.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/ansi_cprng.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/anubis.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/arc4.%{_ko}
@@ -696,10 +405,6 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/crypto/async_tx/async_memcpy.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/async_tx/async_pq.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/async_tx/async_raid6_recov.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/async_tx/async_tx.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/async_tx/async_xor.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/authencesn.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/authenc.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/blake2b_generic.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/blowfish_common.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/blowfish_generic.%{_ko}
@@ -707,24 +412,19 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/crypto/cast5_generic.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/cast6_generic.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/cast_common.%{_ko}
+%{_cross_kmoddir}/kernel/crypto/ccm.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/chacha.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/chacha20poly1305.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/cbc.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/ccm.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/cmac.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/crc32-cryptoapi.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/crypto_user.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/cts.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/des_generic.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/echainiv.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/essiv.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/fcrypt.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/fips140/fips140.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/gcm.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/khazad.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/lrw.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/lz4hc.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/lz4.%{_ko}
+%{_cross_kmoddir}/kernel/crypto/lz4hc.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/md4.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/michael_mic.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/pcbc.%{_ko}
@@ -732,32 +432,16 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/crypto/rmd160.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/seed.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/serpent_generic.%{_ko}
+%{_cross_kmoddir}/kernel/crypto/tcrypt.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/tea.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/twofish_common.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/twofish_generic.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/tcrypt.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/wp512.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/xcbc.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/xor.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/xts.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/xxhash_generic.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/zstd.%{_ko}
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/crypto/sm4.%{_ko}
-%{_cross_kmoddir}/kernel/crypto/cryptd.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/acpi/ac.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/acpi/acpi_ipmi.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/acpi/button.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/acpi/thermal.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/acpi/video.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/acpi/acpi_extlog.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/acpi/acpi_pad.%{_ko}
-%endif
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/amazon/flash/aws_fwflash/aws_fwflash.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/amazon/media/v4l2-loopback/v4l2loopback.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/amazon/net/ena/ena.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/amazon/net/igb_uio/igb_uio.%{_ko}
@@ -769,104 +453,34 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/drivers/block/rbd.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/block/ublk_drv.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/block/zram/zram.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/hw_random/virtio-rng.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_devintf.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_msghandler.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_poweroff.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_si.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/char/ipmi/ipmi_watchdog.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/char/virtio_console.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/char/hangcheck-timer.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/char/nvram.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/rng-core.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/virtio-rng.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/amd-rng.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/intel-rng.%{_ko}
-%endif
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/arm_smccc_trng.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/cn10k-rng.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/char/hw_random/graviton-rng.%{_ko}
-%endif
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/drivers/char/tpm/tpm_crb_ffa.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/cpufreq/cpufreq_conservative.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/cpufreq/cpufreq_ondemand.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/cpufreq/cpufreq_powersave.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/cpufreq/cpufreq_userspace.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/dax/device_dax.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/dax/kmem.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/cpufreq/acpi-cpufreq.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/cpufreq/pcc-cpufreq.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/dca/dca.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/dma/ioat/ioatdma.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/amd64_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/e752x_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/i3000_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/i3200_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/i5100_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/i5400_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/i7300_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/i7core_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/i82975x_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/ie31200_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/pnd2_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/sb_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/skx_edac.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/skx_edac_common.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/edac/x38_edac.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/firmware/dmi-sysfs.%{_ko}
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/drivers/firmware/arm_ffa/ffa-core.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/firmware/arm_ffa/ffa-module.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/firmware/arm_scpi.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/gpu/drm/drm_kms_helper.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/gpu/drm/display/drm_display_helper.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/gpu/drm/drm.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/gpu/drm/drm_kms_helper.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/gpu/drm/drm_shmem_helper.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/gpu/drm/drm_suballoc_helper.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/gpu/drm/clients/drm_client_lib.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/gpu/drm/sysfb/drm_sysfb_helper.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/gpu/drm/display/drm_display_helper.%{_ko}
-
-%{_cross_kmoddir}/kernel/drivers/gpu/drm/sysfb/simpledrm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/gpu/drm/drm_ttm_helper.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/gpu/drm/sysfb/drm_sysfb_helper.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/gpu/drm/sysfb/simpledrm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/gpu/drm/ttm/ttm.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/gpu/drm/vmwgfx/vmwgfx.%{_ko}
-%endif
-
-%{_cross_kmoddir}/kernel/drivers/hid/hid-generic.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/hid/hid-hyperv.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/hid/hid-multitouch.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/hid/uhid.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/hid/usbhid/usbhid.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/hwmon/acpi_power_meter.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/hwmon/coretemp.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/hwmon/k10temp.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/hwmon/hwmon.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/hv/hv_balloon.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/hv/hv_utils.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/i2c/algos/i2c-algo-bit.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-i801.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-piix4.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/i2c/i2c-smbus.%{_ko}
-%endif
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-tegra-bpmp.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/i2c/i2c-core.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/infiniband/core/ib_cm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/infiniband/core/ib_core.%{_ko}
@@ -876,26 +490,10 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/drivers/infiniband/core/rdma_cm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/infiniband/core/rdma_ucm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/infiniband/hw/mlx5/mlx5_ib.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/input/keyboard/atkbd.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/input/mouse/psmouse.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/input/misc/uinput.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/input/mousedev.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/input/serio/hyperv-keyboard.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/input/serio/i8042.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/input/serio/libps2.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/input/serio/serio.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/input/serio/serport.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/input/vivaldi-fmap.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/input/sparse-keymap.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/iommu/virtio-iommu.%{_ko}
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/drivers/mailbox/arm_mhu_db.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/mailbox/arm_mhu.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/md/bcache/bcache.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/dm-bio-prison.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/dm-cache.%{_ko}
@@ -904,7 +502,6 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/drivers/md/dm-delay.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/dm-dust.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/dm-flakey.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/md/dm-integrity.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/dm-log.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/dm-log-userspace.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/dm-log-writes.%{_ko}
@@ -921,45 +518,31 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/drivers/md/linear.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/persistent-data/dm-persistent-data.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/raid0.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/md/raid10.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/raid1.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/md/raid10.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/md/raid456.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/media/mc/mc.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/media/v4l2-core/v4l2-dv-timings.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/media/v4l2-core/videodev.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/mfd/lpc_ich.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/mfd/lpc_sch.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/mfd/mfd-core.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/misc/eeprom/eeprom_93cx6.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/misc/vmw_balloon.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/misc/vmw_vmci/vmw_vmci.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/misc/nsm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/bonding/bonding.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/dummy.%{_ko}
-
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/e1000/e1000.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/e1000e/e1000e.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/i40e/i40e.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/ice/ice.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/igb/igb.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/igc/igc.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/ice/ice.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/ixgbevf/ixgbevf.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/ethernet/realtek/r8169.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/geneve.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/net/hyperv/hv_netvsc.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/ixgbe/ixgbe.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/ixgbevf/ixgbevf.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libeth/libeth.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libie/libie.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libie/libie_adminq.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libie/libie_fwlog.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/ethernet/realtek/r8169.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/geneve.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ifb.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ipvlan/ipvlan.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ipvlan/ipvtap.%{_ko}
@@ -969,7 +552,6 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/drivers/net/mdio/acpi_mdio.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/mdio/fwnode_mdio.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/netdevsim/netdevsim.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/net_failover.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/nlmon.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/phy/fixed_phy.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/phy/libphy.%{_ko}
@@ -992,54 +574,36 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/drivers/net/team/team_mode_loadbalance.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/team/team_mode_roundrobin.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/tun.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/veth.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/net/virtio_net.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/vmxnet3/vmxnet3.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/vrf.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/vxlan/vxlan.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/wireguard/wireguard.%{_ko}
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/drivers/net/mdio/of_mdio.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/nvme/host/nvme-fabrics.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/nvme/host/nvme-tcp.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/pci/controller/pci-hyperv-intf.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/pci/hotplug/acpiphp_ibm.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/pci/pci-stub.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/pci/hotplug/cpcihp_generic.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/platform/x86/wmi-bmof.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/platform/x86/wmi.%{_ko}
-%endif
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/drivers/perf/arm-cmn.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/pmdomain/arm/scpi_pm_domain.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/pps/clients/pps-gpio.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/pps/clients/pps-ldisc.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/ptp/ptp_kvm.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/ras/amd/atl/amd_atl.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/ras/amd/fmpm.%{_ko}
-%endif
+%{_cross_kmoddir}/kernel/drivers/scsi/iscsi_boot_sysfs.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/iscsi_tcp.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/libiscsi.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/libiscsi_tcp.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/scsi/raid_class.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/scsi/scsi_common.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/scsi_mod.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/scsi_transport_iscsi.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/scsi_transport_sas.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/sd_mod.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/virtio_scsi.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/target/iscsi/iscsi_target_mod.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/target/loopback/tcm_loop.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/target/target_core_file.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/target/target_core_iblock.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/target/target_core_mod.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/target/target_core_user.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/thermal/intel/x86_pkg_temp_thermal.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/tty/serial/8250/8250_exar.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/uio/uio_dmem_genirq.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/uio/uio_hv_generic.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/uio/uio.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/uio/uio_dmem_genirq.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/uio/uio_pci_generic.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/uio/uio_pdrv_genirq.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/usb/class/cdc-acm.%{_ko}
@@ -1063,65 +627,20 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/drivers/usb/usbip/usbip-host.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/usb/usbip/vhci-hcd.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/vfio/pci/mlx5/mlx5-vfio-pci.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/vfio/pci/vfio-pci-core.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/vfio/pci/vfio-pci.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/vfio/vfio_iommu_type1.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/vfio/pci/vfio-pci-core.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/vfio/vfio.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/vhost/vhost_iotlb.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/vhost/vhost.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/vfio/vfio_iommu_type1.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/vhost/vhost_net.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/vhost/vhost_vsock.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/video/backlight/backlight.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/video/backlight/lcd.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/virt/coco/sev-guest/sev-guest.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/virt/coco/guest/tsm_report.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/virt/vboxguest/vboxguest.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/virtio/virtio_balloon.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/virtio/virtio_mmio.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/virtio/virtio_mem.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/drivers/watchdog/softdog.%{_ko}
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/drivers/watchdog/gpio_wdt.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/watchdog/sbsa_gwdt.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/watchdog/sp805_wdt.%{_ko}
-%endif
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/xen/xen-evtchn.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/xen/xenfs/xenfs.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/xen/xen-gntalloc.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/xen/xen-gntdev.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/xen/xen-privcmd.%{_ko}
-%endif
-
-%{_cross_kmoddir}/kernel/drivers/scsi/scsi_transport_sas.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/scsi/hv_storvsc.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/drivers/scsi/iscsi_boot_sysfs.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/scsi/iscsi_tcp.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/scsi/libiscsi.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/scsi/libiscsi_tcp.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/scsi/scsi_mod.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/scsi/scsi_transport_iscsi.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/scsi/sd_mod.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/scsi/virtio_scsi.%{_ko}
-%{_cross_kmoddir}/kernel/drivers/target/loopback/tcm_loop.%{_ko}
-
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/drivers/scsi/vmw_pvscsi.%{_ko}
-%endif
-
 %{_cross_kmoddir}/kernel/fs/binfmt_misc.%{_ko}
 %{_cross_kmoddir}/kernel/fs/cachefiles/cachefiles.%{_ko}
 %{_cross_kmoddir}/kernel/fs/ceph/ceph.%{_ko}
 %{_cross_kmoddir}/kernel/fs/configfs/configfs.%{_ko}
 %{_cross_kmoddir}/kernel/fs/efivarfs/efivarfs.%{_ko}
 %{_cross_kmoddir}/kernel/fs/exfat/exfat.%{_ko}
-%{_cross_kmoddir}/kernel/fs/ext4/ext4.%{_ko}
 %{_cross_kmoddir}/kernel/fs/fat/fat.%{_ko}
 %{_cross_kmoddir}/kernel/fs/fat/msdos.%{_ko}
 %{_cross_kmoddir}/kernel/fs/fat/vfat.%{_ko}
@@ -1129,8 +648,6 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/fs/fuse/fuse.%{_ko}
 %{_cross_kmoddir}/kernel/fs/fuse/virtiofs.%{_ko}
 %{_cross_kmoddir}/kernel/fs/isofs/isofs.%{_ko}
-%{_cross_kmoddir}/kernel/fs/jbd2/jbd2.%{_ko}
-%{_cross_kmoddir}/kernel/fs/lockd/lockd.%{_ko}
 %{_cross_kmoddir}/kernel/fs/lustre/fid/fid.%{_ko}
 %{_cross_kmoddir}/kernel/fs/lustre/fld/fld.%{_ko}
 %{_cross_kmoddir}/kernel/fs/lustre/llite/lustre.%{_ko}
@@ -1142,17 +659,7 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/fs/lustre/obdecho/obdecho.%{_ko}
 %{_cross_kmoddir}/kernel/fs/lustre/osc/osc.%{_ko}
 %{_cross_kmoddir}/kernel/fs/lustre/ptlrpc/ptlrpc.%{_ko}
-%{_cross_kmoddir}/kernel/fs/mbcache.%{_ko}
-%{_cross_kmoddir}/kernel/fs/netfs/netfs.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nfs/blocklayout/blocklayoutdriver.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nfs_common/grace.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nfs_common/nfs_acl.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nfsd/nfsd.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nfs/filelayout/nfs_layout_nfsv41_files.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nfs/flexfilelayout/nfs_layout_flexfiles.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nfs/nfs.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nfs/nfsv3.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nfs/nfsv4.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/mac-celtic.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/mac-centeuro.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/mac-croatian.%{_ko}
@@ -1161,8 +668,8 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/fs/nls/mac-greek.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/mac-iceland.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/mac-inuit.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nls/mac-romanian.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/mac-roman.%{_ko}
+%{_cross_kmoddir}/kernel/fs/nls/mac-romanian.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/mac-turkish.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_ascii.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_cp1250.%{_ko}
@@ -1189,10 +696,10 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/fs/nls/nls_cp949.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_cp950.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_euc-jp.%{_ko}
+%{_cross_kmoddir}/kernel/fs/nls/nls_iso8859-1.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_iso8859-13.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_iso8859-14.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_iso8859-15.%{_ko}
-%{_cross_kmoddir}/kernel/fs/nls/nls_iso8859-1.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_iso8859-2.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_iso8859-3.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_iso8859-4.%{_ko}
@@ -1205,7 +712,6 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/fs/nls/nls_koi8-u.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_ucs2_utils.%{_ko}
 %{_cross_kmoddir}/kernel/fs/nls/nls_utf8.%{_ko}
-%{_cross_kmoddir}/kernel/fs/overlayfs/overlay.%{_ko}
 %{_cross_kmoddir}/kernel/fs/pstore/ramoops.%{_ko}
 %{_cross_kmoddir}/kernel/fs/quota/quota_tree.%{_ko}
 %{_cross_kmoddir}/kernel/fs/quota/quota_v2.%{_ko}
@@ -1216,17 +722,13 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/kernel/bpf/preload/bpf_preload.%{_ko}
 %{_cross_kmoddir}/kernel/kernel/kheaders.%{_ko}
 %{_cross_kmoddir}/kernel/lib/asn1_encoder.%{_ko}
-%{_cross_kmoddir}/kernel/lib/crc/crc16.%{_ko}
 %{_cross_kmoddir}/kernel/lib/crc/crc-itu-t.%{_ko}
 %{_cross_kmoddir}/kernel/lib/crypto/libarc4.%{_ko}
-%{_cross_kmoddir}/kernel/lib/crypto/libchacha20poly1305.%{_ko}
 %{_cross_kmoddir}/kernel/lib/crypto/libchacha.%{_ko}
+%{_cross_kmoddir}/kernel/lib/crypto/libchacha20poly1305.%{_ko}
 %{_cross_kmoddir}/kernel/lib/crypto/libcurve25519.%{_ko}
 %{_cross_kmoddir}/kernel/lib/crypto/libdes.%{_ko}
 %{_cross_kmoddir}/kernel/lib/crypto/libpoly1305.%{_ko}
-%if "%{_cross_arch}" == "aarch64"
-%{_cross_kmoddir}/kernel/lib/crypto/libsm3.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/lib/lru_cache.%{_ko}
 %{_cross_kmoddir}/kernel/lib/lz4/lz4_compress.%{_ko}
 %{_cross_kmoddir}/kernel/lib/lz4/lz4hc_compress.%{_ko}
@@ -1237,20 +739,16 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/lib/ts_fsm.%{_ko}
 %{_cross_kmoddir}/kernel/lib/ts_kmp.%{_ko}
 %{_cross_kmoddir}/kernel/lib/zstd/zstd_compress.%{_ko}
-%{_cross_kmoddir}/kernel/net/8021q/8021q.%{_ko}
 %{_cross_kmoddir}/kernel/net/802/garp.%{_ko}
 %{_cross_kmoddir}/kernel/net/802/mrp.%{_ko}
-%{_cross_kmoddir}/kernel/net/802/psnap.%{_ko}
-%{_cross_kmoddir}/kernel/net/802/stp.%{_ko}
-%{_cross_kmoddir}/kernel/net/bridge/bridge.%{_ko}
-%{_cross_kmoddir}/kernel/net/bridge/br_netfilter.%{_ko}
+%{_cross_kmoddir}/kernel/net/8021q/8021q.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_802_3.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_among.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_arp.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_arpreply.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_dnat.%{_ko}
-%{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_ip6.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_ip.%{_ko}
+%{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_ip6.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_limit.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_log.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebt_mark.%{_ko}
@@ -1267,32 +765,24 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/ebtables.%{_ko}
 %{_cross_kmoddir}/kernel/net/bridge/netfilter/nft_reject_bridge.%{_ko}
 %{_cross_kmoddir}/kernel/net/ceph/libceph.%{_ko}
-%{_cross_kmoddir}/kernel/net/core/failover.%{_ko}
 %{_cross_kmoddir}/kernel/net/core/selftests.%{_ko}
-%{_cross_kmoddir}/kernel/net/dns_resolver/dns_resolver.%{_ko}
 %{_cross_kmoddir}/kernel/net/ife/ife.%{_ko}
-%{_cross_kmoddir}/kernel/net/mptcp/mptcp_diag.%{_ko}
-%{_cross_kmoddir}/kernel/net/sctp/sctp_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/ah4.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/esp4.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/esp4_offload.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/fou.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/gre.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/inet_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/ip_gre.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/ip_tunnel.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/ip_vti.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/ipcomp.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/ipip.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/arp_tables.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/netfilter/arptable_filter.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/arpt_mangle.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_ah.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv4/netfilter/arptable_filter.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_ECN.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_REJECT.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_rpfilter.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_SYNPROXY.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/netfilter/nf_defrag_ipv4.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_ah.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv4/netfilter/ipt_rpfilter.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nf_dup_ipv4.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nf_nat_h323.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nf_nat_pptp.%{_ko}
@@ -1303,12 +793,10 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nft_dup_ipv4.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nft_fib_ipv4.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/netfilter/nft_reject_ipv4.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/netfilter/iptable_nat.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/raw_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_bbr.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_bic.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_dctcp.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/tcp_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_highspeed.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_htcp.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_hybla.%{_ko}
@@ -1318,34 +806,30 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_vegas.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_veno.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_westwood.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/udp_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/tcp_yeah.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/tunnel4.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv4/udp_tunnel.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv4/udp_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv4/xfrm4_tunnel.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/ah6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/esp6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/esp6_offload.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/fou6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/ila/ila.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/ip6_gre.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/ip6_tunnel.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/ip6_udp_tunnel.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/ip6_vti.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/ipcomp6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/mip6.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_REJECT.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_SYNPROXY.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_ah.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_eui64.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_frag.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_hbh.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_ipv6header.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_mh.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_REJECT.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_rpfilter.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_rt.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_srh.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6t_SYNPROXY.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/netfilter/nf_defrag_ipv6.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6table_nat.%{_ko}
+%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6table_security.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nf_dup_ipv6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nf_reject_ipv6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nf_socket_ipv6.%{_ko}
@@ -1353,13 +837,8 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nft_dup_ipv6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nft_fib_ipv6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/netfilter/nft_reject_ipv6.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6table_nat.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/netfilter/ip6table_security.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/sit.%{_ko}
-%{_cross_kmoddir}/kernel/net/ipv6/tunnel6.%{_ko}
 %{_cross_kmoddir}/kernel/net/ipv6/xfrm6_tunnel.%{_ko}
 %{_cross_kmoddir}/kernel/net/key/af_key.%{_ko}
-%{_cross_kmoddir}/kernel/net/llc/llc.%{_ko}
 %{_cross_kmoddir}/kernel/net/lnet/libcfs/libcfs/libcfs.%{_ko}
 %{_cross_kmoddir}/kernel/net/lnet/lnet/klnds/efalnd/kefalnd.%{_ko}
 %{_cross_kmoddir}/kernel/net/lnet/lnet/klnds/o2iblnd/ko2iblnd.%{_ko}
@@ -1369,27 +848,27 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/mpls/mpls_gso.%{_ko}
 %{_cross_kmoddir}/kernel/net/mpls/mpls_iptunnel.%{_ko}
 %{_cross_kmoddir}/kernel/net/mpls/mpls_router.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_bitmap_ip.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_bitmap_ipmac.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_bitmap_port.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_ip.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_ipmac.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_ipmark.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_ipportip.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_ipport.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_ipportip.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_ipportnet.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_mac.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_netiface.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_net.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_netiface.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_netnet.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_netport.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_hash_netportnet.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipset/ip_set_list_set.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/ipvs/ip_vs.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipvs/ip_vs_dh.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipvs/ip_vs_fo.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipvs/ip_vs_ftp.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/ipvs/ip_vs.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipvs/ip_vs_lblc.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipvs/ip_vs_lblcr.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/ipvs/ip_vs_lc.%{_ko}
@@ -1408,7 +887,6 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack_ftp.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack_h323.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack_irc.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack_netbios_ns.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack_netlink.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack_pptp.%{_ko}
@@ -1417,31 +895,26 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack_snmp.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_conntrack_tftp.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_dup_netdev.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nf_flow_table_inet.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_flow_table.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/nf_flow_table_inet.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_log_syslog.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_nat_amanda.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_nat_ftp.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_nat_irc.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nf_nat.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_nat_sip.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nf_nat_tftp.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/nf_synproxy_core.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nfnetlink_acct.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nfnetlink_cthelper.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nfnetlink_cttimeout.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nfnetlink.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nfnetlink_log.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nfnetlink_osf.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nfnetlink_queue.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nf_synproxy_core.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nf_tables.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nft_chain_nat.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nft_compat.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_connlimit.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_ct.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_dup_netdev.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nft_fib_inet.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_fib.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/nft_fib_inet.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_fib_netdev.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_flow_offload.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_fwd_netdev.%{_ko}
@@ -1449,62 +922,63 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_limit.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_log.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_masq.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nft_nat.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_numgen.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_osf.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_queue.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_quota.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nft_redir.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/nft_reject_inet.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_reject.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/nft_reject_inet.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_socket.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_synproxy.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_tproxy.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_tunnel.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/nft_xfrm.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_addrtype.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_AUDIT.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_bpf.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_cgroup.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_CHECKSUM.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_CLASSIFY.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_CONNSECMARK.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_CT.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_DSCP.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_HL.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_HMARK.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_IDLETIMER.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_LOG.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_NETMAP.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_NFLOG.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_NFQUEUE.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_RATEEST.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_SECMARK.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_TCPMSS.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_TCPOPTSTRIP.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_TEE.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_TPROXY.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_TRACE.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_bpf.%{_ko}
+%{_cross_kmoddir}/kernel/net/netfilter/xt_cgroup.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_cluster.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_comment.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_connbytes.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_connlabel.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_connlimit.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_connmark.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_CONNSECMARK.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_conntrack.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_cpu.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_CT.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_devgroup.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_dscp.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_DSCP.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_ecn.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_esp.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_hashlimit.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_helper.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_hl.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_HL.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_HMARK.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_IDLETIMER.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_ipcomp.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_iprange.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_ipvs.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_l2tp.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_length.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_limit.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_LOG.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_mac.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_mark.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_MASQUERADE.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_multiport.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_nat.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_NETMAP.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_nfacct.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_NFLOG.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_NFQUEUE.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_osf.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_owner.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_physdev.%{_ko}
@@ -1512,24 +986,16 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_policy.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_quota.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_rateest.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_RATEEST.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_realm.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_recent.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_REDIRECT.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_sctp.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_SECMARK.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_set.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_socket.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_state.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_statistic.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_string.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_tcpmss.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_TCPMSS.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_TCPOPTSTRIP.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_TEE.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_TRACE.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_time.%{_ko}
-%{_cross_kmoddir}/kernel/net/netfilter/xt_TPROXY.%{_ko}
 %{_cross_kmoddir}/kernel/net/netfilter/xt_u32.%{_ko}
 %{_cross_kmoddir}/kernel/net/netlink/netlink_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/nsh/nsh.%{_ko}
@@ -1570,15 +1036,15 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/sched/sch_choke.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_codel.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_drr.%{_ko}
-%{_cross_kmoddir}/kernel/net/sched/sch_fq_codel.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_fq.%{_ko}
+%{_cross_kmoddir}/kernel/net/sched/sch_fq_codel.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_gred.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_hfsc.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_hhf.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_htb.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_ingress.%{_ko}
-%{_cross_kmoddir}/kernel/net/sched/sch_mqprio_lib.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_mqprio.%{_ko}
+%{_cross_kmoddir}/kernel/net/sched/sch_mqprio_lib.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_multiq.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_netem.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_pie.%{_ko}
@@ -1591,51 +1057,120 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 %{_cross_kmoddir}/kernel/net/sched/sch_tbf.%{_ko}
 %{_cross_kmoddir}/kernel/net/sched/sch_teql.%{_ko}
 %{_cross_kmoddir}/kernel/net/sctp/sctp.%{_ko}
-%{_cross_kmoddir}/kernel/net/sunrpc/auth_gss/auth_rpcgss.%{_ko}
-%{_cross_kmoddir}/kernel/net/sunrpc/auth_gss/rpcsec_gss_krb5.%{_ko}
-%{_cross_kmoddir}/kernel/net/sunrpc/sunrpc.%{_ko}
+%{_cross_kmoddir}/kernel/net/sctp/sctp_diag.%{_ko}
 %{_cross_kmoddir}/kernel/net/tls/tls.%{_ko}
 %{_cross_kmoddir}/kernel/net/unix/unix_diag.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/net/vmw_vsock/hv_sock.%{_ko}
-%endif
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_virtio_transport_common.%{_ko}
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_virtio_transport.%{_ko}
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vsock_diag.%{_ko}
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vsock.%{_ko}
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vsock_loopback.%{_ko}
-%if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_vmci_transport.%{_ko}
-%endif
 %{_cross_kmoddir}/kernel/net/xfrm/xfrm_algo.%{_ko}
 %{_cross_kmoddir}/kernel/net/xfrm/xfrm_interface.%{_ko}
 %{_cross_kmoddir}/kernel/net/xfrm/xfrm_ipcomp.%{_ko}
 %{_cross_kmoddir}/kernel/net/xfrm/xfrm_user.%{_ko}
 %{_cross_kmoddir}/kernel/security/keys/encrypted-keys/encrypted-keys.%{_ko}
 %{_cross_kmoddir}/kernel/security/keys/trusted-keys/trusted.%{_ko}
+
 %if "%{_cross_arch}" == "x86_64"
-%{_cross_kmoddir}/kernel/virt/lib/irqbypass.ko
+%{_cross_kmoddir}/kernel/arch/x86/crypto/blowfish-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/camellia-aesni-avx-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/camellia-aesni-avx2.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/camellia-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/cast5-avx-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/cast6-avx-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/des3_ede-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/serpent-avx-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/serpent-avx2.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/serpent-sse2-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/twofish-avx-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/twofish-x86_64.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/crypto/twofish-x86_64-3way.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/kvm/kvm.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/kvm/kvm-amd.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/kvm/kvm-intel.%{_ko}
+%{_cross_kmoddir}/kernel/arch/x86/platform/intel/iosf_mbi.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/acpi/acpi_extlog.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/acpi/acpi_pad.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/hangcheck-timer.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/hw_random/amd-rng.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/hw_random/intel-rng.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/nvram.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/cpufreq/acpi-cpufreq.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/cpufreq/pcc-cpufreq.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/dca/dca.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/dma/ioat/ioatdma.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/amd64_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/e752x_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/i3000_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/i3200_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/i5100_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/i5400_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/i7300_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/i7core_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/i82975x_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/ie31200_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/pnd2_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/sb_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/skx_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/skx_edac_common.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/edac/x38_edac.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/gpu/drm/vmwgfx/vmwgfx.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/hid/hid-hyperv.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/hv/hv_balloon.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/hv/hv_utils.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/hwmon/coretemp.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/hwmon/k10temp.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-i801.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-piix4.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/i2c/i2c-smbus.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/input/serio/hyperv-keyboard.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/mfd/mfd-core.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/misc/vmw_balloon.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/misc/vmw_vmci/vmw_vmci.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/hyperv/hv_netvsc.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/pci/controller/pci-hyperv-intf.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/pci/hotplug/cpcihp_generic.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/platform/x86/wmi.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/platform/x86/wmi-bmof.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/ras/amd/atl/amd_atl.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/ras/amd/fmpm.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/hv_storvsc.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/scsi/vmw_pvscsi.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/thermal/intel/x86_pkg_temp_thermal.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/uio/uio_hv_generic.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/virt/coco/guest/tsm_report.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/virt/coco/sev-guest/sev-guest.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/virt/vboxguest/vboxguest.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/virtio/virtio_mem.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/xen/xen-evtchn.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/xen/xen-gntalloc.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/xen/xen-gntdev.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/xen/xen-privcmd.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/xen/xenfs/xenfs.%{_ko}
+%{_cross_kmoddir}/kernel/net/vmw_vsock/hv_sock.%{_ko}
+%{_cross_kmoddir}/kernel/net/vmw_vsock/vmw_vsock_vmci_transport.%{_ko}
+%{_cross_kmoddir}/kernel/virt/lib/irqbypass.%{_ko}
+# Built on x86_64 but intentionally not shipped.
+%exclude %{_cross_kmoddir}/kernel/drivers/amazon/flash/aws_fwflash/aws_fwflash.%{_ko}
+%endif
+
+%if "%{_cross_arch}" == "aarch64"
+%{_cross_kmoddir}/kernel/crypto/cryptd.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/hw_random/arm_smccc_trng.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/hw_random/cn10k-rng.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/hw_random/graviton-rng.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/char/tpm/tpm_crb_ffa.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/firmware/arm_ffa/ffa-core.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/firmware/arm_ffa/ffa-module.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/firmware/arm_scpi.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/i2c/busses/i2c-tegra-bpmp.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/mailbox/arm_mhu.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/mailbox/arm_mhu_db.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/mdio/of_mdio.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/perf/arm-cmn.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/pmdomain/arm/scpi_pm_domain.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/watchdog/gpio_wdt.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/watchdog/sbsa_gwdt.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/watchdog/sp805_wdt.%{_ko}
 %endif
 
 %exclude %{_cross_kmoddir}/kernel/drivers/amazon/net/efa/efa.%{_ko}
-
-%if "%{_cross_arch}" == "x86_64"
-%files modules-neuron
-%{_cross_libexecdir}/neuron/neuron_2_24/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_latest/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_2x_7372/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_2x_7693/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_2x_8072/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_2x_8586/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_2x_8689/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_2x_8732/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_2x_8890/neuron.%{_ko}
-%{_cross_libexecdir}/neuron/neuron_2x_9456/neuron.%{_ko}
-%{_cross_tmpfilesdir}/neuron.conf
-%{_cross_unitdir}/load-neuron-inf1-modules.service
-%{_cross_unitdir}/load-neuron-latest-modules.service
-%{_cross_factorydir}%{_cross_sysconfdir}/drivers/neuron-inf1.toml
-%{_cross_factorydir}%{_cross_sysconfdir}/drivers/neuron-latest.toml
-%endif
+%exclude %{_cross_kmoddir}/kernel/drivers/gpu/drm/clients/drm_client_lib.%{_ko}
 
 %changelog

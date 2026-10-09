@@ -1,0 +1,37 @@
+From 82f2dfb2808d43b8ae058165b1b4d9a6b2b65d4e Mon Sep 17 00:00:00 2001
+From: Martin Harriman <mharrimn@amazon.com>
+Date: Sun, 30 Mar 2025 22:36:38 +0000
+Subject: [PATCH] drm/simpledrm: Select prerequisites for gpu drivers
+
+Select DRM subsystem components needed for GPU driver support including
+display helpers (DP, HDMI, HDCP), execution context management, buddy
+allocator, scheduler, TTM memory management, and panel backlight quirks.
+
+Signed-off-by: Martin Harriman <mharrimn@amazon.com>
+[mgsharm: adjust context for 6.18]
+Signed-off-by: Gaurav Sharma <mgsharm@amazon.com>
+---
+ drivers/gpu/drm/sysfb/Kconfig | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/gpu/drm/sysfb/Kconfig b/drivers/gpu/drm/sysfb/Kconfig
+index 9c9884c7e..99de86016 100644
+--- a/drivers/gpu/drm/sysfb/Kconfig
++++ b/drivers/gpu/drm/sysfb/Kconfig
+@@ -46,6 +46,13 @@ config DRM_SIMPLEDRM
+ 	select DRM_GEM_SHMEM_HELPER
+ 	select DRM_KMS_HELPER
+ 	select DRM_SYSFB_HELPER
++	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_HELPER
++	select DRM_SUBALLOC_HELPER
++	select DRM_TTM
++	select DRM_TTM_HELPER
++	select DRM_DISPLAY_HDCP_HELPER
++	select DRM_DISPLAY_HDMI_HELPER
+ 	help
+ 	  DRM driver for simple platform-provided framebuffers.
+ 
+-- 
+2.50.1
+

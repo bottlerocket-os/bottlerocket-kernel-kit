@@ -70,3 +70,4 @@ sha512 = "a124ce5f6c0ab767532262da447c6b55754b6667301cb79ddb60dde109dbe95d2ca902
 
 [build-dependencies]
 microcode = { path = "../microcode" }
+kernel-6_18-shared-configs = { path = "../kernel-6.18-shared-configs" }
