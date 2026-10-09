@@ -6,6 +6,7 @@ members = [
     "packages/kernel-6.1",
     "packages/kernel-6.12",
     "packages/kernel-6.18",
+    "packages/kernel-6.18-microvm",
     "packages/kernel-6.18-shared-configs",
     "packages/kmod-6.1-efa",
     "packages/kmod-6.1-nvidia-r580",

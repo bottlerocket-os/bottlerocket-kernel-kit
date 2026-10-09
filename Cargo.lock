@@ -10,6 +10,7 @@ dependencies = [
  "kernel-6_1",
  "kernel-6_12",
  "kernel-6_18",
+ "kernel-6_18-microvm",
  "kernel-6_18-shared-configs",
  "kmod-6_1-efa",
  "kmod-6_1-nvidia-r580",
@@ -48,6 +49,14 @@ dependencies = [
 
 [[package]]
 name = "kernel-6_18"
+version = "0.1.0"
+dependencies = [
+ "kernel-6_18-shared-configs",
+ "microcode",
+]
+
+[[package]]
+name = "kernel-6_18-microvm"
 version = "0.1.0"
 dependencies = [
  "kernel-6_18-shared-configs",
