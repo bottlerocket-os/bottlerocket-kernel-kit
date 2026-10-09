@@ -57,13 +57,31 @@ fetch_sources() {
     # from installing tools at /home/builder/
     for kernel_dir in "${KERNEL_KIT_DIR}/packages"/kernel-*; do
         pushd "${kernel_dir}" || bail "Unable to enter kernel directory '${kernel_dir}'"
-        grep 'url =' "Cargo.toml" | while IFS= read -r url; do
-            url=$(echo "${url#*\"}" | cut -d '"' -f 1)
-            echo "Fetching: ${url}"
-            curl -LOs "${url}"
-        done
+        # Skip packages that declare no external 'url =' sources (e.g.
+        # kernel-6.18-shared-configs)
+        if grep -q 'url =' "Cargo.toml"; then
+            grep 'url =' "Cargo.toml" | while IFS= read -r url; do
+                url=$(echo "${url#*\"}" | cut -d '"' -f 1)
+                echo "Fetching: ${url}"
+                curl -LOs "${url}"
+            done
+        fi
         popd || bail "Could not exit kernel directory '${kernel_dir}'"
     done
+}
+
+# Resolve where a kernel package's base config-bottlerocket{,-<arch>} fragments
+# live. They may be shipped by a shared package
+# (kernel-<majorminor>-shared-configs) and installed into the build sysroot
+# rather than duplicated in the kernel package.
+resolve_base_config_dir() {
+    local kernel_path="$1" majorminor="$2"
+    local shared_dir="${KERNEL_KIT_DIR}/packages/kernel-${majorminor}-shared-configs"
+    if [[ ! -f "${kernel_path}/config-bottlerocket" && -d "${shared_dir}" ]]; then
+        echo "${shared_dir}"
+    else
+        echo "${kernel_path}"
+    fi
 }
 
 # Generate merged kernel configs for each architecture.
@@ -72,9 +90,14 @@ generate_kernel_configs() {
     local kernel_path="$2"
     local microcode_file="$3"
     local majorminor="$4"
+    # The base config-bottlerocket{,-${arch}} fragments may be provided by a
+    # shared package (kernel-${majorminor}-shared-configs) rather than living in
+    # the kernel package itself. Fall back to that package when they are absent.
+    local base_cfg_dir
+    base_cfg_dir=$(resolve_base_config_dir "${kernel_path}" "${majorminor}")
     for arch in "x86_64" "aarch64"; do
-        br_cfg="${kernel_path}/config-bottlerocket"
-        br_cfg_arch="${kernel_path}/config-bottlerocket-${arch}"
+        br_cfg="${base_cfg_dir}/config-bottlerocket"
+        br_cfg_arch="${base_cfg_dir}/config-bottlerocket-${arch}"
         microcode_cfg="${MICROCODE_DIR}/${microcode_file}"
         config_filename=$(get_kernel_config_file_name "${majorminor}" "${arch}")
 
@@ -86,6 +109,12 @@ generate_kernel_configs() {
         elif [ "${arch}" = "x86_64" ]; then
             karch="x86"
             script_args=("../config-${arch}" "${microcode_cfg}" "${br_cfg}" "${br_cfg_arch}")
+        fi
+
+        # Packages with an extra config overlay (e.g. kernel-6.18-microvm's
+        # config-microvm) merge it last, matching that package spec's %prep.
+        if [[ -f "${kernel_path}/config-microvm" ]]; then
+            script_args+=("${kernel_path}/config-microvm")
         fi
 
         ARCH=${karch} \
@@ -103,8 +132,7 @@ merge_kernel_configs() {
     local version="$1"
     local majorminor="$2"
     local tmpdir="$3"
-
-    local kernel_package_dir="${KERNEL_KIT_DIR}/packages/kernel-${majorminor}"
+    local kernel_package_dir="$4"
 
     readarray -t br_patches < <(find "${kernel_package_dir}" -maxdepth 1 -name "*.patch")
 
@@ -162,19 +190,23 @@ merge_kernel_configs() {
 validate_kernel_configs() {
     local version="$1"
     local majorminor="$2"
+    local kernel_path="$3"
     local errors=0
-    local kernel_path="${KERNEL_KIT_DIR}/packages/kernel-${majorminor}"
+    # The base config fragments may live in kernel-${majorminor}-shared-configs;
+    # the generated config-full file always lives in the kernel package itself.
+    local base_cfg_dir
+    base_cfg_dir=$(resolve_base_config_dir "${kernel_path}" "${majorminor}")
 
     for arch in x86_64 aarch64; do
         echo "=== Validating kernel-${majorminor} ${arch} ==="
 
         # Check if files exist
-        if [[ ! -f "${kernel_path}/config-bottlerocket" ]]; then
+        if [[ ! -f "${base_cfg_dir}/config-bottlerocket" ]]; then
             echo "❌ Missing config-bottlerocket"
             ((++errors))
             continue
         fi
-        if [[ ! -f "${kernel_path}/config-bottlerocket-${arch}" ]]; then
+        if [[ ! -f "${base_cfg_dir}/config-bottlerocket-${arch}" ]]; then
             echo "❌ Missing config-bottlerocket-${arch}"
             ((++errors))
             continue
@@ -189,9 +221,9 @@ validate_kernel_configs() {
 
         # Extract config lines (ignoring comments by default to avoid issues with removed kernel options)
         local common_configs
-        common_configs=$(grep "^CONFIG_" "${kernel_path}/config-bottlerocket" | sort)
+        common_configs=$(grep "^CONFIG_" "${base_cfg_dir}/config-bottlerocket" | sort)
         local arch_configs
-        arch_configs=$(grep "^CONFIG_" "${kernel_path}/config-bottlerocket-${arch}" | sort)
+        arch_configs=$(grep "^CONFIG_" "${base_cfg_dir}/config-bottlerocket-${arch}" | sort)
         local full_configs
         full_configs=$(grep "^CONFIG_" "${kernel_path}/${config_filename}" | sort)
 
@@ -281,10 +313,10 @@ for kernel_dir in "${KERNEL_KIT_DIR}/packages"/kernel-*; do
     version="$(rpm --query --nosignature --queryformat '%{VERSION}' kernel-source.rpm)"
     majorminor=${version%.*}
 
-    merge_kernel_configs "${version}" "${majorminor}" "${tmpdir}" || bail "Failed to merge kernel config for ${kernel_pkg}"
+    merge_kernel_configs "${version}" "${majorminor}" "${tmpdir}" "${kernel_dir}" || bail "Failed to merge kernel config for ${kernel_pkg}"
 
     echo "Validating ${kernel_pkg} configurations..."
-    validate_kernel_configs "${version}" "${majorminor}" || bail "Validation failed for ${kernel_pkg}"
+    validate_kernel_configs "${version}" "${majorminor}" "${kernel_dir}" || bail "Validation failed for ${kernel_pkg}"
 
     popd || bail "Could not return from temporary directory"
 done
