@@ -1,0 +1,12 @@
+[package]
+name = "kernel-6_18-shared-configs"
+version = "0.1.0"
+edition = "2021"
+publish = false
+build = "../build.rs"
+
+[package.metadata.build-package]
+package-name = "kernel-6.18-shared-configs"
+
+[lib]
+path = "../packages.rs"

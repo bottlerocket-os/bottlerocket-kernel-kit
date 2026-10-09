@@ -2,6 +2,8 @@
 %global __strip /bin/true
 
 %global kmajor 6.18
+# Location where kernel-6.18-shared-configs installs the base config fragments.
+%global kernel_configdir %{_cross_datadir}/bottlerocket/kernel-configs
 %global neuron_ver 2.29.0
 %global neuron_inf1_ver 2.24.13
 
@@ -17,10 +19,6 @@ URL: https://www.kernel.org/
 Source0: https://cdn.amazonlinux.com/al2023/blobstore/39f4c2db4f790d9f1525e77e5597d80d8080f9c1db893482267c7b7d4321f2b0/kernel6.18-6.18.51-120.163.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
-# Custom Bottlerocket kernel configurations.
-Source100: config-bottlerocket
-Source101: config-bottlerocket-x86_64
-Source102: config-bottlerocket-aarch64
 # Fully generated kernel configurations used for validation.
 Source110: config-full-bottlerocket-x86_64-on-aarch64
 Source111: config-full-bottlerocket-aarch64-on-aarch64
@@ -94,6 +92,8 @@ BuildRequires: elfutils-devel
 BuildRequires: hostname
 BuildRequires: kmod
 BuildRequires: openssl-devel
+# Provides the shared base config-bottlerocket{,-x86_64,-aarch64} fragments.
+BuildRequires: %{_cross_os}kernel-6.18-shared-configs
 
 # CPU microcode updates are included as "extra firmware" so the files don't
 # need to be installed on the root filesystem. However, we want the license and
@@ -249,11 +249,11 @@ scripts/kconfig/merge_config.sh \
   ../config-%{_cross_arch} \
 %if "%{_cross_arch}" == "x86_64"
   ../config-microcode \
-  %{S:101} \
+  %{kernel_configdir}/config-bottlerocket-x86_64 \
 %else
-  %{S:102} \
+  %{kernel_configdir}/config-bottlerocket-aarch64 \
 %endif
-  %{S:100}
+  %{kernel_configdir}/config-bottlerocket
 
 # Select the full kernel config based on host and target architecture.
 # Kernel 6.18 uses host-arch-specific configs because config generation
