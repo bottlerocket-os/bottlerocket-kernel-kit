@@ -8,13 +8,13 @@
 %global host_arch %(uname -m)
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.18.51
+Version: 6.18.54
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/39f4c2db4f790d9f1525e77e5597d80d8080f9c1db893482267c7b7d4321f2b0/kernel6.18-6.18.51-120.163.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/29d88d37fe6de08d78ff9e57ddbe05c439a3b25ea7e9414dd65ffc3b7f435d0d/kernel6.18-6.18.54-121.166.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
@@ -86,8 +86,6 @@ Patch1005: 1005-drm-simpledrm-Select-prerequisites-for-gpu-drivers.patch
 Patch1006: 1006-Revert-selinux-fix-overlayfs-mmap-and-mprotect-acces.patch
 # Backport patch to disable LZ4 rolling decompression on EROFS
 Patch1007: 1007-erofs-disable-LZ4-rolling-decompression-for-now.patch
-# Reserve blocks for XFS parent pointer updates to avoid a filesystem shutdown
-Patch1008: 1008-xfs-initialise-args-total-for-parent-pointer-updates.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
