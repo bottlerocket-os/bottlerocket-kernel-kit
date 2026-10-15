@@ -41,6 +41,16 @@ sha512 = "acdddc210980a450fe6722f529c0f98ca377497749d967dbfb39e91fcb6b8c95ff86fd
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/libnvidia-nscq-580.178.04-1.amzn2023.x86_64.rpm"
+sha512 = "132d42cac5c39659afbcd4edf51f69a2f6d93581ebd281fa1c2a471fac1c5d56602d8136341bfc28ef87baedefbc617c61f7abb63959b9c6fe417aeff87b94ab"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/libnvidia-nscq-580.178.04-1.amzn2023.aarch64.rpm"
+sha512 = "3ad0e7c34b4b6fac4708c3382b3fdd76122656dc459441b583345d53df00db5bb3621b078348c3edc88cacbd55669666e9d7b1616739dacd9e9549dd4c691810"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
 url = "https://s3.amazonaws.com/ec2-linux-nvidia-drivers/grid-19.6/NVIDIA-Linux-x86_64-580.178.04-grid-aws.run"
 sha512 = "5ca704b562a0810b7767fd3534313f0ed69e7dad8afac1d3fba4473cbc743da2ebd86187d411fa82ce03d0e610153d2443dca7e3034f41dfc61b6caa14f56dee"
 force-upstream = true
