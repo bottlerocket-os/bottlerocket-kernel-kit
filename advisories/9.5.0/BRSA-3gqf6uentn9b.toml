@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-3gqf6uentn9b"
+title = "kernel CVE-2026-89778"
+cve = "CVE-2026-89778"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: isofs: fix out-of-bounds page array access on empty zisofs block"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.54"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

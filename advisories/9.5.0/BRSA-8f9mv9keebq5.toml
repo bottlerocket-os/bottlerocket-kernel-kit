@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-8f9mv9keebq5"
+title = "kernel CVE-2026-98158"
+cve = "CVE-2026-98158"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: ppp_async: drop the errored frame instead of resetting its headroom"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

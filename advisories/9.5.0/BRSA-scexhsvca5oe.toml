@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-scexhsvca5oe"
+title = "kernel CVE-2026-97568"
+cve = "CVE-2026-97568"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: mptcp: syncookies: remember the request backup flag"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

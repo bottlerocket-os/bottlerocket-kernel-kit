@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-66orhzycbngw"
+title = "kernel CVE-2026-89659"
+cve = "CVE-2026-89659"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: NFSD: Prevent client use-after-free during delegation revoke"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

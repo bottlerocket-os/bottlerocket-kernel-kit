@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-gdlzfxhzijtp"
+title = "kernel CVE-2026-97943"
+cve = "CVE-2026-97943"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: x86/mm/pat: Acquire init_mm write lock on collapse to avoid UAF"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.54"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

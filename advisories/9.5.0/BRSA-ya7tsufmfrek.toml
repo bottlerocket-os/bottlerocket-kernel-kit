@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-ya7tsufmfrek"
+title = "kernel CVE-2026-89660"
+cve = "CVE-2026-89660"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: NFSD: Prevent client use-after-free during admin state revocation A stateid holds only a bare pointer to its nfs4_client; a stateid"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-wzmv2zhw0vw8"
+title = "kernel CVE-2026-89637"
+cve = "CVE-2026-89637"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: smb: client: fix UAF and buffer leak in cifs_check_trans2() for malformed secondary T2"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.188"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

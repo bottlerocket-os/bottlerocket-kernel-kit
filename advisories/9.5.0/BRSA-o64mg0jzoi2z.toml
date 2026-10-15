@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-o64mg0jzoi2z"
+title = "kernel CVE-2026-98007"
+cve = "CVE-2026-98007"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Reject non-scalar bpf_loop iteration counts"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

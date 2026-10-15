@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-cyqf2fdjnwli"
+title = "kernel CVE-2026-97978"
+cve = "CVE-2026-97978"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: eth: ice: don't dereference pointers from TP_printk()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

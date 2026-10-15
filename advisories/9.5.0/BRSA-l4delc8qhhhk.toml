@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-l4delc8qhhhk"
+title = "kernel CVE-2026-98083"
+cve = "CVE-2026-98083"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: btrfs: fix transaction use-after-free in raid stripe insertion"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

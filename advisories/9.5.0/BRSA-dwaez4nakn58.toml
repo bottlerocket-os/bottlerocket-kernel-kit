@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-dwaez4nakn58"
+title = "kernel CVE-2026-98046"
+cve = "CVE-2026-98046"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Mark bpf_btf_find_by_name_kind() as sleepable"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

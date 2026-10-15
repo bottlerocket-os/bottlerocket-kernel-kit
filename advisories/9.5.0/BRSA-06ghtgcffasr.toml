@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-06ghtgcffasr"
+title = "kernel CVE-2026-89652"
+cve = "CVE-2026-89652"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: ceph: bound copied dentry name length in NFS export get_name ceph_get_name() copies the MDS-supplied name into the caller's"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.188"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

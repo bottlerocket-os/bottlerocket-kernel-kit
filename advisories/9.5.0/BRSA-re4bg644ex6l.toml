@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-re4bg644ex6l"
+title = "kernel CVE-2026-89564"
+cve = "CVE-2026-89564"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: ip: orphan prefetched skbs before multicast forwarding"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

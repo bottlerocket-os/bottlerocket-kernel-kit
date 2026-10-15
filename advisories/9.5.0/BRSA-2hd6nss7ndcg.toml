@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-2hd6nss7ndcg"
+title = "kernel CVE-2026-98072"
+cve = "CVE-2026-98072"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: net/rds: use wq_has_sleeper() in release_in_xmit()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

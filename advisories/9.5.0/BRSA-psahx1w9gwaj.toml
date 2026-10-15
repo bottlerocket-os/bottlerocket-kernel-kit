@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-psahx1w9gwaj"
+title = "kernel CVE-2026-97522"
+cve = "CVE-2026-97522"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: mptcp: fix bad accounting in __mptcp_subflow_push_pending()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

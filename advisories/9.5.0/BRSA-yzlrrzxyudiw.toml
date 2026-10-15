@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-yzlrrzxyudiw"
+title = "kernel CVE-2026-89708"
+cve = "CVE-2026-89708"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: nfsd: RCU-protect cl_cb_session to fix use-after-free on session teardown"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

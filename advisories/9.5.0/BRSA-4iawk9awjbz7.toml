@@ -1,0 +1,22 @@
+[advisory]
+id = "BRSA-4iawk9awjbz7"
+title = "kernel CVE-2026-98016"
+cve = "CVE-2026-98016"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: net/mlx5e: Fix use-after-free race in sample_restore_put()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.54"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"

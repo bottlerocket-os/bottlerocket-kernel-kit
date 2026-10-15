@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-eqgubgpm16j8"
+title = "kernel CVE-2026-97430"
+cve = "CVE-2026-97430"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: xhci: Prevent queuing new commands if xhci is inaccessible"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

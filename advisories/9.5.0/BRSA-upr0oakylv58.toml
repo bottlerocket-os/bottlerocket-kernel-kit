@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-upr0oakylv58"
+title = "kernel CVE-2026-97959"
+cve = "CVE-2026-97959"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: net/sched: cls_route: free emptied bucket on filter move"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.111"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

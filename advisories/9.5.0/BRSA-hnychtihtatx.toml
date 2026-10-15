@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-hnychtihtatx"
+title = "kernel CVE-2026-89777"
+cve = "CVE-2026-89777"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: vfio/pci: clear vdev->msi_perm after freeing it on init failure"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.54"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["aarch64", "x86_64"]
+version = "9.5.0"

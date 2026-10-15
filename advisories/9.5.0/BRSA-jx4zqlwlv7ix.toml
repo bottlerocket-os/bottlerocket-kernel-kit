@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-jx4zqlwlv7ix"
+title = "kernel CVE-2026-90393"
+cve = "CVE-2026-90393"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Fix potential UAF in bpf_netns_link_update_prog"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.54"
+patched-epoch = "0"
+
+[updateinfo]
+author = "vyaghras"
+issue-date = 2026-10-15T00:17:34Z
+arches = ["x86_64", "aarch64"]
+version = "9.5.0"
