@@ -56,6 +56,10 @@ Source11: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa
 Source20: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-imex-%{tesla_ver}-1.amzn2023.x86_64.rpm
 Source21: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-imex-%{tesla_ver}-1.amzn2023.aarch64.rpm
 
+# NSCQ (NVSwitch Configuration and Query) library
+Source30: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/libnvidia-nscq-%{tesla_ver}-1.amzn2023.x86_64.rpm
+Source31: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/libnvidia-nscq-%{tesla_ver}-1.amzn2023.aarch64.rpm
+
 # Common NVIDIA conf files from 200 to 299
 Source200: nvidia-tmpfiles.conf.in
 Source202: nvidia-dependencies-modules-load.conf
@@ -131,9 +135,18 @@ Summary: NVIDIA fabricmanager config and service files
 Requires: %{name}-tesla(fabricmanager)
 Requires: %{_cross_os}nvlsm
 Requires: %{name}-imex
+Requires: %{name}-nscq
 Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-fabricmanager
 
 %description fabricmanager
+%{summary}.
+
+%package nscq
+Summary: NVIDIA NSCQ (NVSwitch Configuration and Query) library
+Requires: %{name}
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-nscq
+
+%description nscq
 %{summary}.
 
 %package imex
@@ -234,6 +247,9 @@ popd
 # correct source is architecture-dependent.
 mkdir fabricmanager-linux-%{nvidia_arch}-%{tesla_ver}-archive
 rpm2cpio %{_sourcedir}/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.%{_cross_arch}.rpm | cpio -idmV -D fabricmanager-linux-%{nvidia_arch}-%{tesla_ver}-archive
+
+mkdir nscq-%{nvidia_arch}-%{tesla_ver}-archive
+rpm2cpio %{_sourcedir}/libnvidia-nscq-%{tesla_ver}-1.amzn2023.%{_cross_arch}.rpm | cpio -idmV -D nscq-%{nvidia_arch}-%{tesla_ver}-archive
 
 # Add the license.
 install -p -m 0644 %{S:3} %{S:4} %{S:5} .
@@ -590,6 +606,19 @@ install -p -m 0644 %{S:217} %{buildroot}%{_cross_tmpfilesdir}/nvidia-imex.conf
 install -d %{buildroot}%{_cross_libdir}/modprobe.d
 install -p -m 0644 %{S:218} %{buildroot}%{_cross_libdir}/modprobe.d/10-nvidia-default-imex-channel.conf
 
+# Begin NSCQ library
+pushd nscq-%{nvidia_arch}-%{tesla_ver}-archive
+install -p -m 0755 usr/lib64/libnvidia-nscq.so.%{tesla_ver} %{buildroot}%{nvidia_libdir}
+
+for lib in $(find usr/lib64 -maxdepth 1 -type f -name 'libnvidia-nscq.so.*' -printf '%%P\n'); do
+  soname="$(%{_cross_target}-readelf -d "usr/lib64/${lib}" | awk '/SONAME/{print $5}' | tr -d '[]')"
+  [ -n "${soname}" ] || continue
+  [ "${lib}" == "${soname}" ] && continue
+  ln -s "${lib}" %{buildroot}/%{nvidia_libdir}/"${soname}"
+done
+
+popd
+
 install -d %{buildroot}%{nvidia_datadir}/nvidia/gdrcopy/open-gpu/drivers
 
 install -p -m 0644 gdrcopy-%{gdrcopy_ver}/gdrdrv-open-gpu.ko \
@@ -925,6 +954,10 @@ install -d %{buildroot}%{_cross_datadir}/egl
 %{nvidia_sysconfdir}/nvidia/fabricmanager.cfg
 %{nvidia_sysconfdir}/nvidia/fabricmanager.env
 %{_cross_unitdir}/nvidia-fabricmanager.service
+
+%files nscq
+%license nscq-%{nvidia_arch}-%{tesla_ver}-archive/usr/share/licenses/libnvidia-nscq/LICENSE
+%{nvidia_libdir}/libnvidia-nscq.so.*
 
 %files imex
 %{nvidia_bindir}/nvidia-imex
