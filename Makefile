@@ -28,12 +28,14 @@ full-config:
 prep:
 	@mkdir -p $(TWOLITER_DIR)
 	@mkdir -p $(CARGO_HOME)
+	@# DO NOT MERGE: build Twoliter from the module-signing branch until a
+	@# Twoliter release carries it. Remove tools/twoliter/twoliter to rebuild.
 	@$(TOOLS_DIR)/install-twoliter.sh \
-		--repo "https://github.com/bottlerocket-os/twoliter" \
-		--version v$(TWOLITER_VERSION) \
+		--repo "https://github.com/michaelb990/twoliter" \
+		--version e8be5594453dcc5274d1ada2bc1a4a9d5443b019 \
 		--directory $(TWOLITER_DIR) \
 		--reuse-existing-install \
-		--allow-binary-install $(TWOLITER_SHA256) \
+		--skip-version-check \
 		--allow-from-source
 
 update: prep
