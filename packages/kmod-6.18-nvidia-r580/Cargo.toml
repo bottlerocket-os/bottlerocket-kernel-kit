@@ -10,6 +10,7 @@ path = "../packages.rs"
 
 [package.metadata.build-package]
 package-name = "kmod-6.18-nvidia-r580"
+module-signing = true
 releases-url = "https://docs.nvidia.com/datacenter/tesla/"
 
 [[package.metadata.build-package.external-files]]

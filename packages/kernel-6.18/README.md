@@ -46,3 +46,14 @@ Changes that can have an effect on the resulting kernel configuration include:
 
 * explicit kernel configuration changes in any of the source config files
 * package updates/kernel rebases
+
+## Module signing
+
+`Cargo.toml` sets `module-signing = true`, so Twoliter mounts a kit
+module-signing key for the build, and `%kmake` passes it to Kbuild as
+`CONFIG_MODULE_SIG_KEY`. Kbuild signs every in-tree and Neuron module with it
+and builds its certificate in as the kernel's only built-in key.
+
+`kernel-6.18-module-signature-enforcement` ships the certificate as
+`/usr/share/bottlerocket/module-signing/kit-cert.pem` and a boot config snippet
+that sets `module.sig_enforce=1 lockdown=integrity`.
