@@ -50,3 +50,13 @@ Changes that can have an effect on the resulting kernel configuration include:
 
 * explicit kernel configuration changes in any of the source config files
 * package updates/kernel rebases
+
+## Module signing
+
+The kernel opts in to kit module signing (`module-signing = true` in
+`Cargo.toml`), so its modules are signed with the kit module-signing key.
+
+`kernel-6.18-module-integrity`, which the kernel pulls in for UKI images,
+provides a boot config snippet that enforces module signatures and integrity
+lockdown, blacklists the `binfmt_misc`, `efivarfs` and `i8042` modules, and
+disables kexec loading.
