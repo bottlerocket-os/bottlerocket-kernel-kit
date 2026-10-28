@@ -319,8 +319,19 @@ and .devid != "0x1DB5"
 and .devid != "0x1EB8"
 and .devid != "0x1EB4"
 and .devid != "0x2237")' supported-gpus.json | jq -s '{"open-gpu": .}' > open-gpu-supported-devices.json
-# confirm "NVIDIA H100" is in the resulting file to catch shape changes
-jq -e '."open-gpu"[] | select(."devid" == "0x2330") | ."features"| index("kernelopen")' open-gpu-supported-devices.json
+# Confirm H100, H200, B200 and B300 (x86_64) and GB200 and GB300 (aarch64) are in
+# the resulting file to catch shape changes
+%if "%{_cross_arch}" == "x86_64"
+open_gpu_required="0x2330 0x2335 0x2901 0x3182"
+%else
+open_gpu_required="0x2941 0x31C2"
+%endif
+for devid in ${open_gpu_required}; do
+  jq -e --arg devid "${devid}" \
+    '."open-gpu"[] | select((."devid" | ascii_upcase) == ($devid | ascii_upcase)) | ."features" | index("kernelopen")' \
+    open-gpu-supported-devices.json >/dev/null \
+    || { echo "error: GPU ${devid} is not supported by the open driver" >&2; exit 1; }
+done
 popd
 
 tar -xof %{S:700}
