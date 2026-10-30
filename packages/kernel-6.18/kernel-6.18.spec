@@ -39,6 +39,7 @@ Source210: var-lib-kernel-devel-lower.mount.drop-in.conf.in
 # Bootconfig snippets to adjust the default kernel command line for the platform.
 Source300: bootconfig-aws.conf
 Source301: bootconfig-vmware.conf
+Source302: bootconfig-module-signature-enforcement.conf
 
 # Neuron driver RPMs - x86_64 only
 Source2: gpgkey-00FA2C1079260870A76D2C285749CAD8646D9185.asc
@@ -91,6 +92,7 @@ BuildRequires: bc
 BuildRequires: elfutils-devel
 BuildRequires: hostname
 BuildRequires: kmod
+BuildRequires: openssl
 BuildRequires: openssl-devel
 
 # CPU microcode updates are included as "extra firmware" so the files don't
@@ -185,6 +187,13 @@ Requires: (%{_cross_os}image-feature(fips) and %{name})
 Conflicts: %{_cross_os}image-feature(no-fips)
 
 %description fips
+%{summary}.
+
+%package module-signature-enforcement
+Summary: Module signature enforcement and integrity lockdown for the Linux kernel
+Requires: %{name} = %{version}-%{release}
+
+%description module-signature-enforcement
 %{summary}.
 
 %if "%{_cross_arch}" == "x86_64"
@@ -362,6 +371,7 @@ make -s \
   INSTALL_HDR_PATH="%{buildroot}%{_cross_prefix}" \
   INSTALL_MOD_PATH="%{buildroot}%{_cross_prefix}" \
   INSTALL_MOD_STRIP=1 \
+  CONFIG_MODULE_SIG_KEY="%{_cross_module_signing_key}" \
   %{nil}}
 
 %build
@@ -551,6 +561,12 @@ ln -s lts_6.18.conf %{buildroot}%{_cross_datadir}/xfsprogs/mkfs/default.conf
 install -d %{buildroot}%{_cross_bootconfigdir}
 install -p -m 0644 %{S:300} %{buildroot}%{_cross_bootconfigdir}/05-aws.conf
 install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
+install -p -m 0644 %{S:302} %{buildroot}%{_cross_bootconfigdir}/06-module-signature-enforcement.conf
+
+install -d %{buildroot}%{_cross_datadir}/bottlerocket/module-signing
+openssl x509 -inform DER -in certs/signing_key.x509 -outform PEM \
+  -out %{buildroot}%{_cross_datadir}/bottlerocket/module-signing/kit-cert.pem
+chmod 0644 %{buildroot}%{_cross_datadir}/bottlerocket/module-signing/kit-cert.pem
 
 %if "%{_cross_arch}" == "x86_64"
 # Add Neuron-related configuration files to load the module when the hardware is present.
@@ -633,6 +649,11 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 
 %files bootconfig-vmware
 %{_cross_bootconfigdir}/05-vmware.conf
+
+%files module-signature-enforcement
+%{_cross_bootconfigdir}/06-module-signature-enforcement.conf
+%dir %{_cross_datadir}/bottlerocket/module-signing
+%{_cross_datadir}/bottlerocket/module-signing/kit-cert.pem
 
 %files modules
 %dir %{_cross_libdir}/modules

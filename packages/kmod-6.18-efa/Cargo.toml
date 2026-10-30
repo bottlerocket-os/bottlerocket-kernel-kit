@@ -10,6 +10,7 @@ path = "../packages.rs"
 
 [package.metadata.build-package]
 package-name = "kmod-6.18-efa"
+module-signing = true
 releases-url = "https://github.com/amzn/amzn-drivers/releases"
 
 [[package.metadata.build-package.external-files]]
