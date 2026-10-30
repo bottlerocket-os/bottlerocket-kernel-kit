@@ -1,3 +1,11 @@
+# v9.6.2 (2026-10-30)
+
+## OS Changes
+
+* Update kernel from 6.1.189-236.399 to 6.1.189-236.400 ([#607])
+
+[#607]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/607
+
 # v9.6.1 (2026-10-26)
 
 ## OS Changes
