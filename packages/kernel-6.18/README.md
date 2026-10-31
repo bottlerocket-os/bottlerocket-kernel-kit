@@ -6,9 +6,13 @@ This package contains the Bottlerocket Linux kernel of the 6.18 series.
 
 The kernel configuration is organized into multiple files:
 
-* [`config-bottlerocket`](config-bottlerocket) - Common configuration options shared across all architectures
-* [`config-bottlerocket-aarch64`](config-bottlerocket-aarch64) - ARM64-specific configuration options
-* [`config-bottlerocket-x86_64`](config-bottlerocket-x86_64) - x86_64-specific configuration options
+The base configuration fragments live in the
+[`kernel-6.18-shared-configs`](../kernel-6.18-shared-configs) package and are
+shared with `kernel-6.18-microvm`:
+
+* [`config-bottlerocket`](../kernel-6.18-shared-configs/config-bottlerocket) - Common configuration options shared across all architectures
+* [`config-bottlerocket-aarch64`](../kernel-6.18-shared-configs/config-bottlerocket-aarch64) - ARM64-specific configuration options
+* [`config-bottlerocket-x86_64`](../kernel-6.18-shared-configs/config-bottlerocket-x86_64) - x86_64-specific configuration options
 
 During the build process, these configurations are merged in the following order:
 1. Base Amazon Linux config (`../config-<arch>`)

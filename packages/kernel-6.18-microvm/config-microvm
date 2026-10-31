@@ -1,0 +1,141 @@
+# Kernel configuration overrides for the microvm flavor.
+#
+# This flavor targets microvm guests (e.g., Firecracker), which have a fixed, minimal device
+# model. Everything needed to reach userspace is built in.
+
+# Virtio devices exposed over MMIO.
+CONFIG_VIRTIO_MMIO=y
+CONFIG_VIRTIO_BALLOON=y
+
+# Networking and the guest-side vsock transport are the guest's only channels to
+# the host, so keep them built in rather than relying on module loading early in
+# boot.
+CONFIG_VIRTIO_NET=y
+CONFIG_VSOCKETS=y
+CONFIG_VIRTIO_VSOCKETS=y
+
+# Host-side vhost backend (/dev/vhost-vsock), distinct from the guest-side
+# transport above: used when the guest itself runs a nested VMM and provides
+# vsock to it.
+CONFIG_VHOST=y
+CONFIG_VHOST_VSOCK=y
+
+# Build in the erofs zstd decompression frontend.
+CONFIG_EROFS_FS_ZIP_ZSTD=y
+
+# These are built in rather than left as modules so the storage and container
+# networking + NFS data path does not depend on runtime module autoload.
+# Drivers for devices that only appear later (passed-through NVMe, above) stay
+# modular; symbols these select (async-xor, jbd2, vsock common, etc.) resolve
+# built in on their own.
+CONFIG_BRIDGE=y
+CONFIG_BRIDGE_NETFILTER=y
+CONFIG_CRYPTO_AUTHENC=y
+CONFIG_CRYPTO_ESSIV=y
+CONFIG_CRYPTO_GCM=y
+CONFIG_CRYPTO_USER=y
+CONFIG_CRYPTO_USER_API_AEAD=y
+CONFIG_CRYPTO_USER_API_SKCIPHER=y
+CONFIG_CRYPTO_XTS=y
+CONFIG_DM_INTEGRITY=y
+CONFIG_DUMMY=y
+CONFIG_EXT4_FS=y
+CONFIG_IP_NF_NAT=y
+CONFIG_IP_NF_TARGET_MASQUERADE=y
+CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y
+CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y
+CONFIG_NFS_FS=y
+CONFIG_NFS_V4=y
+CONFIG_NFT_COMPAT=y
+CONFIG_NFT_NAT=y
+CONFIG_NF_CONNTRACK=y
+CONFIG_NF_NAT=y
+CONFIG_NF_TABLES=y
+CONFIG_OVERLAY_FS=y
+CONFIG_SUNRPC=y
+CONFIG_VETH=y
+
+# Build in the Nitro Secure Module (NSM) driver.
+CONFIG_NSM=y
+
+# Build the REDIRECT netfilter targets in rather than ship them as modules.
+CONFIG_NFT_REDIR=y
+CONFIG_NETFILTER_XT_TARGET_REDIRECT=y
+
+# Drop the x86 GHASH-CLMULNI module: AES-NI is built in and nothing in the guest
+# needs this accelerator, so don't ship it. x86-only symbol; no-op on aarch64.
+# CONFIG_CRYPTO_GHASH_CLMUL_NI_INTEL is not set
+#
+# =^..^==^..^==^..^= Guest minimization =^..^==^..^==^..^=
+
+# NR_CPUS bounds per-CPU areas, cpumasks and NR_CPUS-sized static arrays.
+# CONFIG_MAXSMP is not set
+CONFIG_NR_CPUS=256
+
+# printk ring buffer 2 MiB -> 128 KiB of static bss.
+CONFIG_LOG_BUF_SHIFT=17
+
+# NVMe as modules, not built in: the guest boots from virtio-blk and nothing
+# loads them, so they cost no guest RAM; udev loads them if an NVMe device is
+# passed through.
+CONFIG_NVME_CORE=m
+CONFIG_BLK_DEV_NVME=m
+
+# Headless microvm: serial console only, no framebuffer. The
+# shared base pins FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER=y; disable it here too
+# since it cascades off with the framebuffer.
+# CONFIG_FB is not set
+# CONFIG_FB_CORE is not set
+# CONFIG_FB_EFI is not set
+# CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER is not set
+# CONFIG_DRM_FBDEV_EMULATION is not set
+
+# No BTF/DWARF: the .BTF blob is several MiB of rodata paid by every guest and
+# nothing in the guest consumes it (the spec generates no vmlinux.h).
+# CONFIG_DEBUG_INFO_BTF is not set
+# CONFIG_DEBUG_INFO_BTF_MODULES is not set
+CONFIG_DEBUG_INFO_NONE=y
+
+# No embedded .config (/proc/config.gz); the build ships /boot/config instead.
+# CONFIG_IKCONFIG is not set
+# CONFIG_IKCONFIG_PROC is not set
+
+# No function tracing / trace events: drops __mcount_loc, trace-event
+# descriptors and the ftrace text/data.
+# CONFIG_FTRACE is not set
+# CONFIG_KPROBES is not set
+# /proc/latency_stats has no guest use and it selects KALLSYMS_ALL (the full
+# data-symbol table); drop both.
+# CONFIG_LATENCYTOP is not set
+# CONFIG_KALLSYMS_ALL is not set
+
+# No kernel memory read path.
+# CONFIG_PROC_KCORE is not set
+
+# =^..^==^..^==^..^= aarch64-effective overlays =^..^==^..^==^..^=
+
+# Driver needed for the wall clock start time on aarch64
+CONFIG_RTC_DRV_PL031=y
+
+# No DMA CMA area. The AL2023 aarch64 base reserves a 64 MiB CMA region
+# (CONFIG_CMA_SIZE_MBYTES=64); a virtio-only guest never allocates from it, so
+# disable it to return that memory. x86_64 has DMA_CMA=y with a 0 MiB default
+# area; disabling it there drops the unused code.
+# CONFIG_DMA_CMA is not set
+
+# Build the arm64 crypto accelerators in rather than ship them as loadable
+# modules (the x86 equivalent, AES-NI, is already built in), and drop the
+# non-FIPS SM3/SM4 CE variants. Keeps the guest's crypto out of the loadable
+# module set. These symbols don't exist on x86_64 (ignored there). Does not
+# enable CONFIG_CRYPTO_FIPS.
+CONFIG_CRYPTO_GHASH_ARM64_CE=y
+CONFIG_CRYPTO_SHA3_ARM64=y
+CONFIG_CRYPTO_AES_ARM64=y
+CONFIG_CRYPTO_AES_ARM64_CE=y
+CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
+CONFIG_CRYPTO_AES_ARM64_NEON_BLK=y
+CONFIG_CRYPTO_AES_ARM64_BS=y
+CONFIG_CRYPTO_AES_ARM64_CE_CCM=y
+# CONFIG_CRYPTO_SM3_ARM64_CE is not set
+# CONFIG_CRYPTO_SM4_ARM64_CE is not set
+

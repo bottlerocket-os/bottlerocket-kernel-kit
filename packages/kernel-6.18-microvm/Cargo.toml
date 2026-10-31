@@ -1,0 +1,22 @@
+[package]
+name = "kernel-6_18-microvm"
+version = "0.1.0"
+edition = "2021"
+publish = false
+build = "../build.rs"
+
+[package.metadata.build-package]
+package-name = "kernel-6.18-microvm"
+
+[lib]
+path = "../packages.rs"
+
+[[package.metadata.build-package.external-files]]
+# Use latest-kernel-srpm-url.sh in packages/kernel-6.18 to get this. Keep this
+# in sync with packages/kernel-6.18 so both kernels come from the same source.
+url = "https://cdn.amazonlinux.com/al2023/blobstore/ec20d3a788e0c8493ac8340fcac7ec15ddf92f3e776d53ad14849d82907d612d/kernel6.18-6.18.56-125.164.amzn2023.src.rpm"
+sha512 = "b54df16abab76e161f1a7d1424a08fbdf79525374330354747ec3c54e6d5b276a09570c4ed878d87e7f03074d9522f95cd26b7bd812c6939e57e41dbc13cd310"
+force-upstream = true
+
+[build-dependencies]
+kernel-6_18-shared-configs = { path = "../kernel-6.18-shared-configs" }
