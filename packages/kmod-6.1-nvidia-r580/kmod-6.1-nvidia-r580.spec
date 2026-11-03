@@ -4,15 +4,8 @@
 %global tesla_ver %{tesla_major}.%{tesla_minor}.%{tesla_patch}
 %global grid_ver grid-19.6
 %global gdrcopy_ver 2.6
-# Branch name for namespaced per-branch paths
-%global nvidia_branch lts
-# Branch-namespaced storage root for files that are overlaid onto canonical paths
-# at boot. Resolved to /usr/share/.nvidia/lts
-%global nvidia_root %{_cross_datadir}/.nvidia/%{nvidia_branch}
-%global nvidia_datadir     %{nvidia_root}/share
-%global nvidia_libdir      %{nvidia_root}/lib64
-%global nvidia_bindir      %{nvidia_root}/bin
-%global nvidia_sysconfdir %{nvidia_root}/etc
+# NVIDIA path macros namespaced to the "lts" branch; overlaid onto canonical paths at boot.
+%cross_nvidia_paths lts
 %if "%{?_cross_arch}" == "aarch64"
 %global nvidia_arch sbsa
 %else
