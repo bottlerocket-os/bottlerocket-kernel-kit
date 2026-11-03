@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-lywbb3kz3p25"
+title = "kernel CVE-2026-98432"
+cve = "CVE-2026-98432"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: ipv4: free inet_opt and ireq_opt after an RCU grace period"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.189"
+patched-epoch = "0"
+
+[updateinfo]
+author = "giinglis"
+issue-date = 2026-10-30T23:18:15Z
+arches = ["aarch64", "x86_64"]
+version = "9.6.2"
