@@ -24,8 +24,8 @@ sha512 = "ba2234e3aa8f5fb15a36304d811043abbed27e79bbd34bf2e0789f2f9a72d8f4c25c70
 
 [[package.metadata.build-package.external-files]]
 # Use latest-neuron-srpm-url.sh to get this.
-url = "https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.29.0.0.noarch.rpm"
-sha512 = "6fdf25c5a82c15c379e897ca5252851a51f6e00b7e99071c971f82f20521f5ff3eee66e2aca10f37dfc3b19d5ddcc14b0a8df5dcf60b6de1df7b0045a1f92a1f"
+url = "https://yum.repos.neuron.amazonaws.com/aws-neuronx-dkms-2.31.7.0.noarch.rpm"
+sha512 = "980afb0ffe077ec37d22a22dc209de50a8224ff0796bb2f1c6470c01bd422eb43901c257ba41984f0003c9292922081b13618d3267a2ef8a6576455dba20e0bd"
 
 [[package.metadata.build-package.external-files]]
 # Neuron driver 2.x.7372.0
