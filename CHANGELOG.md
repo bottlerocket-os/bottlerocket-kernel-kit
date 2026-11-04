@@ -1,3 +1,33 @@
+# v9.7.0 (2026-11-06)
+
+## OS Changes
+
+* Add `kernel-6.18-microvm` package for microvm guests ([#585])
+* Add `kernel-6.18-shared-configs` package providing shared kernel configuration fragments for 6.18 ([#585])
+* Use `cross_nvidia_paths` macro for NVIDIA branch paths ([#594])
+* Add `libnvidia-nscq` to NVIDIA r580 and r595 drivers for kernel-6.1, kernel-6.12, and kernel-6.18 ([#595])
+* Sign kernel-6.18 in-tree, Neuron, EFA, and NVIDIA kernel modules with the kit module-signing key ([#601])
+* Add `kernel-6.18-module-signature-enforcement` subpackage to enforce signed kernel modules ([#601])
+* Update Neuron driver to 2.31.7.0 ([#602])
+* Update EFA installer to 1.51.0 ([#603])
+
+## Build Changes
+
+* Extend the kmod-6.18-nvidia open-driver check to H200, B200, B300, GB200, and GB300 ([#601])
+* Fix kernel-6.12 Source0 blobstore URL to match Cargo.toml ([#611])
+* Update the Bottlerocket SDK to `v0.82.0` ([#613])
+* Update Twoliter to `v0.27.0` ([#614])
+
+[#585]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/585
+[#594]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/594
+[#595]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/595
+[#601]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/601
+[#602]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/602
+[#603]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/603
+[#611]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/611
+[#613]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/613
+[#614]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/614
+
 # v9.6.2 (2026-10-30)
 
 ## OS Changes
