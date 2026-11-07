@@ -37,6 +37,7 @@ Source210: var-lib-kernel-devel-lower.mount.drop-in.conf.in
 # Bootconfig snippets to adjust the default kernel command line for the platform.
 Source300: bootconfig-aws.conf
 Source301: bootconfig-vmware.conf
+Source302: bootconfig-integrity.conf
 
 # Neuron driver RPMs - x86_64 only
 Source2: gpgkey-00FA2C1079260870A76D2C285749CAD8646D9185.asc
@@ -127,6 +128,7 @@ Requires: (%{name}-mkfs-xfs-conf if %{_cross_os}xfsprogs)
 # Pull in platform-dependent boot config snippets.
 Requires: (%{name}-bootconfig-aws if %{_cross_os}variant-platform(aws))
 Requires: (%{name}-bootconfig-vmware if %{_cross_os}variant-platform(vmware))
+Requires: (%{name}-module-integrity if %{_cross_os}image-feature(uki-image))
 
 # Pull in platform-dependent modules.
 %if "%{_cross_arch}" == "x86_64"
@@ -186,6 +188,15 @@ Requires: (%{_cross_os}image-feature(fips) and %{name})
 Conflicts: %{_cross_os}image-feature(no-fips)
 
 %description fips
+%{summary}.
+
+%package module-integrity
+Summary: Kernel parameters that enforce module signatures and integrity lockdown
+Requires: %{name}
+Requires: %{_cross_os}image-feature(uki-image)
+Conflicts: %{_cross_os}image-feature(no-uki-image)
+
+%description module-integrity
 %{summary}.
 
 %if "%{_cross_arch}" == "x86_64"
@@ -363,6 +374,7 @@ make -s \
   INSTALL_HDR_PATH="%{buildroot}%{_cross_prefix}" \
   INSTALL_MOD_PATH="%{buildroot}%{_cross_prefix}" \
   INSTALL_MOD_STRIP=1 \
+  CONFIG_MODULE_SIG_KEY="%{_cross_module_signing_key}" \
   %{nil}}
 
 %build
@@ -549,9 +561,11 @@ mkdir -p %{buildroot}%{_cross_datadir}/xfsprogs/mkfs
 ln -s lts_6.18.conf %{buildroot}%{_cross_datadir}/xfsprogs/mkfs/default.conf
 
 # Install platform-specific bootconfig snippets.
+# Placed 06-module-integrity.conf after 05-aws.conf to allow override when it is packaged.
 install -d %{buildroot}%{_cross_bootconfigdir}
 install -p -m 0644 %{S:300} %{buildroot}%{_cross_bootconfigdir}/05-aws.conf
 install -p -m 0644 %{S:301} %{buildroot}%{_cross_bootconfigdir}/05-vmware.conf
+install -p -m 0644 %{S:302} %{buildroot}%{_cross_bootconfigdir}/06-module-integrity.conf
 
 %if "%{_cross_arch}" == "x86_64"
 # Add Neuron-related configuration files to load the module when the hardware is present.
@@ -634,6 +648,9 @@ install -p -m 0644 %{S:222} %{S:224} %{buildroot}%{_cross_unitdir}
 
 %files bootconfig-vmware
 %{_cross_bootconfigdir}/05-vmware.conf
+
+%files module-integrity
+%{_cross_bootconfigdir}/06-module-integrity.conf
 
 %files modules
 %dir %{_cross_libdir}/modules
