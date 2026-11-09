@@ -146,7 +146,7 @@ Provides: %{_cross_os}kmod-6.1-nvidia-%{nvidia_branch}-open-gpu
 %package grid
 Summary: NVIDIA %{tesla_major} GRID driver
 Version: %{tesla_ver}
-License: MIT AND GPL-2.0-only AND LicenceRef-NVIDIA-GRID-AWS-EULA
+License: MIT AND GPL-2.0-only AND LicenseRef-NVIDIA-GRID-AWS-EULA
 Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
 Requires: %{_cross_os}libstdc++
