@@ -88,6 +88,8 @@ Requires: (%{name}-mkfs-xfs-conf if %{_cross_os}xfsprogs)
 Requires: (%{name}-bootconfig-aws if %{_cross_os}variant-platform(aws))
 Requires: (%{name}-module-integrity if %{_cross_os}image-feature(uki-image))
 
+Requires: %{_cross_os}kmod-next-efa
+
 # This kernel has no FIPS certification.
 Conflicts: %{_cross_os}image-feature(fips)
 
