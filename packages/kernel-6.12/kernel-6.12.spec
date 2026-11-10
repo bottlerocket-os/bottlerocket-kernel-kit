@@ -6,13 +6,13 @@
 %global neuron_inf1_ver 2.24.13
 
 Name: %{_cross_os}kernel-%{kmajor}
-Version: 6.12.113
+Version: 6.12.114
 Release: 1%{?dist}
 Summary: The Linux kernel
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/683f4dd98d9663f1acd3699dd2906dd4931fee88d8dc6ca4fd064e38c2fd26e1/kernel6.12-6.12.113-138.209.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/e8160deb988c9b850deec0d2c8e5db7e25148df62796fce818934b2233e76805/kernel6.12-6.12.114-139.210.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Custom Bottlerocket kernel configurations.
@@ -78,8 +78,6 @@ Patch1008: 1008-Revert-selinux-recheck-intermediate-backing-files-on.patch
 Patch1009: 1009-Revert-selinux-preserve-user-SID-across-nested-backi.patch
 Patch1010: 1010-Revert-selinux-fix-incorrect-execmem-checks-on-overl.patch
 Patch1011: 1011-Revert-selinux-fix-overlayfs-mmap-and-mprotect-acces.patch
-# Backport patch to disable LZ4 rolling decompression on EROFS
-Patch1012: 1012-erofs-disable-LZ4-rolling-decompression-for-now.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
