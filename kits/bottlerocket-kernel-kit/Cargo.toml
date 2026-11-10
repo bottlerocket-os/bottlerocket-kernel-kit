@@ -29,6 +29,7 @@ kmod-6_18-efa = { path = "../../packages/kmod-6.18-efa" }
 kmod-6_18-nvidia-r580 = { path = "../../packages/kmod-6.18-nvidia-r580" }
 kmod-6_18-nvidia-r595 = { path = "../../packages/kmod-6.18-nvidia-r595" }
 kmod-next-efa = { path = "../../packages/kmod-next-efa" }
+kmod-next-nvidia-r620 = { path = "../../packages/kmod-next-nvidia-r620" }
 nvidia-migmanager = { path = "../../packages/nvidia-migmanager" }
 nvlsm = { path = "../../packages/nvlsm" }
 linux-firmware = { path = "../../packages/linux-firmware" }
