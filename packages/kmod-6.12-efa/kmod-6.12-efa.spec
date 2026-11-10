@@ -5,7 +5,7 @@
 %global _ko ko
 
 Name: %{_cross_os}kmod-6.12-efa
-Version: 3.0.0
+Version: 3.3.1
 Release: 1%{?dist}
 Epoch: 1
 Summary: EFA driver for the 6.12 kernel
