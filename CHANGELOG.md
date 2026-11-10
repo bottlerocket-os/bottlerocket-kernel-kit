@@ -1,3 +1,17 @@
+# v9.7.1 (2026-11-10)
+
+## OS Changes
+
+* Update kernel from 6.1.189-236.400 to 6.1.190-237.431 ([#616])
+* Update kernel from 6.12.113-138.209 to 6.12.114-139.210 ([#617])
+* Update kernel from 6.18.56-125.164 to 6.18.56-126.188 ([#618])
+* Correct the EFA driver version metadata from 3.0.0 to 3.3.1 ([#619])
+
+[#616]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/616
+[#617]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/617
+[#618]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/618
+[#619]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/619
+
 # v9.7.0 (2026-11-06)
 
 ## OS Changes
