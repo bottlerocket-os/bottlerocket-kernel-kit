@@ -39,14 +39,16 @@ bail() {
     exit 1
 }
 
-# Get the config-full filename for a given kernel version and architecture
+# Get the config-full filename for a given kernel package and architecture.
+# Older packages keep one full config per architecture. The other packages
+# keep one full config per build host, named "-on-<host>".
 get_kernel_config_file_name() {
-    local majorminor="$1"
+    local kernel_path="$1"
     local arch="$2"
-    if [[ "${majorminor}" == "6.18" ]]; then
-        echo "config-full-bottlerocket-${arch}-on-$(uname -m)"
-    else
+    if [[ -f "${kernel_path}/config-full-bottlerocket-${arch}" ]]; then
         echo "config-full-bottlerocket-${arch}"
+    else
+        echo "config-full-bottlerocket-${arch}-on-$(uname -m)"
     fi
 }
 
@@ -84,25 +86,28 @@ resolve_base_config_dir() {
 }
 
 # Generate merged kernel configs for each architecture.
+# The base Amazon Linux configs are ../config-x86_64 and "../${aarch64_config}".
 generate_kernel_configs() {
     local version="$1"
     local kernel_path="$2"
     local microcode_file="$3"
-    local majorminor="$4"
+    local aarch64_config="$4"
+    local majorminor=${version%.*}
     # Base fragments may come from the shared package; see resolve_base_config_dir.
     local base_cfg_dir
     base_cfg_dir=$(resolve_base_config_dir "${kernel_path}" "${majorminor}")
+    local arch
     for arch in "x86_64" "aarch64"; do
         br_cfg="${base_cfg_dir}/config-bottlerocket"
         br_cfg_arch="${base_cfg_dir}/config-bottlerocket-${arch}"
         microcode_cfg="${MICROCODE_DIR}/${microcode_file}"
-        config_filename=$(get_kernel_config_file_name "${majorminor}" "${arch}")
+        config_filename=$(get_kernel_config_file_name "${kernel_path}" "${arch}")
 
         pushd "linux-${version}" || bail "Could not move into linux-${version}"
 
         if [ "${arch}" = "aarch64" ]; then
             karch="arm64"
-            script_args=("../config-${arch}" "${br_cfg}" "${br_cfg_arch}")
+            script_args=("../${aarch64_config}" "${br_cfg}" "${br_cfg_arch}")
         elif [ "${arch}" = "x86_64" ]; then
             karch="x86"
             if [[ -n "${microcode_file}" ]]; then
@@ -128,38 +133,42 @@ generate_kernel_configs() {
     done
 }
 
-# Function to merge kernel configurations for a specific kernel version
+# Function to merge kernel configurations for a kernel built from an SRPM
 merge_kernel_configs() {
     local version="$1"
-    local majorminor="$2"
+    local kernel_path="$2"
     local tmpdir="$3"
-    local kernel_package_dir="$4"
+    local majorminor=${version%.*}
 
-    readarray -t br_patches < <(find "${kernel_package_dir}" -maxdepth 1 -name "*.patch")
+    readarray -t br_patches < <(find "${kernel_path}" -maxdepth 1 -name "*.patch")
 
+    # The SRPM spec is named after the kernel series, except for 6.1.
+    if [[ "${majorminor}" == "6.1" ]]; then
+        spec_file="kernel.spec"
+    else
+        spec_file="kernel${majorminor}.spec"
+    fi
     if [[ "${majorminor}" == "6.18" ]]; then
-        spec_file="kernel6.18.spec"
         microcode_file="config-microcode-6-18"
     elif [[ "${majorminor}" == "6.12" ]]; then
-        spec_file="kernel6.12.spec"
         microcode_file="config-microcode-6-12"
     else
-        spec_file="kernel.spec"
         microcode_file="config-microcode"
     fi
 
     # The microvm flavor embeds no CPU microcode (a guest cannot apply it), so it
     # skips the microcode config fragment entirely. An empty microcode_file tells
     # generate_kernel_configs to leave it out of the x86_64 merge.
-    if [[ "$(basename "${kernel_package_dir}")" == *-microvm ]]; then
+    if [[ "$(basename "${kernel_path}")" == *-microvm ]]; then
         microcode_file=""
     fi
 
-    local kernel_path="${kernel_package_dir}"
+    local aarch64_config="config-aarch64"
 
     pushd "${tmpdir}" || bail "Unable to enter temporary directory"
 
-    rpm2cpio kernel-source.rpm | cpio -iu {,./}linux-"${version}".tar{,.xz} {,./}config-x86_64 {,./}config-aarch64 {,./}"*.patch" {,./}"${spec_file}"
+    rpm2cpio kernel-source.rpm | cpio -iu {,./}linux-"${version}".tar{,.xz} {,./}config-x86_64 {,./}"${aarch64_config}" {,./}"*.patch" {,./}"${spec_file}"
+    [[ -f "${spec_file}" ]] || bail "The kernel SRPM has no ${spec_file}"
 
     # Upstream source is either xz compressed tarball or plain tarball
     if [ -f "./linux-${version}.tar" ]; then
@@ -189,24 +198,26 @@ merge_kernel_configs() {
 
     popd || bail "Could not move around - 'popd' back to /work failed. Lets stop before we break anything further."
 
-    generate_kernel_configs "${version}" "${kernel_path}" "${microcode_file}" "${majorminor}"
+    generate_kernel_configs "${version}" "${kernel_path}" "${microcode_file}" "${aarch64_config}"
 
     popd || bail "Could not return from temporary directory"
 }
 
 # Function to validate kernel configurations (similar to validate_config.sh)
 validate_kernel_configs() {
-    local version="$1"
-    local majorminor="$2"
-    local kernel_path="$3"
+    local kernel_path="$1"
+    local version="$2"
+    local majorminor=${version%.*}
     local errors=0
+    local kernel_pkg
+    kernel_pkg=$(basename "${kernel_path}")
     # Base fragments may come from the shared package (see resolve_base_config_dir);
     # the generated config-full always lives in the kernel package.
     local base_cfg_dir
     base_cfg_dir=$(resolve_base_config_dir "${kernel_path}" "${majorminor}")
 
     for arch in x86_64 aarch64; do
-        echo "=== Validating kernel-${majorminor} ${arch} ==="
+        echo "=== Validating ${kernel_pkg} ${arch} ==="
 
         # Check if files exist
         if [[ ! -f "${base_cfg_dir}/config-bottlerocket" ]]; then
@@ -220,7 +231,7 @@ validate_kernel_configs() {
             continue
         fi
         local config_filename
-        config_filename=$(get_kernel_config_file_name "${majorminor}" "${arch}")
+        config_filename=$(get_kernel_config_file_name "${kernel_path}" "${arch}")
         if [[ ! -f "${kernel_path}/${config_filename}" ]]; then
             echo "❌ Missing ${config_filename}"
             ((++errors))
@@ -415,12 +426,11 @@ for kernel_dir in "${KERNEL_KIT_DIR}/packages"/kernel-*; do
     cp "${rpm_file}" kernel-source.rpm
 
     version="$(rpm --query --nosignature --queryformat '%{VERSION}' kernel-source.rpm)"
-    majorminor=${version%.*}
 
-    merge_kernel_configs "${version}" "${majorminor}" "${tmpdir}" "${kernel_dir}" || bail "Failed to merge kernel config for ${kernel_pkg}"
+    merge_kernel_configs "${version}" "${kernel_dir}" "${tmpdir}" || bail "Failed to merge kernel config for ${kernel_pkg}"
 
     echo "Validating ${kernel_pkg} configurations..."
-    validate_kernel_configs "${version}" "${majorminor}" "${kernel_dir}" || bail "Validation failed for ${kernel_pkg}"
+    validate_kernel_configs "${kernel_dir}" "${version}" || bail "Validation failed for ${kernel_pkg}"
 
     popd || bail "Could not return from temporary directory"
 done
