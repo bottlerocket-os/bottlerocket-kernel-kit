@@ -163,7 +163,13 @@ merge_kernel_configs() {
         microcode_file=""
     fi
 
+    # kernel-next builds with microcode-ec2, like kernel-6.18, and uses the
+    # SRPM's 64K page config on aarch64.
     local aarch64_config="config-aarch64"
+    if [[ "$(basename "${kernel_path}")" == "kernel-next" ]]; then
+        microcode_file="config-microcode-6-18"
+        aarch64_config="config-aarch64-64k"
+    fi
 
     pushd "${tmpdir}" || bail "Unable to enter temporary directory"
 

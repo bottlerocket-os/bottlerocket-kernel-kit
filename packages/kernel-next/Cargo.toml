@@ -1,0 +1,25 @@
+[package]
+name = "kernel-next"
+version = "0.1.0"
+edition = "2021"
+publish = false
+build = "../build.rs"
+
+[package.metadata.build-package]
+package-name = "kernel-next"
+module-signing = true
+
+[lib]
+path = "../packages.rs"
+
+[[package.metadata.build-package.external-files]]
+# Use latest-kernel-srpm-url.sh to get this.
+url = "https://cdn-al2027.amazonlinux.com/blobstore/5bd4a8d2cbf10ea258ccda52a108880bca0b9d6c9e2f2d6102c5dfe0f9ca2a53/kernel7.2-7.2.13-17.148.amzn2027.src.rpm"
+sha512 = "2faf8e3c8cd34c82966e5f9ee856c6eff77caa46cac7bfbcb95a8290b8fc206387bda0ff1216bcf9229cc79f662cefd27c2c5b14fcbbb3ab63e03350769e1b77"
+force-upstream = true
+
+# This kernel builds no Neuron drivers, because the target instances
+# have NVIDIA GPUs only.
+
+[build-dependencies]
+microcode = { path = "../microcode" }

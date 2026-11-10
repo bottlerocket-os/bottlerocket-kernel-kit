@@ -1,0 +1,19 @@
+# Architecture-specific configurations for x86_64
+
+# x86_64-specific EFI support
+CONFIG_EFI_MIXED=y
+
+# x86_64-specific virtualization
+CONFIG_XEN_BLKDEV_FRONTEND=y
+
+# x86_64-specific Xen backend control
+# CONFIG_XEN_BACKEND is not set
+
+# x86_64-specific SCSI frontend
+# CONFIG_XEN_SCSI_FRONTEND is not set
+
+# x86_64-specific VMware support
+CONFIG_VMWARE_PVSCSI=m
+
+# Turn off i915 on x86_64
+# CONFIG_DRM_I915 is not set
