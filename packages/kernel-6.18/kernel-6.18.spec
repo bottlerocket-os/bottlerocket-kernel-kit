@@ -87,6 +87,10 @@ Patch1006: 1006-Revert-selinux-recheck-intermediate-backing-files-on-mprotect.pa
 Patch1007: 1007-Revert-selinux-preserve-user-SID-across-nested-backing.patch
 Patch1008: 1008-Revert-selinux-fix-overlayfs-mmap-and-mprotect-acces.patch
 
+# Add __u128 to tools/include/linux/types.h so kernel host-tool builds
+# work with kernel-headers >= 7.3 on aarch64 hosts.
+Patch1009: 1009-tools-linux-types.h-Add-128-bit-integer-types-for-ar.patch
+
 BuildRequires: bc
 BuildRequires: elfutils-devel
 BuildRequires: hostname

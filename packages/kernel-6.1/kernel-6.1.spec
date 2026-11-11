@@ -63,6 +63,10 @@ Patch1006: 1006-strscpy-write-destination-buffer-only-once.patch
 # Backport patch to disable LZ4 rolling decompression for EROFS
 Patch1008: 1008-erofs-disable-LZ4-rolling-decompression-for-now.patch
 
+# Add __u128 to tools/include/linux/types.h so kernel host-tool builds
+# work with kernel-headers >= 7.3 on aarch64 hosts.
+Patch1009: 1009-tools-linux-types.h-Add-128-bit-integer-types-for-ar.patch
+
 BuildRequires: bc
 BuildRequires: elfutils-devel
 BuildRequires: hostname
