@@ -79,6 +79,10 @@ Patch1009: 1009-Revert-selinux-preserve-user-SID-across-nested-backi.patch
 Patch1010: 1010-Revert-selinux-fix-incorrect-execmem-checks-on-overl.patch
 Patch1011: 1011-Revert-selinux-fix-overlayfs-mmap-and-mprotect-acces.patch
 
+# Add __u128 to tools/include/linux/types.h so kernel host-tool builds
+# work with kernel-headers >= 7.3 on aarch64 hosts.
+Patch1012: 1012-tools-linux-types.h-Add-128-bit-integer-types-for-ar.patch
+
 BuildRequires: bc
 BuildRequires: elfutils-devel
 BuildRequires: hostname
