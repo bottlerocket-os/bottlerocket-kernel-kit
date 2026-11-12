@@ -8,14 +8,14 @@
 %global host_arch %(uname -m)
 
 Name: %{_cross_os}kernel-%{kmajor}-microvm
-Version: 6.18.56
+Version: 6.18.62
 Release: 1%{?dist}
 Summary: The Linux kernel, configured for microvm guests
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Keep this in sync with packages/kernel-6.18 so both kernels are built from the
 # same source. Use that package's latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/662a06f920092f6b37f28901fe034b0e63f6bfedf89d2eb4b2bb40455f53a0c6/kernel6.18-6.18.56-126.188.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/cbb9be49c69897a31d4ff653bf48ad68dc6a2e95df6c18c26cd92549c752c857/kernel6.18-6.18.62-127.179.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Overrides that make this kernel bootable as a microvm guest.
@@ -461,6 +461,8 @@ install -p -m 0644 %{S:300} %{buildroot}%{_cross_bootconfigdir}/05-aws.conf
 %{_cross_kmoddir}/kernel/crypto/fcrypt.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/fips140/fips140.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/khazad.%{_ko}
+%{_cross_kmoddir}/kernel/crypto/krb5/krb5.%{_ko}
+%{_cross_kmoddir}/kernel/crypto/krb5enc.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/lrw.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/lz4.%{_ko}
 %{_cross_kmoddir}/kernel/crypto/lz4hc.%{_ko}
@@ -580,6 +582,7 @@ install -p -m 0644 %{S:300} %{buildroot}%{_cross_bootconfigdir}/05-aws.conf
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/ixgbe/ixgbe.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/ixgbevf/ixgbevf.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libeth/libeth.%{_ko}
+%{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libeth/libeth_xdp.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libie/libie.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libie/libie_adminq.%{_ko}
 %{_cross_kmoddir}/kernel/drivers/net/ethernet/intel/libie/libie_fwlog.%{_ko}
