@@ -1,3 +1,20 @@
+# v9.7.2 (2026-11-12)
+
+## OS Changes
+
+* Update kernel from 6.1.190-237.431 to 6.1.190-237.442 ([#627])
+* Update kernel from 6.12.114-139.210 to 6.12.115-140.210 ([#628])
+* Update kernel from 6.18.56-126.188 to 6.18.62-127.179 ([#626])
+
+## Build Changes
+
+* Backport patch adding 128-bit integer types to the kernel's bundled `tools/include/linux/types.h` to fix host tool builds on aarch64 ([#623])
+
+[#623]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/623
+[#626]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/626
+[#627]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/627
+[#628]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/628
+
 # v9.7.1 (2026-11-10)
 
 ## OS Changes
