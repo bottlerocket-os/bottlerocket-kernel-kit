@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-sivqsmyc5aku"
+title = "kernel CVE-2026-98043"
+cve = "CVE-2026-98043"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Don't infer non-NULL from a pointer with an unbounded offset"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:22Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

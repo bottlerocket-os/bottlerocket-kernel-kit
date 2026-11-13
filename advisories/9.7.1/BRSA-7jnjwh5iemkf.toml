@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-7jnjwh5iemkf"
+title = "kernel CVE-2026-74338"
+cve = "CVE-2026-74338"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Reject sleepable BPF_LSM_CGROUP programs at load time"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:41Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-y4csmlinv77n"
+title = "kernel CVE-2026-68400"
+cve = "CVE-2026-68400"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: firmware: arm_ffa: Fix Endpoint Memory Access Descriptor offset calculation"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:22Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

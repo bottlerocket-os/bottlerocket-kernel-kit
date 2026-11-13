@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-roqahiyop56o"
+title = "kernel CVE-2026-74571"
+cve = "CVE-2026-74571"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: btrfs: skip global block reserve accounting for rescue mounts"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:49Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

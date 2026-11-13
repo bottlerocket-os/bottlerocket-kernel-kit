@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-fyackevfkhqh"
+title = "kernel CVE-2026-80634"
+cve = "CVE-2026-80634"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfilter: flowtable: avoid num_encaps underflow on bridge VLAN untag"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:01Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

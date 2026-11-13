@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-9e5eskemm5t4"
+title = "kernel CVE-2026-72439"
+cve = "CVE-2026-72439"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: md/raid10: fix writes_pending leak on write request failures"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:36Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

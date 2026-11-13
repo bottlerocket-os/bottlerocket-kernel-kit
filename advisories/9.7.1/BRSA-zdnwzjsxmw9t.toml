@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-zdnwzjsxmw9t"
+title = "kernel CVE-2026-89642"
+cve = "CVE-2026-89642"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: cifs: call pagecache_isize_extended() in cifs_setsize() when extending"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:11Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

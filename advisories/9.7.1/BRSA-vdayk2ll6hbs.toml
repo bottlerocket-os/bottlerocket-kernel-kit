@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-vdayk2ll6hbs"
+title = "kernel CVE-2026-98049"
+cve = "CVE-2026-98049"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: zero extend the result of an arena 32-bit cmpxchg"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:26Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

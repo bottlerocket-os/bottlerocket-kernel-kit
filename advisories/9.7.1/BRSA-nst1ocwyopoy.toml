@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-nst1ocwyopoy"
+title = "kernel CVE-2026-64006"
+cve = "CVE-2026-64006"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfilter: nf_tables: fix dst corruption in same register operation For lshift and rshift, the shift operations are performed in a loop over"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:08Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

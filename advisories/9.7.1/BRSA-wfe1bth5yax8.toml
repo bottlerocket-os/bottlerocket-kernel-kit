@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-wfe1bth5yax8"
+title = "kernel CVE-2026-68441"
+cve = "CVE-2026-68441"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: net/sched: Handle TC_ACT_REDIRECT from qdisc filter chains"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:26Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

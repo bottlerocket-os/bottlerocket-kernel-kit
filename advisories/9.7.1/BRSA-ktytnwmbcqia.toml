@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-ktytnwmbcqia"
+title = "kernel CVE-2026-80668"
+cve = "CVE-2026-80668"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfilter: nf_conntrack_expect: use conntrack GC to reap expectations"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:02Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

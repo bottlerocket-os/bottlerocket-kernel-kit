@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-jp0aar6ot2wn"
+title = "kernel CVE-2026-74356"
+cve = "CVE-2026-74356"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: vhost: fix vhost_get_avail_idx for a non empty ring"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.190"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:42Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

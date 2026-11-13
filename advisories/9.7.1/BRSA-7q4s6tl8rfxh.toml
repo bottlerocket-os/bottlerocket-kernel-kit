@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-7q4s6tl8rfxh"
+title = "kernel CVE-2026-90142"
+cve = "CVE-2026-90142"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: virtio_net: Fix resize of the RX ring"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:28Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

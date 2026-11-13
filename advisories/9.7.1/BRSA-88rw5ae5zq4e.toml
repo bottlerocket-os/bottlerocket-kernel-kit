@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-88rw5ae5zq4e"
+title = "kernel CVE-2026-72367"
+cve = "CVE-2026-72367"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: iomap: guard io_size EOF trim against concurrent truncate underflow"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:32Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

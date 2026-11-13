@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-vlbcnegzmdao"
+title = "kernel CVE-2026-97479"
+cve = "CVE-2026-97479"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: driver core: Avoid warning when removing a device while its supplier is unbinding"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:07Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

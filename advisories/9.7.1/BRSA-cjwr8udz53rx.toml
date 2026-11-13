@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-cjwr8udz53rx"
+title = "kernel CVE-2026-98038"
+cve = "CVE-2026-98038"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Keep refcount_acquire nullable for borrowed RCU kptrs"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:21Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

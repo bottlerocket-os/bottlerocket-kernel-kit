@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-tozwonq2viph"
+title = "kernel CVE-2026-98857"
+cve = "CVE-2026-98857"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: ipvs: bound LBLCR and LBLC cache growth"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.190"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:43Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

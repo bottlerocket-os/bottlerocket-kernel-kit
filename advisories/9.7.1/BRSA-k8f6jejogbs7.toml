@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-k8f6jejogbs7"
+title = "kernel CVE-2026-72341"
+cve = "CVE-2026-72341"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: net/mlx5e: Fix publication race for priv->channel_stats[]"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:30Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

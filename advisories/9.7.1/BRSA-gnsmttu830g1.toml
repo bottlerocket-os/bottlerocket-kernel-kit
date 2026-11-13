@@ -1,0 +1,27 @@
+[advisory]
+id = "BRSA-gnsmttu830g1"
+title = "kernel CVE-2026-98033"
+cve = "CVE-2026-98033"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Preserve inner map identity in callback frames"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.190"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.56"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:20Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

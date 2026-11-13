@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-ahaeenzkm85c"
+title = "kernel CVE-2026-90061"
+cve = "CVE-2026-90061"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfilter: nf_tables: skip double clone set expressions on element insert"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:20Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

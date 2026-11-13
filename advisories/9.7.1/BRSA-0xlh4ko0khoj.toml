@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-0xlh4ko0khoj"
+title = "kernel CVE-2026-74374"
+cve = "CVE-2026-74374"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: md/raid1,raid10: fix error-path detection with md_cloned_bio()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:43Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

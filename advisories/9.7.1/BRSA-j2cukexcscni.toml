@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-j2cukexcscni"
+title = "kernel CVE-2026-74542"
+cve = "CVE-2026-74542"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfs: Fix folio_queue ENOMEM in writeback by adding a mempool"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:45Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"
