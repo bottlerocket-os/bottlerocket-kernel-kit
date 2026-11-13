@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-ngljcxa3iotu"
+title = "kernel CVE-2026-74695"
+cve = "CVE-2026-74695"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfilter: nf_flow_table: drop existing skb dst before skb_dst_set_noref()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:52Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

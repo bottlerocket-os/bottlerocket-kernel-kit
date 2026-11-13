@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-4nfsgndjd5mx"
+title = "kernel CVE-2026-90105"
+cve = "CVE-2026-90105"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: vxlan: fix reading neigh ha"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:25Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

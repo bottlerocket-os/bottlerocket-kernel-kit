@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-fnopxppidhlo"
+title = "kernel CVE-2026-99258"
+cve = "CVE-2026-99258"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: x86/hyperv: Avoid using per-cpu output page in hv_apicid_to_vp_index()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:22Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

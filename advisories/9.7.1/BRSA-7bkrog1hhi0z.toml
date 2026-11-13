@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-7bkrog1hhi0z"
+title = "kernel CVE-2026-80738"
+cve = "CVE-2026-80738"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Check sk_state before sk_protocol in bpf_tcp_*_syncookie"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:03Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

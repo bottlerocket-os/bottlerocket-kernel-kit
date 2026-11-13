@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-xn85zi8ursem"
+title = "kernel CVE-2026-98985"
+cve = "CVE-2026-98985"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: namespace: check the mounts before reading their parents in pivot_root()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:48Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

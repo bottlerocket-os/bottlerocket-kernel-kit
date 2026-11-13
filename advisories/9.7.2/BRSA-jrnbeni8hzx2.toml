@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-jrnbeni8hzx2"
+title = "kernel CVE-2026-99245"
+cve = "CVE-2026-99245"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: KEYS: Fix key_reject_and_link() race with keyring restriction"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:14Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

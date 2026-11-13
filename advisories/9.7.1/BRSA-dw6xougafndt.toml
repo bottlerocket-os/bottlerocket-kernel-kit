@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-dw6xougafndt"
+title = "kernel CVE-2026-89682"
+cve = "CVE-2026-89682"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: nfsd: fix fcache_disposal UAF by inlining dispose state into nfsd_net nfsd_file_dispose_list_delayed() defers fput() to nfsd service threads"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:14Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

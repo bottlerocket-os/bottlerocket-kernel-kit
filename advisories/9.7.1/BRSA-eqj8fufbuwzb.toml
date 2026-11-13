@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-eqj8fufbuwzb"
+title = "kernel CVE-2026-90240"
+cve = "CVE-2026-90240"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: iommu/vt-d: Flush context cache with correct SID when tearing down aliases"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:36Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

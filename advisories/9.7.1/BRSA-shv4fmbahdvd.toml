@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-shv4fmbahdvd"
+title = "kernel CVE-2026-99085"
+cve = "CVE-2026-99085"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: sched_ext: Fix CPU hotplug hang when a dying CPU's tasks sit in the BPF scheduler"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:57Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-tvvdqvpuzvdp"
+title = "kernel CVE-2026-90263"
+cve = "CVE-2026-90263"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: btrfs: check if root is readonly when setting posix acl"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:40Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

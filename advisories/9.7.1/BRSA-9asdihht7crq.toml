@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-9asdihht7crq"
+title = "kernel CVE-2026-97962"
+cve = "CVE-2026-97962"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: net/mlx5e: Move representor vnic reporter to eswitch devlink port"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:14Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

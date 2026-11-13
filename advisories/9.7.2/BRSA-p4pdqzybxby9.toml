@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-p4pdqzybxby9"
+title = "kernel CVE-2026-99219"
+cve = "CVE-2026-99219"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: ftrace: Initialize modname and offset in print_rec()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:01Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

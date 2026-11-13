@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-joa2ofjt2vch"
+title = "kernel CVE-2026-98047"
+cve = "CVE-2026-98047"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Check ancestor frames for rbtree callbacks"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:24Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

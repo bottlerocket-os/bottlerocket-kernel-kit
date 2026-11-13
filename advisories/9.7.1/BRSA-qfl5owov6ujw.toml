@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-qfl5owov6ujw"
+title = "kernel CVE-2026-89537"
+cve = "CVE-2026-89537"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: SUNRPC: Reject short RFC 4121 MIC tokens in gss_krb5_verify_mic_v2"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:08Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

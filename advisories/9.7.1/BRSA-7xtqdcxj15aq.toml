@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-7xtqdcxj15aq"
+title = "kernel CVE-2026-90144"
+cve = "CVE-2026-90144"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: dpll: fix NULL deref in dpll_device_ops() during teardown race"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:29Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

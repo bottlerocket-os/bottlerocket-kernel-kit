@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-ahfwcjlepyu6"
+title = "kernel CVE-2026-64388"
+cve = "CVE-2026-64388"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: smb/client: fix chown/chgrp with SMB3 POSIX Extensions"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:15Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

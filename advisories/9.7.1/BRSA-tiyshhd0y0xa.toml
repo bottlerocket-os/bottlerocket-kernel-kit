@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-tiyshhd0y0xa"
+title = "kernel CVE-2026-68401"
+cve = "CVE-2026-68401"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: firmware: arm_ffa: Fix out-of-bound writes in ffa_setup_and_transmit()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:23Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

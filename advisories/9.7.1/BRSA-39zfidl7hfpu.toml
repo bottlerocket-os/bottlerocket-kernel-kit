@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-39zfidl7hfpu"
+title = "kernel CVE-2026-90177"
+cve = "CVE-2026-90177"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Check pointer type for all atomic RMW paths"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:32Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

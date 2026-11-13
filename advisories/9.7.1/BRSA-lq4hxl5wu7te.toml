@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-lq4hxl5wu7te"
+title = "kernel CVE-2026-90317"
+cve = "CVE-2026-90317"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: bpf: Invalidate RCU pointers after final spin unlock"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:45Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

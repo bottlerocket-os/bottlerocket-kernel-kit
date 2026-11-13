@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-fi8hewcy2czf"
+title = "kernel CVE-2026-63998"
+cve = "CVE-2026-63998"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: ethtool: module: call ethnl_ops_complete() on module flash errors"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:06Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

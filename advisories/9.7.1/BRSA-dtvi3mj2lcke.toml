@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-dtvi3mj2lcke"
+title = "kernel CVE-2026-89757"
+cve = "CVE-2026-89757"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: mm/mglru: fix and remove redundant unevictable folio handling"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:16Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

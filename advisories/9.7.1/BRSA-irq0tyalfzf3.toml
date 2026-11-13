@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-irq0tyalfzf3"
+title = "kernel CVE-2026-64036"
+cve = "CVE-2026-64036"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: cgroup/rstat: validate cpu before css_rstat_cpu() access css_rstat_updated() is exposed as a BPF kfunc and accepts a"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:09Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

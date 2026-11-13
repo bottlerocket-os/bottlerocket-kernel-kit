@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-mfoi7k8hubgk"
+title = "kernel CVE-2026-64060"
+cve = "CVE-2026-64060"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: netfs: Fix leak of request in netfs_write_begin() error handling Fix netfs_write_begin() to not leak our ref on the request in the event that we get an error from netfs_wait_for_read()."
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:10Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-dpe3cbclc5co"
+title = "kernel CVE-2026-89631"
+cve = "CVE-2026-89631"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: smb: client: reject a tree connect response whose byte count is too small"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:09Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

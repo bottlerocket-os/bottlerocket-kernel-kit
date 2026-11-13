@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-jokdtfgoaora"
+title = "kernel CVE-2026-90182"
+cve = "CVE-2026-90182"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: blk-iocost: clear delay state when freeing policy data"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:33Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

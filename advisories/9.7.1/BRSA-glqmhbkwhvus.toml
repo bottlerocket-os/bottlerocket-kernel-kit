@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-glqmhbkwhvus"
+title = "kernel CVE-2026-89654"
+cve = "CVE-2026-89654"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: ceph: fix UAF in check_new_map() on session freed during unlock"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:44:12Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

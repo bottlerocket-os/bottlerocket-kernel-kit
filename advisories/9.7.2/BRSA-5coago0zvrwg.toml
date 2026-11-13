@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-5coago0zvrwg"
+title = "kernel CVE-2026-99105"
+cve = "CVE-2026-99105"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: sched_ext: Fix stall when a task enqueued with SCX_ENQ_LAST lands back on its CPU's local DSQ"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:19Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.2"

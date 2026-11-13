@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-k9cgujawzldh"
+title = "kernel CVE-2026-89912"
+cve = "CVE-2026-89912"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: KVM: arm64: vgic-its: Don't dereference a NULL collection on ITT save"
+
+[[advisory.products]]
+package-name = "kernel-6.1"
+patched-version = "6.1.190"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:13Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

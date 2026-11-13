@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-cxvs2nae2k2j"
+title = "kernel CVE-2026-98788"
+cve = "CVE-2026-98788"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: futex: Fix private hash use-after-free on resize"
+
+[[advisory.products]]
+package-name = "kernel-6.18"
+patched-version = "6.18.56"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:45:40Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.1"

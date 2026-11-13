@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-xvr1hqwf3idz"
+title = "kernel CVE-2026-99254"
+cve = "CVE-2026-99254"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: io_uring: don't flood a cancelling task with task_work"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:19Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.2"

@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-ex2pkzm4ah3t"
+title = "kernel CVE-2026-74611"
+cve = "CVE-2026-74611"
+severity = "low"
+description = "In the Linux kernel, the following vulnerability has been resolved: tls: rx: restore msg_iter before TLS 1.3 optimistic retry"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:51Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

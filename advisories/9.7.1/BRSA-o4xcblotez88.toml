@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-o4xcblotez88"
+title = "kernel CVE-2026-68241"
+cve = "CVE-2026-68241"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: drm/i915/mst: limit DP MST ESI service loop"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.114"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-11T01:43:18Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.1"

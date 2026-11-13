@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-yvlhc0aqp3om"
+title = "kernel CVE-2026-99147"
+cve = "CVE-2026-99147"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: drm/exec: don't immediately add prelocked obj to array of locked objs"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:35Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

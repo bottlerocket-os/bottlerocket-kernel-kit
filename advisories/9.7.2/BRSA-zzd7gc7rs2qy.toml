@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-zzd7gc7rs2qy"
+title = "kernel CVE-2026-99220"
+cve = "CVE-2026-99220"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: asymmetric_keys: reject trust keys without IDs"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:02Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.2"

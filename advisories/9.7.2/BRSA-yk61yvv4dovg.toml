@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-yk61yvv4dovg"
+title = "kernel CVE-2026-99153"
+cve = "CVE-2026-99153"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: scsi: libiscsi: Validate the ITT reflected in a Reject PDU"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:36Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

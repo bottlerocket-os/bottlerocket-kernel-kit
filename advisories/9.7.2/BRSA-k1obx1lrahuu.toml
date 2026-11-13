@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-k1obx1lrahuu"
+title = "kernel CVE-2026-99130"
+cve = "CVE-2026-99130"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: io_uring/cancel: don't spin on local work the task can't run"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:28Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-tongodf8m3u4"
+title = "kernel CVE-2026-99222"
+cve = "CVE-2026-99222"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: keys: Protect the read method check against type removal"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:04Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.2"

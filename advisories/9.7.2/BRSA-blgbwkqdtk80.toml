@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-blgbwkqdtk80"
+title = "kernel CVE-2026-99218"
+cve = "CVE-2026-99218"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: coredump: hold RCU while releasing parked threads"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:00Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.2"
