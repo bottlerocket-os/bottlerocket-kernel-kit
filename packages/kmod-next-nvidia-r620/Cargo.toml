@@ -1,0 +1,71 @@
+[package]
+name = "kmod-next-nvidia-r620"
+version = "0.1.0"
+edition = "2021"
+publish = false
+build = "../build.rs"
+
+[lib]
+path = "../packages.rs"
+
+[package.metadata.build-package]
+package-name = "kmod-next-nvidia-r620"
+module-signing = true
+releases-url = "https://docs.nvidia.com/datacenter/tesla/"
+
+[[package.metadata.build-package.external-files]]
+url = "https://s3.amazonaws.com/EULA/NVidiaEULAforAWS.pdf"
+sha512 = "e1926fe99afc3ab5b2f2744fcd53b4046465aefb2793e2e06c4a19455a3fde895e00af1415ff1a5804c32e6a2ed0657e475de63da6c23a0e9c59feeef52f3f58"
+
+[[package.metadata.build-package.external-files]]
+url = "https://us.download.nvidia.com/tesla/620.70.06/NVIDIA-Linux-x86_64-620.70.06.run"
+sha512 = "3889406d2717c5492852c8e06343981ee2481a31e1247fb6c7600205941a28cde90421192d78bbd9e98082b87cc853768ac741dbca4e03ad01ff4f123a9a086d"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://us.download.nvidia.com/tesla/620.70.06/NVIDIA-Linux-aarch64-620.70.06.run"
+sha512 = "d632804e285da73aeea76b9723c3b87ba9a0e3aa186db2f3db96558a3c71eebfa8c8d358039f54aad90f205e82952dee48c8f6d4fafd7b9aa666bcc0b3658466"
+force-upstream = true
+
+# Fabric manager and IMEX are direct RPMs.
+[[package.metadata.build-package.external-files]]
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-fabricmanager-direct-2.0.0.rel106-1.x86_64.rpm"
+sha512 = "a7fc60ba5d565c58d50e5bd3c8995f0bff5946facd5a8403b06550992c4eb4368d8ec250c49ac481b8914560f1f2fc2c80d28c785044ee3e73e3a80f75b10a2c"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-fabricmanager-direct-2.0.0.rel106-1.aarch64.rpm"
+sha512 = "200cf6157dea9040093f5ff1deb3881933b414e88d931d3002d22f50ebc6997070b83f6c37c98d96c7c6d42ad1441ab8789f5850aba0ec7841c30e146353d31b"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/libnvidia-nscq-620.70.06-1.amzn2023.x86_64.rpm"
+sha512 = "c4c053a9b365600c230bd73fc37042eaa08f2987d2ee5413808f879665d31d334b19a5d6c43ea7384672dad22393afef542d904a55a218ba86d8f7ca0f740e5f"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/libnvidia-nscq-620.70.06-1.amzn2023.aarch64.rpm"
+sha512 = "d4a1ff79e56025b84716d09bc0e2b12f4b955c7dfe4b7c4a2ad54d0daedf9191f9ae6329d4dc406cf7cdf254e50eca91fdbae66da32db87cac3d622ef60df7a8"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-imex-direct-2.0.0.rel49-1.x86_64.rpm"
+sha512 = "12f4c5d0c8e29f0a3fa2a6be9df007ef69a9959536712842278e390d497f001ad7b0c6a4b5563d65a3a7ba52ff99e886dab4a93181a9d7338e5da116b8fbd66c"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-imex-direct-2.0.0.rel49-1.aarch64.rpm"
+sha512 = "ec90cb434b91d1105fb6b7a4ae5bc845f44566f085f2d7994405a71b70736ad8c58a12a2be01d7c4c4dec1b3afcfd1a280d23791593cec3322f5379c3aee4c05"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://raw.githubusercontent.com/NVIDIA/open-gpu-kernel-modules/620.70.06/COPYING"
+sha512 = "f9cee68cbb12095af4b4e92d01c210461789ef41c70b64efefd6719d0b88468b7a67a3629c432d4d9304c730b5d1a942228a5bcc74a03ab1c411c77c758cd938"
+force-upstream = true
+
+[[package.metadata.build-package.external-files]]
+url = "https://github.com/NVIDIA/gdrcopy/archive/v2.6/gdrcopy-2.6.tar.gz"
+sha512 = "3653881de4380ecf85d26a93d9e4ce66679001c9901189707fb13cb98f2ff841eb6d67b63784d1e048db7f7c1975052f22fea0f7813233d96fded2bd39031342"
+
+[build-dependencies]
+kernel-next = { path = "../kernel-next" }

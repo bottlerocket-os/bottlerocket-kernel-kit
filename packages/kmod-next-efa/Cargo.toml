@@ -1,0 +1,26 @@
+[package]
+name = "kmod-next-efa"
+version = "0.1.0"
+edition = "2021"
+publish = false
+build = "../build.rs"
+
+[lib]
+path = "../packages.rs"
+
+[package.metadata.build-package]
+package-name = "kmod-next-efa"
+module-signing = true
+releases-url = "https://github.com/amzn/amzn-drivers/releases"
+
+[[package.metadata.build-package.external-files]]
+url = "https://efa-installer.amazonaws.com/aws-efa-installer-1.51.0.tar.gz"
+sha512 = "6d948dbdaacba28a5bb7b8f332d22005aed154c0e5f5a3b1b54c20ac487d6865798d9cb3609b7cc54a305e3368bb0c7d8d8119292e67390300220ed3c52ad935"
+
+[[package.metadata.build-package.external-files]]
+# The installer doesn't ship with the COPYING file
+url = "https://raw.githubusercontent.com/amzn/amzn-drivers/745ad6b502dba1d7f53c22d4974a41eacc238706/kernel/linux/efa/COPYING"
+sha512 = "118f66163b6ca87ac5e1bb65b627c23dc736f0bf09c7304d44417d858b7a3e95bb9b91ffa2099d8db7a481099fbb30262866f377da806cfb6c89561ffb62941a"
+
+[build-dependencies]
+kernel-next = { path = "../kernel-next" }

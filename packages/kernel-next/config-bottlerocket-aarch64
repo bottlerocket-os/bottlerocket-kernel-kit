@@ -1,0 +1,7 @@
+# Architecture-specific configurations for aarch64
+
+# compress arm64 kernels
+CONFIG_EFI_ZBOOT=y
+
+# Disable unused filesystems on aarch64
+# CONFIG_JFFS2_FS is not set

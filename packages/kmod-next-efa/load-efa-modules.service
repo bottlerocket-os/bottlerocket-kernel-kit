@@ -1,0 +1,18 @@
+[Unit]
+Description=Load EFA modules
+After=local-fs.target
+Requires=local-fs.target
+# Disable manual restarts to prevent loading kernel modules
+# that weren't linked by the running system
+RefuseManualStart=true
+RefuseManualStop=true
+
+[Service]
+Type=oneshot
+ExecCondition=/usr/bin/ghostdog efa-present
+ExecStart=/bin/modprobe efa
+RemainAfterExit=true
+StandardError=journal+console
+
+[Install]
+RequiredBy=drivers.target

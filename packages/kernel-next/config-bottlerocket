@@ -1,0 +1,289 @@
+# Because Bottlerocket does not have an initramfs, modules required to mount
+# the root filesystem must be set to y.
+
+# The root filesystem is erofs
+CONFIG_EROFS_FS=y
+
+# Some userspace applications require squashfs support
+CONFIG_SQUASHFS=m
+CONFIG_SQUASHFS_FILE_CACHE=y
+# CONFIG_SQUASHFS_FILE_DIRECT is not set
+CONFIG_SQUASHFS_DECOMP_SINGLE=y
+# CONFIG_SQUASHFS_CHOICE_DECOMP_BY_MOUNT is not set
+CONFIG_SQUASHFS_COMPILE_DECOMP_SINGLE=y
+# CONFIG_SQUASHFS_COMPILE_DECOMP_MULTI is not set
+# CONFIG_SQUASHFS_COMPILE_DECOMP_MULTI_PERCPU is not set
+CONFIG_SQUASHFS_XATTR=y
+CONFIG_SQUASHFS_ZLIB=y
+CONFIG_SQUASHFS_LZ4=y
+CONFIG_SQUASHFS_LZO=y
+CONFIG_SQUASHFS_XZ=y
+CONFIG_SQUASHFS_ZSTD=y
+# CONFIG_SQUASHFS_4K_DEVBLK_SIZE is not set
+# CONFIG_SQUASHFS_EMBEDDED is not set
+CONFIG_SQUASHFS_FRAGMENT_CACHE_SIZE=3
+
+# compress arm64 kernels
+
+# NVMe support
+CONFIG_BLK_DEV_NVME=y
+CONFIG_NVME_CORE=y
+
+# Xen blkfront for Xen-based EC2 platforms
+
+# Turn off Xen backend
+
+# virtio for local testing with QEMU
+CONFIG_VIRTIO=y
+CONFIG_VIRTIO_BLK=y
+CONFIG_VIRTIO_PCI=y
+
+# dm-verity and enabling it on the kernel command line
+CONFIG_BLK_DEV_DM=y
+CONFIG_DAX=y
+CONFIG_DM_INIT=y
+CONFIG_DM_VERITY=y
+
+# Ensure specialized CPU instructions are available for dm-verity.
+
+# TCMU/LIO
+CONFIG_TCM_USER2=m
+
+# EFI
+CONFIG_EFI=y
+CONFIG_EFI_STUB=y
+
+# EFI video
+CONFIG_FB=y
+CONFIG_FB_EFI=y
+CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER=y
+
+# Bottlerocket does not hibernate
+# CONFIG_HIBERNATION is not set
+
+# Do not permit processes to push characters into their controlling tty device
+# CONFIG_LEGACY_TIOCSTI is not set
+
+# Bottlerocket does not livepatch
+# CONFIG_LIVEPATCH is not set
+
+# The "magic sysrq" key is enabled. Set the default operations available
+# through a console device. All operations are always available via
+# /proc/sysrq-trigger, and this default can be overridden.
+# SysRq operations enabled by default:
+# 176 = sync (16) + remount read-only (32) + reboot/poweroff (128)
+CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE=176
+
+# We have a relocatable kernel, so randomize the kernel base address, both
+# physical and virtual.
+CONFIG_RANDOMIZE_BASE=y
+
+# Set the default state of kernel stack address randomization. With
+# randomization on, the kernel stack offset is randomized.
+# The default can be overriden via a kernel command-line option,
+# randomize_kstack_offset=[on/off].
+CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
+
+# Turn off i915
+
+# yama LSM for ptrace restrictions
+CONFIG_SECURITY_YAMA=y
+
+# Do not allow SELinux to be disabled at boot.
+# CONFIG_SECURITY_SELINUX_BOOTPARAM is not set
+
+# Do not allow SELinux to be disabled at runtime.
+# CONFIG_SECURITY_SELINUX_DISABLE is not set
+
+# Do not allow SELinux to use `enforcing=0` behavior.
+# CONFIG_SECURITY_SELINUX_DEVELOP is not set
+
+# Enable support for the kernel lockdown security module.
+CONFIG_SECURITY_LOCKDOWN_LSM=y
+
+# Enable lockdown early so that if the option is present on the
+# kernel command line, it can be enforced.
+CONFIG_SECURITY_LOCKDOWN_LSM_EARLY=y
+
+# disable integrity measurement architecture
+# CONFIG_IMA is not set
+
+# Disable SafeSetID LSM
+# CONFIG_SECURITY_SAFESETID is not set
+
+# Enable landlock
+CONFIG_SECURITY_LANDLOCK=y
+
+# Add landlock to the list of LSMs.
+CONFIG_LSM="landlock,lockdown,yama,loadpin,safesetid,selinux,smack,tomoyo,apparmor,ipe,bpf"
+
+# enable /proc/config.gz
+CONFIG_IKCONFIG=y
+CONFIG_IKCONFIG_PROC=y
+
+# BTF debug info at /sys/kernel/btf/vmlinux
+CONFIG_DEBUG_INFO_BTF=y
+
+# We don't want to extend the kernel command line with any upstream defaults;
+# Bottlerocket uses a fairly custom setup that needs tight control over it.
+# CONFIG_CMDLINE_EXTEND is not set
+
+# We don't want to unpack the initramfs passed by the bootloader. The intent of
+# this option is to ensure that the built-in initramfs is used. Since we do not
+# have a built-in initramfs, in practice this means we will never unpack any
+# initramfs.
+#
+# We rely on `CONFIG_BLK_DEV_INITRD` for boot config support, so we can't just
+# disable the functionality altogether.
+CONFIG_INITRAMFS_FORCE=y
+
+# Enable ZSTD kernel image compression
+CONFIG_HAVE_KERNEL_ZSTD=y
+CONFIG_KERNEL_ZSTD=y
+CONFIG_ZSTD_COMPRESS=m
+CONFIG_ZSTD_DECOMPRESS=y
+CONFIG_DECOMPRESS_ZSTD=y
+
+# Do not compress kernel modules
+# The upstream kernel does not set this, but let's make it explicit.
+# CONFIG_MODULE_COMPRESS is not set
+
+# Support handling of compressed firmware
+CONFIG_FW_LOADER_COMPRESS=y
+# CONFIG_FW_LOADER_COMPRESS_XZ is not set
+CONFIG_FW_LOADER_COMPRESS_ZSTD=y
+
+# Prefer LZ4 for zram compression
+CONFIG_ZRAM_BACKEND_LZ4=y
+CONFIG_ZRAM_DEF_COMP_LZ4=y
+# CONFIG_ZRAM_BACKEND_LZO is not set
+# CONFIG_ZRAM_DEF_COMP_LZO is not set
+
+# Add virtio drivers for development setups running as guests in qemu
+CONFIG_VIRTIO_CONSOLE=m
+CONFIG_HW_RANDOM_VIRTIO=m
+
+# Add support for IPMI drivers
+CONFIG_IPMI_HANDLER=m
+# CONFIG_IPMI_SSIF is not set
+
+# Add support for bootconfig
+CONFIG_BOOT_CONFIG=y
+
+# Enables support for checkpoint/restore
+CONFIG_CHECKPOINT_RESTORE=y
+
+# Enable cgroup v1 cpusets controller
+CONFIG_CPUSETS_V1=y
+
+# Disable user-mode helper for bpfilter, since it relies on a more complete set
+# of userspace libraries for the target than we want to depend on at kernel
+# build time.
+# CONFIG_BPFILTER_UMH is not set
+
+# Disable unused filesystems.
+# CONFIG_AFS_FS is not set
+# CONFIG_BTRFS_FS is not set
+# CONFIG_CRAMFS is not set
+# CONFIG_ECRYPT_FS is not set
+# CONFIG_EXT2_FS is not set
+# CONFIG_EXT3_FS is not set
+CONFIG_EXT4_USE_FOR_EXT2=y
+# CONFIG_GFS2_FS is not set
+# CONFIG_HFS_FS is not set
+# CONFIG_HFSPLUS_FS is not set
+# CONFIG_JFS_FS is not set
+# CONFIG_NFS_V2 is not set
+# CONFIG_NILFS2_FS is not set
+# CONFIG_NTFS_FS is not set
+# CONFIG_ROMFS_FS is not set
+# CONFIG_UFS_FS is not set
+# CONFIG_ZONEFS_FS is not set
+# CONFIG_NTFS3_FS is not set
+
+# Disable unused network protocols.
+# CONFIG_AF_RXRPC is not set
+# CONFIG_ATM is not set
+# CONFIG_CAN is not set
+# CONFIG_HSR is not set
+# CONFIG_IP_DCCP is not set
+# CONFIG_L2TP is not set
+# CONFIG_RDS is not set
+# CONFIG_RFKILL is not set
+# CONFIG_TIPC is not set
+
+# Disable USB-attached network interfaces, unused in the cloud and on server-grade hardware.
+# CONFIG_USB_NET_DRIVERS is not set
+
+# Disable unused qdiscs
+#   - sch_cake targets home routers and residential links
+# CONFIG_NET_SCH_CAKE is not set
+
+# Provide minimal iSCSI via TCP support for initiator and target mode
+# initiator side
+CONFIG_SCSI=m
+CONFIG_ISCSI_TCP=m
+CONFIG_ISCSI_BOOT_SYSFS=m
+CONFIG_SCSI_ISCSI_ATTRS=m
+# target side
+CONFIG_ISCSI_TARGET=m
+# CONFIG_INFINIBAND_ISERT is not set
+
+# Disable unused SCSI functionality.
+# CONFIG_CHR_DEV_ST is not set
+# CONFIG_BLK_DEV_SR is not set
+# CONFIG_CHR_DEV_SG is not set
+# CONFIG_CHR_DEV_SCH is not set
+
+# SCSI Transports
+
+# Disable DAMON subsystem. We currently do not have a good use-case for DAMON.
+# CONFIG_DAMON is not set
+
+# Disable unnecessary framebuffer/drm drivers
+# CONFIG_DRM_BOCHS is not set
+# CONFIG_SYSFB_SIMPLEFB is not set
+
+# Enable the SIMPLEDRM driver, which is a minimal drm driver that enables the
+# helpers for platform provided framebuffers required by the NVIDIA driver.
+CONFIG_DRM_SIMPLEDRM=m
+
+# =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=   =^..^=
+
+# Disable virtio drivers unused in Bottlerocket
+# CONFIG_DRM_VIRTIO_GPU is not set
+# CONFIG_VIRTIO_DMA_SHARED_BUFFER is not set
+
+# Disable libnvdimm: it is not used in Bottlerocket
+# CONFIG_LIBNVDIMM is not set
+
+# Disable metal drivers
+# CONFIG_ATA is not set
+# CONFIG_SATA_AHCI is not set
+# CONFIG_ATA_PIIX is not set
+# CONFIG_SCSI_MPI3MR is not set
+# CONFIG_SCSI_MPT3SAS is not set
+# CONFIG_SCSI_SMARTPQI is not set
+# CONFIG_USB_STORAGE is not set
+# CONFIG_CDROM_PKTCDVD is not set
+# CONFIG_SCSI_SAS_ATTRS
+
+# Add ib_umad module
+CONFIG_INFINIBAND_USER_MAD=m
+
+# Enable CephFS SELinux labels
+CONFIG_CEPH_FS_SECURITY_LABEL=y
+
+# Disable in-tree AMD driver
+# CONFIG_DRM_AMDGPU is not set
+
+# Disable ext4/jbd2 debug options for production (reduces latency overhead)
+# CONFIG_EXT4_DEBUG is not set
+# CONFIG_JBD2_DEBUG is not set
+
+# Disable the Nitro Enclaves driver. It's not shipped for this kernel yet
+# CONFIG_NITRO_ENCLAVES is not set
+
+# Disable the Alibaba network drivers menu. Bottlerocket ships no Alibaba
+# network drivers, and this menu adds no code.
+# CONFIG_NET_VENDOR_ALIBABA is not set

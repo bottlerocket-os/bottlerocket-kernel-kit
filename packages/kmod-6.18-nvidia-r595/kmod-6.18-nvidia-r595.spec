@@ -42,12 +42,12 @@ Source4: COPYING
 Source5: NvidiaGridAWSUserLicenseAgreement.DOCX
 
 # fabricmanager for NVSwitch
-Source10: https://developer.download.nvidia.com/compute/nvidia-fabricmanager/%{tesla_ver}/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.x86_64.rpm
-Source11: https://developer.download.nvidia.com/compute/nvidia-fabricmanager/%{tesla_ver}/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.aarch64.rpm
+Source10: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.x86_64.rpm
+Source11: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-fabricmanager-%{tesla_ver}-1.amzn2023.aarch64.rpm
 
 # IMEX for GB200
-Source20: https://developer.download.nvidia.com/compute/nvidia-imex/%{tesla_ver}/nvidia-imex-%{tesla_ver}-1.x86_64.rpm
-Source21: https://developer.download.nvidia.com/compute/nvidia-imex/%{tesla_ver}/nvidia-imex-%{tesla_ver}-1.aarch64.rpm
+Source20: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvidia-imex-%{tesla_ver}-1.amzn2023.x86_64.rpm
+Source21: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvidia-imex-%{tesla_ver}-1.amzn2023.aarch64.rpm
 
 # NSCQ (NVSwitch Configuration and Query) library
 Source30: https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/libnvidia-nscq-%{tesla_ver}-1.amzn2023.x86_64.rpm
@@ -173,7 +173,7 @@ Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-open-gpu
 %package grid
 Summary: NVIDIA %{tesla_major} GRID driver
 Version: %{tesla_ver}
-License: MIT AND GPL-2.0-only AND LicenceRef-NVIDIA-GRID-AWS-EULA
+License: MIT AND GPL-2.0-only AND LicenseRef-NVIDIA-GRID-AWS-EULA
 Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
 Requires: %{_cross_os}libstdc++

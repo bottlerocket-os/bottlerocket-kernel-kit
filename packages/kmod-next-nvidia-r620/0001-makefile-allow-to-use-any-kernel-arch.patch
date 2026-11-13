@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Shikha Vyaghra <vyaghras@amazon.com>
+Date: Wed, 8 Jan 2025 19:42:26 +0000
+Subject: [PATCH] makefile: allow to use any kernel arch
+
+The added check results in failing build for x86_64 architecture when we use
+`_cross_karch` in make commands in spec file and fails for aarch64 while
+using _cross_arch in the make commands.
+
+This check has been added recently and do not allow us to use
+Kernel_ARCH we want.
+
+We need different Kernel arch as we do cross builds.
+
+Signed-off-by: Shikha Vyaghra <vyaghras@amazon.com>
+Signed-off-by: Matthew Yeazel <yeazelm@amazon.com>
+Signed-off-by: Vighnesh Maheshwari <vighmah@amazon.com>
+---
+ kernel-open/Makefile | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/kernel-open/Makefile b/kernel-open/Makefile
+index 26c4d2d..1e4d7ee 100644
+--- a/kernel-open/Makefile
++++ b/kernel-open/Makefile
+@@ -95,16 +95,6 @@ else
+   endif
+ 
+ 
+-  KERNEL_ARCH = $(ARCH)
+-
+-  ifneq ($(filter $(ARCH),i386 x86_64),)
+-    KERNEL_ARCH = x86
+-  else
+-    ifeq ($(filter $(ARCH),arm64 riscv),)
+-        $(error Unsupported architecture $(ARCH))
+-    endif
+-  endif
+-
+   NV_KERNEL_MODULES ?= $(wildcard nvidia nvidia-uvm nvidia-vgpu-vfio nvidia-modeset nvidia-drm nvidia-peermem)
+   NV_KERNEL_MODULES := $(filter-out $(NV_EXCLUDE_KERNEL_MODULES), \
+                                     $(NV_KERNEL_MODULES))
