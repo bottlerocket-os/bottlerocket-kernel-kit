@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-ute5qmcl3icp"
+title = "kernel CVE-2026-99231"
+cve = "CVE-2026-99231"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: io_uring/waitid: own the request before clearing ->head"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:11Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.2"

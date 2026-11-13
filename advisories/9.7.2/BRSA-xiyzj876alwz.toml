@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-xiyzj876alwz"
+title = "kernel CVE-2026-99178"
+cve = "CVE-2026-99178"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: x86/kvm: Don't consume async #PF flags on a kernel #PF in NMI context"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:50Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

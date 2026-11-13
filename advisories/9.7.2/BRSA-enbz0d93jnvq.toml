@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-enbz0d93jnvq"
+title = "kernel CVE-2026-99227"
+cve = "CVE-2026-99227"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: io_uring/waitid: prevent cancel reference wrap"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:40:08Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

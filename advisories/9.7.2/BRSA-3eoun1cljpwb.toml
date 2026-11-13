@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-3eoun1cljpwb"
+title = "kernel CVE-2026-99167"
+cve = "CVE-2026-99167"
+severity = "high"
+description = "In the Linux kernel, the following vulnerability has been resolved: net/sched: fix use-after-free in __tcf_action_put()"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:43Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.2"

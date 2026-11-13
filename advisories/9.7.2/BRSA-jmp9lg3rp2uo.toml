@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-jmp9lg3rp2uo"
+title = "kernel CVE-2026-99173"
+cve = "CVE-2026-99173"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: eventfs: Free the eventfs_inode after an rcu grace period too"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:46Z
+arches = ["aarch64", "x86_64"]
+version = "9.7.2"

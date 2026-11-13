@@ -1,0 +1,17 @@
+[advisory]
+id = "BRSA-fhldjg1wjetw"
+title = "kernel CVE-2026-99203"
+cve = "CVE-2026-99203"
+severity = "moderate"
+description = "In the Linux kernel, the following vulnerability has been resolved: pipe: preserve existing fasync readers on writer setup failure"
+
+[[advisory.products]]
+package-name = "kernel-6.12"
+patched-version = "6.12.115"
+patched-epoch = "0"
+
+[updateinfo]
+author = "jpculp"
+issue-date = 2026-11-13T00:39:55Z
+arches = ["x86_64", "aarch64"]
+version = "9.7.2"
