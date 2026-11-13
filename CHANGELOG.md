@@ -1,3 +1,20 @@
+# v9.8.0 (2026-11-13)
+
+## OS Changes
+
+* Add `kernel-next` package built from the Amazon Linux 2027 `kernel7.2` SRPM, using 64K pages on aarch64 ([#621])
+* Add `kmod-next-efa` package providing the EFA driver for `kernel-next` ([#621])
+* Add `kmod-next-nvidia-r620` package providing the open NVIDIA R620 GPU driver for `kernel-next` ([#621])
+
+## Build Changes
+
+* Correct the `Source0` URLs for `kmod-6.18-nvidia-r595` ([#621])
+* Correct the GRID license SPDX prefix for `kmod-nvidia` ([#621])
+* Update the Bottlerocket SDK to `v0.83.0` ([#625])
+
+[#621]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/621
+[#625]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/625
+
 # v9.7.2 (2026-11-12)
 
 ## OS Changes
