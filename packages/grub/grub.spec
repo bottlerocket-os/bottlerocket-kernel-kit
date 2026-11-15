@@ -16,7 +16,7 @@ Epoch: 1
 Summary: Bootloader with support for Linux and more
 License: GPL-3.0-or-later AND Unicode-DFS-2015
 URL: https://www.gnu.org/software/grub/
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/e17d7dca3d451a111a1ed9a8b24d6be5c7bb71b2726271508067c8d33d42ab5c/grub2-2.06-61.amzn2023.0.18.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/188b78fbffa11136dd2acf98ac26b01536bf3e9cd60d95d39ccba2b9190e709c/grub2-2.06-61.amzn2023.0.24.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 Source2: bios.cfg
 Source3: efi.cfg

@@ -9,6 +9,6 @@ build = "../build.rs"
 path = "../packages.rs"
 
 [[package.metadata.build-package.external-files]]
-url = "https://cdn.amazonlinux.com/al2023/blobstore/e17d7dca3d451a111a1ed9a8b24d6be5c7bb71b2726271508067c8d33d42ab5c/grub2-2.06-61.amzn2023.0.18.src.rpm"
-sha512 = "d04a30bcd5c433df996e87dfc4f1ee69f7df66a22266f3f5f611c59132954779a1e2d6a8f5f0e0f411c54f1484b80045a275f3df36657fd3481d40c4266ecb88"
+url = "https://cdn.amazonlinux.com/al2023/blobstore/188b78fbffa11136dd2acf98ac26b01536bf3e9cd60d95d39ccba2b9190e709c/grub2-2.06-61.amzn2023.0.24.src.rpm"
+sha512 = "bef529488bc15ca2187c4a0a4217dbc4da5513233fdedc3784e674fe4ed4a046e990302cdbfddfaa05a0928e438b26f8fccd6085af618affe8c09e4989c9c51c"
 force-upstream = true
