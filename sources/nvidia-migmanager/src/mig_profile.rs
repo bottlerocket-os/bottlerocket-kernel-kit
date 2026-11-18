@@ -221,6 +221,27 @@ impl MigGpuProfile for NvidiaRtxPro6000_96gbMigProfile {
 }
 
 #[derive(Deserialize)]
+pub(crate) enum NvidiaRtxPro4500_32gbMigProfile {
+    #[serde(alias = "1g.16gb")]
+    #[serde(alias = "2")]
+    Mig1g16gb,
+
+    #[serde(alias = "2g.32gb")]
+    #[serde(alias = "1")]
+    #[serde(other)]
+    Mig2g32gb,
+}
+
+impl MigGpuProfile for NvidiaRtxPro4500_32gbMigProfile {
+    fn get_mig_profile(&self) -> &str {
+        match self {
+            Self::Mig2g32gb => "2g.32gb",
+            Self::Mig1g16gb => "1g.16gb,1g.16gb",
+        }
+    }
+}
+
+#[derive(Deserialize)]
 pub(crate) enum NvidiaB300_269gbMigProfile {
     #[serde(alias = "1g.34gb")]
     #[serde(alias = "7")]
