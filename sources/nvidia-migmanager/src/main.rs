@@ -99,6 +99,7 @@ enum NvidiaGpu {
     B200_180GB,
     B300_269GB,
     RtxPro6000_96GB,
+    RtxPro4500_32GB,
     Other,
 }
 
@@ -215,6 +216,9 @@ fn get_gpu_model(pci_device_id: &str) -> Result<NvidiaGpu> {
     } else if pci_device_id.starts_with("0x2BB5") {
         info!("Found NVIDIA RTX PRO 6000 Blackwell GPU.");
         Ok(NvidiaGpu::RtxPro6000_96GB)
+    } else if pci_device_id.starts_with("0x2C3A") {
+        info!("Found NVIDIA RTX PRO 4500 Blackwell GPU.");
+        Ok(NvidiaGpu::RtxPro4500_32GB)
     } else if pci_device_id.starts_with("0x3182") {
         info!("Found NVIDIA B300-269GB GPU.");
         Ok(NvidiaGpu::B300_269GB)
@@ -413,6 +417,9 @@ fn enable_mig(mig_settings: NvidiaMigConfig, gpu_info: &[MigGpu]) -> Result<()> 
         Ok(NvidiaGpu::RtxPro6000_96GB) => {
             process_mig_config::<NvidiaRtxPro6000_96gbMigProfile>("rtxpro6000.96gb", &mig_settings)
         }
+        Ok(NvidiaGpu::RtxPro4500_32GB) => {
+            process_mig_config::<NvidiaRtxPro4500_32gbMigProfile>("rtxpro4500.32gb", &mig_settings)
+        }
         Ok(NvidiaGpu::B300_269GB) => {
             process_mig_config::<NvidiaB300_269gbMigProfile>("b300.269gb", &mig_settings)
         }
@@ -424,6 +431,7 @@ fn enable_mig(mig_settings: NvidiaMigConfig, gpu_info: &[MigGpu]) -> Result<()> 
                 "h200.141gb",
                 "b200.180gb",
                 "rtxpro6000.96gb",
+                "rtxpro4500.32gb",
             ];
             let mut filtered_map = mig_settings.profile;
             filtered_map.retain(|key, _| !known_gpus.contains(&key.as_str()));
@@ -673,6 +681,26 @@ mod test {
         let expected_profile_string = "7g.40gb";
 
         assert_eq!(profile_string, expected_profile_string)
+    }
+
+    #[test]
+    fn test_get_gpu_model_rtx_pro_4500() {
+        let gpu = get_gpu_model("0x2C3A10DE").unwrap();
+        assert_eq!(gpu, NvidiaGpu::RtxPro4500_32GB)
+    }
+
+    #[test]
+    fn test_get_mig_profile_rtx_pro_4500() {
+        for (input, expected) in [
+            ("1g.16gb", "1g.16gb,1g.16gb"),
+            ("2", "1g.16gb,1g.16gb"),
+            ("2g.32gb", "2g.32gb"),
+            ("1", "2g.32gb"),
+            ("unknown", "2g.32gb"),
+        ] {
+            let profile = serde_plain::from_str::<NvidiaRtxPro4500_32gbMigProfile>(input).unwrap();
+            assert_eq!(profile.get_mig_profile(), expected);
+        }
     }
 
     #[test]
