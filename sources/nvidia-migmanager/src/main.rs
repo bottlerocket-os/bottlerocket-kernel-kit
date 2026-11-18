@@ -6,7 +6,7 @@ it. It is called by `nvidia-migmanager.service`.
 The binary reads its config file and based on the config, it activates/deactivates MIG
 and applies the profile according to the type of GPU present in the instance.
 
-NVIDIA MIG is currently supported only in A30, A100, H100 and H200 GPUs.
+NVIDIA MIG is supported in A30, A100, H100, H200, B200, B300, RTX PRO 6000 and RTX PRO 4500 GPUs.
 
 ## Example:
 ```toml
@@ -430,6 +430,7 @@ fn enable_mig(mig_settings: NvidiaMigConfig, gpu_info: &[MigGpu]) -> Result<()> 
                 "h100.80gb",
                 "h200.141gb",
                 "b200.180gb",
+                "b300.269gb",
                 "rtxpro6000.96gb",
                 "rtxpro4500.32gb",
             ];
