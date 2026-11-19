@@ -1,6 +1,6 @@
 %global nvlsm_major 2025
-%global nvlsm_minor 06
-%global nvlsm_patch 6
+%global nvlsm_minor 12
+%global nvlsm_patch 211
 %global nvlsm_ver %{nvlsm_major}.%{nvlsm_minor}.%{nvlsm_patch}
 # Both `lib/libgrpc_mgr.so` and `sbin/nvlsm` have RPATHs set to `opt/nvidia/nvlsm` which causes the RPATH check to fail.
 %global __brp_check_rpaths %{nil}

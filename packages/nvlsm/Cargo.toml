@@ -13,13 +13,13 @@ url = "https://s3.amazonaws.com/EULA/NVidiaEULAforAWS.pdf"
 sha512 = "e1926fe99afc3ab5b2f2744fcd53b4046465aefb2793e2e06c4a19455a3fde895e00af1415ff1a5804c32e6a2ed0657e475de63da6c23a0e9c59feeef52f3f58"
 
 [[package.metadata.build-package.external-files]]
-url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvlsm-2025.06.6-1.x86_64.rpm"
-sha512 = "61bf367cd95c854bd96cffd4f9abbd6a79c91e30c701ffe6aba7ff2f1621a17eb32c85df31482581e2c0ae9ef64f3a339e7db2b12de5108c3e25a63ff2aa552d"
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/x86_64/nvlsm-2025.12.211-1.x86_64.rpm"
+sha512 = "91375ce9689479675ad83eb0c3eb089100764c02d5eabfbf15c90ae5f269177a6eba802683d314674e521a6333078c423dbaa96458bcf1a8d3847d4d115234bc"
 force-upstream = true
 
 [[package.metadata.build-package.external-files]]
-url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvlsm-2025.06.6-1.aarch64.rpm"
-sha512 = "a2f712455592497101668b2b8e6f216248bf79a7797bc32509533aa4031eed32505b3387ec736569ae0ea3de620490171d116845ca7c3f565b37ca342e49e9b2"
+url = "https://developer.download.nvidia.com/compute/cuda/repos/amzn2023/sbsa/nvlsm-2025.12.211-1.aarch64.rpm"
+sha512 = "3ccc8ea48c2b53bf40ccd657bbdb56ce20d7bce8899108416302026674e3713ef2657d64b507f67f8b3a0ebdb23db38e945c2f8f66cb90def3a6f6039e83250e"
 force-upstream = true
 
 [build-dependencies]
