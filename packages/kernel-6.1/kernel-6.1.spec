@@ -66,6 +66,9 @@ Patch1008: 1008-erofs-disable-LZ4-rolling-decompression-for-now.patch
 # Add __u128 to tools/include/linux/types.h so kernel host-tool builds
 # work with kernel-headers >= 7.3 on aarch64 hosts.
 Patch1009: 1009-tools-linux-types.h-Add-128-bit-integer-types-for-ar.patch
+# Backport libbpf C23 const fix to avoid -Wdiscarded-qualifiers errors
+# with GCC 16 and glibc 2.42+ which default to C23.
+Patch1010: 1010-libbpf-Fix-Wdiscarded-qualifiers-under-C23.patch
 
 BuildRequires: bc
 BuildRequires: elfutils-devel
