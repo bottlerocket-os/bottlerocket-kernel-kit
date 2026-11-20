@@ -108,6 +108,10 @@ CONFIG_SECURITY_LOCKDOWN_LSM_EARLY=y
 # disable integrity measurement architecture
 # CONFIG_IMA is not set
 
+# Don't create the platform or machine keyrings or load keys from UEFI
+# variables, so UEFI db and MOK certificates can't sign modules.
+# CONFIG_INTEGRITY_PLATFORM_KEYRING is not set
+
 # Disable SafeSetID LSM
 # CONFIG_SECURITY_SAFESETID is not set
 
