@@ -15,6 +15,12 @@
 %global kernel_major 6.18
 %global kernel_sources %{_cross_usrsrc}/kernels/%{kernel_major}
 
+# kmod-6.18-nvidia-r580 and kmod-6.18-nvidia-r620 both provide the lts branch
+# names (nvidia-lts and kmod-6.18-nvidia-lts*). The higher priority epoch
+# makes r580 the default provider. A variant gets r620 only if it lists a
+# kmod-6.18-nvidia-r620 package by name, as with containerd and systemd.
+%global package_priority_epoch 1
+
 # With the split of the firmware binary from firmware/gsp.bin to firmware/gsp_ga10x.bin
 # and firmware/gsp_tu10x.bin the file format changed from executable to relocatable.
 # The __spec_install_post macro will by default try to strip all binary files.
@@ -118,7 +124,7 @@ Requires: %{name}-grid
 %endif
 Requires: %{name}-mps
 
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch} = %{package_priority_epoch}:
 
 %description
 %{summary}.
@@ -129,7 +135,7 @@ Requires: %{name}-tesla(fabricmanager)
 Requires: %{_cross_os}nvlsm
 Requires: %{name}-imex
 Requires: %{name}-nscq
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-fabricmanager
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-fabricmanager = %{package_priority_epoch}:
 
 %description fabricmanager
 %{summary}.
@@ -138,7 +144,7 @@ Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-fabricmanager
 Summary: NVIDIA NSCQ (NVSwitch Configuration and Query) library
 License: LicenseRef-NVIDIA-AWS-EULA
 Requires: %{name}
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-nscq
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-nscq = %{package_priority_epoch}:
 
 %description nscq
 %{summary}.
@@ -146,7 +152,7 @@ Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-nscq
 %package imex
 Summary: NVIDIA IMEX config and service files
 Requires: %{name}
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-imex
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-imex = %{package_priority_epoch}:
 
 %description imex
 %{summary}.
@@ -164,7 +170,7 @@ Version: %{tesla_ver}
 License: MIT AND GPL-2.0-only
 Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-open-gpu
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-open-gpu = %{package_priority_epoch}:
 
 %description open-gpu
 %{summary}.
@@ -177,7 +183,7 @@ License: MIT AND GPL-2.0-only AND LicenseRef-NVIDIA-GRID-AWS-EULA
 Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
 Requires: %{_cross_os}libstdc++
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-grid
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-grid = %{package_priority_epoch}:
 
 %description grid
 %{summary}.
@@ -191,8 +197,8 @@ Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
 Requires: %{name}-fabricmanager
 Provides: %{name}-tesla(fabricmanager)
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-tesla
-Provides: %{_cross_os}nvidia-%{nvidia_branch}
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-tesla = %{package_priority_epoch}:
+Provides: %{_cross_os}nvidia-%{nvidia_branch} = %{package_priority_epoch}:
 # Only one package may provide a given branch alias, and the two branches may
 # not co-install unless the nvidia-dual-branch image feature relaxes it
 Conflicts: %{_cross_os}nvidia-%{nvidia_branch}
@@ -204,7 +210,7 @@ Conflicts: (%{_cross_os}nvidia-pb unless %{_cross_os}image-feature(nvidia-dual-b
 %package mps
 Summary: NVIDIA CUDA Multi-Process Service
 Requires: %{name}
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-mps
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-mps = %{package_priority_epoch}:
 
 %description mps
 %{summary}.
@@ -213,7 +219,7 @@ Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-mps
 Summary: NVIDIA GDRCopy driver
 Version: %{gdrcopy_ver}
 License: MIT AND GPL-2.0-only
-Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-gdrcopy
+Provides: %{_cross_os}kmod-6.18-nvidia-%{nvidia_branch}-gdrcopy = %{package_priority_epoch}:
 Requires: %{_cross_os}variant-platform(aws)
 Requires: %{name}
 

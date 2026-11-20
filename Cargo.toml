@@ -18,6 +18,7 @@ members = [
     "packages/kmod-6.18-efa",
     "packages/kmod-6.18-nvidia-r580",
     "packages/kmod-6.18-nvidia-r595",
+    "packages/kmod-6.18-nvidia-r620",
     "packages/kmod-next-efa",
     "packages/kmod-next-nvidia-r620",
     "packages/nvidia-migmanager",
