@@ -46,9 +46,7 @@ unused = "allow"
 
 [advisories]
 # generational-arena is currently unmaintained.
-ignore = [
-    "RUSTSEC-2024-0014",
-]
+ignore = []
 
 [sources]
 # Deny crates from unknown registries or git repositories.
