@@ -1,0 +1,12 @@
+[Unit]
+Description=NVIDIA Persistence Daemon
+# Ensure persistenced starts after /dev/nvidia* exists
+After=nvidia-lts-load-tesla-kernel-modules.service nvidia-lts-load-open-gpu-kernel-modules.service nvidia-lts-load-grid-kernel-modules.service
+After=nvidia-pb-load-tesla-kernel-modules.service nvidia-pb-load-open-gpu-kernel-modules.service nvidia-pb-load-grid-kernel-modules.service
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/nvidia-persistenced --user nvidia --verbose
+
+[Install]
+RequiredBy=preconfigured.target
