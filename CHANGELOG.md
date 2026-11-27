@@ -1,3 +1,18 @@
+# v9.8.1 (2026-11-27)
+
+## OS Changes
+
+* Update kernel from 6.1.190-237.442 to 6.1.190-237.446 to fix CVE-2026-99362 ([#641])
+* Update kernel from 6.12.115-140.210 to 6.12.115-140.213 to fix CVE-2026-99362 ([#641])
+* Update kernel from 6.18.62-127.179 to 6.18.62-127.181 to fix CVE-2026-99362 ([#641])
+* Update kernel from 7.2.13-17.148 to 7.2.13-18.154 to fix CVE-2026-99362 ([#641])
+* Don't trust UEFI keys for kernel modules ([#635])
+* Update mig-manager profiles for newer instances ([#633])
+
+[#633]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/633
+[#635]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/635
+[#641]: https://github.com/bottlerocket-os/bottlerocket-kernel-kit/pull/641
+
 # v9.8.0 (2026-11-13)
 
 ## OS Changes
