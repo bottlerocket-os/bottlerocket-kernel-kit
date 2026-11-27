@@ -12,7 +12,7 @@ Summary: The Linux kernel, with 64K pages on aarch64
 License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Use latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn-al2027.amazonlinux.com/blobstore/5bd4a8d2cbf10ea258ccda52a108880bca0b9d6c9e2f2d6102c5dfe0f9ca2a53/kernel7.2-7.2.13-17.148.amzn2027.src.rpm
+Source0: https://cdn-al2027.amazonlinux.com/blobstore/ac703f4a3960f4ec0af0d0b453da6bc8cf278c42cb9d514362c3fdc42196cc1a/kernel7.2-7.2.13-18.154.amzn2027.src.rpm
 Source1: gpgkey-37CE7C3833E5A33C4A1E4B0D5408EAA4B1E92E3D.asc
 
 # Custom Bottlerocket kernel configurations.
