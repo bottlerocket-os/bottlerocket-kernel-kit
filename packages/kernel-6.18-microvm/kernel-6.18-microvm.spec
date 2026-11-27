@@ -15,7 +15,7 @@ License: GPL-2.0 WITH Linux-syscall-note
 URL: https://www.kernel.org/
 # Keep this in sync with packages/kernel-6.18 so both kernels are built from the
 # same source. Use that package's latest-kernel-srpm-url.sh to get this.
-Source0: https://cdn.amazonlinux.com/al2023/blobstore/cbb9be49c69897a31d4ff653bf48ad68dc6a2e95df6c18c26cd92549c752c857/kernel6.18-6.18.62-127.179.amzn2023.src.rpm
+Source0: https://cdn.amazonlinux.com/al2023/blobstore/40a1e9eb6686aea458ba79bca71ed75a3ec493fba408fe46c4dbe3b87b64892f/kernel6.18-6.18.62-127.181.amzn2023.src.rpm
 Source1: gpgkey-B21C50FA44A99720EAA72F7FE951904AD832C631.asc
 
 # Overrides that make this kernel bootable as a microvm guest.

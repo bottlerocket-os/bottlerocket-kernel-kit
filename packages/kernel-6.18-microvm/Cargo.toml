@@ -14,8 +14,8 @@ path = "../packages.rs"
 [[package.metadata.build-package.external-files]]
 # Use latest-kernel-srpm-url.sh in packages/kernel-6.18 to get this. Keep this
 # in sync with packages/kernel-6.18 so both kernels come from the same source.
-url = "https://cdn.amazonlinux.com/al2023/blobstore/cbb9be49c69897a31d4ff653bf48ad68dc6a2e95df6c18c26cd92549c752c857/kernel6.18-6.18.62-127.179.amzn2023.src.rpm"
-sha512 = "26d3a40486da10aea5f40dd830f2eb81db6343e9277124875976a09e4dd498f06d99853a343e94c163802a57a512e89e64ae02fd2b98fb6114677422879d4fff"
+url = "https://cdn.amazonlinux.com/al2023/blobstore/40a1e9eb6686aea458ba79bca71ed75a3ec493fba408fe46c4dbe3b87b64892f/kernel6.18-6.18.62-127.181.amzn2023.src.rpm"
+sha512 = "54bad4a7a7b1c72bfad89534a82397e48ced0b40d05465ae593278821e1ebcc45c737aa7db0c8a91c3930b27c7c851a7b187aa28f1c2aacd5511f1098e772f44"
 force-upstream = true
 
 [build-dependencies]
